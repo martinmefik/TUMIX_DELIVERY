@@ -3,564 +3,682 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>TUMIX — служба доставки</title>
-  <!-- favicon из репозитория -->
-  <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/.../favicon-32x32.ico">
+  <title>TUMIX — Доставка с душой</title>
+  <!-- Фавикон (SVG в base64) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23F15A2C'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold' font-size='18'>T</text></svg>">
+  
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
+
     body {
-      background: linear-gradient(145deg, #f5f0eb 0%, #e8e0d5 100%);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      background: #0f0f1a;
+      background-image: 
+        radial-gradient(ellipse at 20% 50%, rgba(241, 90, 44, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(255, 180, 100, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(180, 130, 255, 0.04) 0%, transparent 50%);
       min-height: 100vh;
       display: flex;
-      justify-content: center;
       align-items: center;
-      padding: 20px;
-    }
-    /* Главный контейнер для авторизации / интерфейса */
-    .app-container {
-      width: 100%;
-      max-width: 1400px;
-      background: rgba(255, 250, 245, 0.8);
-      backdrop-filter: blur(18px);
-      border-radius: 48px;
-      box-shadow: 0 30px 50px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.7);
-      padding: 30px;
-      transition: all 0.2s ease;
-    }
-    .logo-area {
-      display: flex;
       justify-content: center;
-      margin-bottom: 20px;
-    }
-    .logo-area img {
-      height: 60px;
-      object-fit: contain;
-      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.2));
-    }
-    .tabs-auth {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-    }
-    .tab-btn {
-      background: transparent;
-      border: none;
-      padding: 12px 28px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 1rem;
-      letter-spacing: 0.5px;
-      background: rgba(255,255,240,0.7);
-      backdrop-filter: blur(10px);
-      color: #3e3a37;
-      cursor: pointer;
-      transition: 0.25s;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      border: 1px solid rgba(255,255,255,0.8);
-    }
-    .tab-btn.active {
-      background: #f15a2c;
-      color: white;
-      border-color: #f15a2c;
-      box-shadow: 0 12px 20px -10px rgba(241,90,44,0.5);
-      transform: translateY(-2px);
-    }
-    .form-card {
-      background: rgba(255,255,245,0.7);
-      backdrop-filter: blur(20px);
-      border-radius: 36px;
-      padding: 30px;
-      max-width: 500px;
-      margin: 0 auto;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.6);
-    }
-    .input-group {
-      margin-bottom: 18px;
-    }
-    .input-group label {
-      font-weight: 600;
-      color: #4a3f35;
-      display: block;
-      margin-bottom: 6px;
-      font-size: 0.9rem;
-    }
-    .input-group input {
-      width: 100%;
-      padding: 14px 18px;
-      border-radius: 30px;
-      border: 1px solid #ddd2c4;
-      background: #fffef9;
-      font-size: 1rem;
-      outline: none;
-      transition: 0.2s;
-    }
-    .input-group input:focus {
-      border-color: #f15a2c;
-      box-shadow: 0 0 0 3px rgba(241,90,44,0.2);
-    }
-    .btn-primary {
-      background: #f15a2c;
-      border: none;
-      color: white;
-      font-weight: 700;
-      padding: 14px 28px;
-      border-radius: 40px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      width: 100%;
-      transition: 0.25s;
-      margin-top: 10px;
-      box-shadow: 0 10px 18px -8px #f15a2c;
-    }
-    .btn-primary:hover {
-      background: #e14a1c;
-      transform: scale(1.02);
-    }
-    .success-overlay {
-      background: #2e7d32;
-      color: white;
       padding: 20px;
-      border-radius: 28px;
-      text-align: center;
-      margin: 20px 0;
-      font-weight: 600;
+      color: #e8e6f0;
     }
-    .hidden {
-      display: none !important;
-    }
-    .dashboard-layout {
-      display: flex;
-      gap: 20px;
-      margin-top: 20px;
-      height: 70vh;
-      min-height: 550px;
-    }
-    .sidebar {
-      width: 230px;
-      background: rgba(250, 245, 235, 0.8);
-      backdrop-filter: blur(20px);
-      border-radius: 32px;
-      padding: 20px 10px;
+
+    .app-wrapper {
+      width: 100%;
+      max-width: 1440px;
+      min-height: 90vh;
+      background: rgba(20, 20, 35, 0.7);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border-radius: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-      border: 1px solid rgba(255,255,240,0.9);
     }
-    .sidebar button {
+
+    /* Логотип */
+    .logo-header {
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #F15A2C, #ff7b4a);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 24px;
+      color: white;
+      box-shadow: 0 12px 28px rgba(241, 90, 44, 0.4);
+      letter-spacing: -1px;
+    }
+    .logo-text {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(to right, #fff, #e0cfc0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Экран авторизации */
+    .auth-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+    .auth-tabs {
+      display: flex;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 6px;
+      border-radius: 20px;
+      margin-bottom: 36px;
+      backdrop-filter: blur(10px);
+    }
+    .auth-tab {
+      padding: 12px 32px;
+      border-radius: 16px;
+      border: none;
+      background: transparent;
+      color: #a09aaa;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.3px;
+    }
+    .auth-tab.active {
+      background: #F15A2C;
+      color: white;
+      box-shadow: 0 8px 24px rgba(241, 90, 44, 0.5);
+    }
+    .auth-card {
+      background: rgba(30, 30, 50, 0.6);
+      backdrop-filter: blur(20px);
+      border-radius: 32px;
+      padding: 40px;
+      width: 100%;
+      max-width: 460px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    }
+    .auth-card h2 {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 28px;
+      text-align: center;
+      color: #f0e6e0;
+    }
+    .input-field {
+      margin-bottom: 20px;
+    }
+    .input-field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #b0a5b8;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .input-field input {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      font-size: 16px;
+      color: #f0e6e0;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .input-field input:focus {
+      border-color: #F15A2C;
+      box-shadow: 0 0 0 4px rgba(241, 90, 44, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 18px;
+      border: none;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+      margin-top: 8px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #F15A2C, #e0481f);
+      color: white;
+      box-shadow: 0 12px 30px rgba(241, 90, 44, 0.4);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 36px rgba(241, 90, 44, 0.55);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #d0c8d8;
+    }
+    .link-text {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 14px;
+      color: #9088a0;
+    }
+    .link-text a {
+      color: #F15A2C;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .success-popup {
+      background: linear-gradient(135deg, #1a3a2a, #0f2a1e);
+      border: 1px solid #2ecc71;
+      color: #2ecc71;
+      padding: 20px 28px;
+      border-radius: 20px;
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 24px;
+      animation: fadeSlide 0.4s ease;
+    }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(-16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Дашборд */
+    .dashboard {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+    .sidebar {
+      width: 260px;
+      background: rgba(18, 18, 32, 0.6);
+      backdrop-filter: blur(20px);
+      padding: 28px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .sidebar-btn {
       background: transparent;
       border: none;
-      padding: 14px 18px;
-      border-radius: 24px;
+      color: #b0a5b8;
+      padding: 14px 20px;
+      border-radius: 16px;
       font-weight: 600;
-      color: #3e362e;
+      font-size: 15px;
       text-align: left;
       cursor: pointer;
-      transition: 0.2s;
-      font-size: 0.95rem;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .sidebar button:hover, .sidebar button.active-nav {
-      background: #f15a2c;
-      color: white;
-      box-shadow: 0 8px 15px rgba(241,90,44,0.4);
+    .sidebar-btn:hover, .sidebar-btn.active {
+      background: rgba(241, 90, 44, 0.2);
+      color: #F15A2C;
     }
-    .content-panel {
+    .sidebar-btn.active {
+      background: rgba(241, 90, 44, 0.25);
+      box-shadow: 0 0 20px rgba(241, 90, 44, 0.2);
+    }
+    .content-area {
       flex: 1;
-      background: rgba(255,252,245,0.75);
-      backdrop-filter: blur(18px);
-      border-radius: 32px;
-      padding: 25px;
+      padding: 32px;
       overflow-y: auto;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+      background: rgba(12, 12, 24, 0.3);
     }
-    .delivery-form input, .delivery-form select {
-      width: 100%;
-      padding: 12px 16px;
+    .card {
+      background: rgba(25, 25, 45, 0.5);
+      backdrop-filter: blur(16px);
       border-radius: 24px;
-      border: 1px solid #cfc2b0;
-      margin: 8px 0;
+      padding: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      margin-bottom: 20px;
+    }
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
     }
     .checkbox-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 15px;
-      margin: 15px 0;
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .checkbox-pill {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 30px;
+      padding: 10px 18px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #c8bfd0;
+    }
+    .checkbox-pill.checked {
+      background: rgba(241, 90, 44, 0.25);
+      border-color: #F15A2C;
+      color: #ff9f7c;
+    }
+    .order-item, .appeal-item {
+      background: rgba(255,255,255,0.03);
+      border-radius: 16px;
+      padding: 18px;
+      margin: 10px 0;
+      border-left: 3px solid #F15A2C;
     }
     .chat-window {
-      background: #fefaf2;
-      border-radius: 24px;
-      padding: 20px;
-      height: 100%;
       display: flex;
       flex-direction: column;
+      height: 400px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 20px;
+      padding: 20px;
     }
-    .messages {
+    .chat-messages {
       flex: 1;
       overflow-y: auto;
-      margin-bottom: 15px;
+      margin-bottom: 16px;
     }
-    .msg {
-      margin: 10px 0;
-      padding: 12px 18px;
-      border-radius: 20px;
-      max-width: 80%;
-    }
-    .msg.support {
-      background: #e7dfd1;
-      align-self: flex-start;
-    }
-    .msg.client {
-      background: #f15a2c;
-      color: white;
-      margin-left: auto;
-    }
-    .employee-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: white;
+    .msg-bubble {
+      max-width: 75%;
       padding: 12px 18px;
       border-radius: 20px;
       margin: 8px 0;
+      font-size: 14px;
     }
-    @media (max-width: 750px) {
-      .dashboard-layout {
-        flex-direction: column;
-      }
-      .sidebar {
-        width: 100%;
-        flex-direction: row;
-        flex-wrap: wrap;
-      }
+    .msg-support {
+      background: rgba(255,255,255,0.08);
+      color: #ddd;
+      align-self: flex-start;
+    }
+    .msg-client {
+      background: #F15A2C;
+      color: white;
+      margin-left: auto;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .badge {
+      background: #F15A2C;
+      color: white;
+      border-radius: 12px;
+      padding: 2px 10px;
+      font-size: 12px;
+      margin-left: 8px;
     }
   </style>
 </head>
 <body>
-<div class="app-container" id="appContainer">
-  <!-- Логотип -->
-  <div class="logo-area">
-    <img src="https://raw.githubusercontent.com/.../logotip.PNG" alt="TUMIX logotip" id="logoImg">
+<div class="app-wrapper" id="appWrapper">
+  <div class="logo-header">
+    <div class="logo-icon">T</div>
+    <span class="logo-text">TUMIX</span>
   </div>
 
-  <!-- Экран авторизации (по умолчанию) -->
-  <div id="authScreen">
-    <div class="tabs-auth">
-      <button class="tab-btn active" id="clientTabBtn">Клиент</button>
-      <button class="tab-btn" id="employeeTabBtn">Сотрудник</button>
+  <!-- Экран авторизации -->
+  <div id="authScreen" class="auth-screen">
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="clientTab">👤 Клиент</button>
+      <button class="auth-tab" id="employeeTab">🛡️ Сотрудник</button>
     </div>
-
-    <!-- Форма клиента (вход/регистрация) -->
-    <div id="clientAuthBlock">
-      <div class="form-card" id="clientLoginForm">
-        <h3 style="color:#3e362e; margin-bottom:20px;">Вход для клиента</h3>
-        <div class="input-group"><label>Почта</label><input type="email" id="loginEmail" placeholder="email@example.com"></div>
-        <div class="input-group"><label>Пароль</label><input type="password" id="loginPassword"></div>
-        <button class="btn-primary" id="loginClientBtn">Войти</button>
-        <p style="margin-top:16px; text-align:center;">Нет аккаунта? <a href="#" id="showRegisterLink" style="color:#f15a2c;">Регистрация</a></p>
-      </div>
-      <div class="form-card hidden" id="clientRegisterForm">
-        <h3>Регистрация</h3>
-        <div class="input-group"><label>Имя *</label><input type="text" id="regName"></div>
-        <div class="input-group"><label>Почта *</label><input type="email" id="regEmail"></div>
-        <div class="input-group"><label>Телефон *</label><input type="tel" id="regPhone"></div>
-        <div class="input-group"><label>Пароль *</label><input type="password" id="regPassword"></div>
-        <button class="btn-primary" id="registerBtn">Зарегистрироваться</button>
-        <p style="margin-top:12px;"><a href="#" id="backToLoginLink">Назад ко входу</a></p>
-      </div>
-    </div>
-
-    <!-- Форма сотрудника -->
-    <div id="employeeAuthBlock" class="hidden">
-      <div class="form-card">
-        <h3>Вход для сотрудника</h3>
-        <div class="input-group"><label>Табельный номер</label><input type="text" id="empId" placeholder="TUM-0001"></div>
-        <div class="input-group"><label>Пароль</label><input type="password" id="empPassword"></div>
-        <button class="btn-primary" id="loginEmployeeBtn">Войти</button>
-      </div>
-    </div>
-    <div id="successMessage" class="success-overlay hidden"></div>
+    <div id="authFormsContainer" class="auth-card"></div>
+    <div id="globalSuccess" class="success-popup hidden"></div>
   </div>
 
-  <!-- Интерфейс клиента (dashboard) -->
-  <div id="clientDashboard" class="dashboard-layout hidden">
+  <!-- Дашборд клиента -->
+  <div id="clientDashboard" class="dashboard hidden">
     <div class="sidebar">
-      <button class="active-nav" data-view="delivery">Доставка</button>
-      <button data-view="appeals">Обращения</button>
-      <button data-view="myOrders">Мои заказы</button>
-      <button data-view="support">Поддержка</button>
+      <button class="sidebar-btn active" data-view="delivery">📦 Доставка</button>
+      <button class="sidebar-btn" data-view="appeals">📋 Обращения</button>
+      <button class="sidebar-btn" data-view="orders">📑 Мои заказы</button>
+      <button class="sidebar-btn" data-view="support">💬 Поддержка</button>
     </div>
-    <div class="content-panel" id="clientContent"></div>
+    <div class="content-area" id="clientContent"></div>
   </div>
 
-  <!-- Интерфейс сотрудника -->
-  <div id="employeeDashboard" class="dashboard-layout hidden">
+  <!-- Дашборд сотрудника -->
+  <div id="employeeDashboard" class="dashboard hidden">
     <div class="sidebar">
-      <button data-view="empChat" class="active-nav">Чат</button>
-      <div style="position:relative;">
-        <button id="appealsDropBtn">Обращения ▾</button>
-        <div id="appealsDropdown" class="hidden" style="background:#faf5ea; border-radius:20px; padding:10px; margin-left:10px;">
-          <button data-view="clientAppealsList">Обращения клиентов</button>
-          <button data-view="createClientAppeal">Создать обращение клиента</button>
-          <button data-view="employeeAppealsList">Обращения сотрудников</button>
-          <button data-view="createEmployeeAppeal">Создать обращение сотрудника</button>
-        </div>
-      </div>
-      <button data-view="allOrders">Все заказы</button>
+      <button class="sidebar-btn active" data-view="empChat">💬 Чат</button>
+      <button class="sidebar-btn" data-view="empAppeals">📋 Обращения</button>
+      <button class="sidebar-btn" data-view="allOrders">📦 Все заказы</button>
     </div>
-    <div class="content-panel" id="employeeContent"></div>
+    <div class="content-area" id="employeeContent"></div>
   </div>
 </div>
 
 <script>
-  (function() {
-    // ---------- хранилище ----------
-    const STORAGE_USERS = 'tumix_users';
-    const STORAGE_ORDERS = 'tumix_orders';
-    const STORAGE_APPEALS = 'tumix_appeals';
-    const STORAGE_EMP_APPEALS = 'tumix_emp_appeals';
-    const STORAGE_CHATS = 'tumix_chats';
+  (() => {
+    // Хранилище
+    const store = (key, val) => val !== undefined ? localStorage.setItem(key, JSON.stringify(val)) : JSON.parse(localStorage.getItem(key) || 'null');
+    const users = () => store('tumix_users') || [];
+    const orders = () => store('tumix_orders') || [];
+    const appeals = () => store('tumix_appeals') || [];
+    const empAppeals = () => store('tumix_emp_appeals') || [];
+    const chats = () => store('tumix_chats') || [];
 
-    // Тестовый сотрудник
-    const TEST_EMPLOYEE = { tab: 'TUM-0001', password: 'Password0001', name: 'Owner' };
-
-    // Утилиты
-    function getData(key) { return JSON.parse(localStorage.getItem(key) || '[]'); }
-    function setData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
-    function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2,6); }
-
-    // Текущие сессии
     let currentClient = null;
     let currentEmployee = null;
 
-    // Элементы DOM
+    // DOM элементы
     const authScreen = document.getElementById('authScreen');
     const clientDash = document.getElementById('clientDashboard');
     const empDash = document.getElementById('employeeDashboard');
-    const logoImg = document.getElementById('logoImg');
-    // логотип и фавикон (уже в HTML, favicon link)
-    logoImg.src = 'https://raw.githubusercontent.com/.../logotip.PNG'; 
-    document.querySelector("link[rel='icon']").href = 'https://raw.githubusercontent.com/.../favicon-32x32.ico';
+    const authForms = document.getElementById('authFormsContainer');
+    const globalSuccess = document.getElementById('globalSuccess');
+
+    // Тестовый сотрудник
+    const TEST_EMP = { tab: 'TUM-0001', password: 'Password0001', name: 'Алексей Смирнов' };
 
     // Переключение вкладок авторизации
-    document.getElementById('clientTabBtn').addEventListener('click', ()=>{
-      document.getElementById('clientAuthBlock').classList.remove('hidden');
-      document.getElementById('employeeAuthBlock').classList.add('hidden');
-      document.getElementById('clientTabBtn').classList.add('active');
-      document.getElementById('employeeTabBtn').classList.remove('active');
-    });
-    document.getElementById('employeeTabBtn').addEventListener('click', ()=>{
-      document.getElementById('clientAuthBlock').classList.add('hidden');
-      document.getElementById('employeeAuthBlock').classList.remove('hidden');
-      document.getElementById('employeeTabBtn').classList.add('active');
-      document.getElementById('clientTabBtn').classList.remove('active');
-    });
+    let authMode = 'client';
+    document.getElementById('clientTab').addEventListener('click', () => { authMode = 'client'; renderAuth(); });
+    document.getElementById('employeeTab').addEventListener('click', () => { authMode = 'employee'; renderAuth(); });
 
-    // Регистрация / вход клиент
-    document.getElementById('showRegisterLink').addEventListener('click', (e)=>{
-      e.preventDefault();
-      document.getElementById('clientLoginForm').classList.add('hidden');
-      document.getElementById('clientRegisterForm').classList.remove('hidden');
-    });
-    document.getElementById('backToLoginLink').addEventListener('click', (e)=>{
-      e.preventDefault();
-      document.getElementById('clientRegisterForm').classList.add('hidden');
-      document.getElementById('clientLoginForm').classList.remove('hidden');
-    });
-
-    document.getElementById('registerBtn').addEventListener('click', ()=>{
-      const name = document.getElementById('regName').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
-      const phone = document.getElementById('regPhone').value.trim();
-      const pass = document.getElementById('regPassword').value.trim();
-      if(!name || !email || !phone || !pass) return alert('Все поля обязательны');
-      let users = getData(STORAGE_USERS);
-      if(users.find(u=>u.email===email)) return alert('Почта уже используется');
-      users.push({id:generateId(), name, email, phone, password: pass});
-      setData(STORAGE_USERS, users);
-      showSuccess('Успешная регистрация! Теперь войдите.');
-      document.getElementById('clientRegisterForm').classList.add('hidden');
-      document.getElementById('clientLoginForm').classList.remove('hidden');
-    });
-
-    function showSuccess(text) {
-      const el = document.getElementById('successMessage');
-      el.textContent = text; el.classList.remove('hidden');
-      setTimeout(()=> el.classList.add('hidden'), 3000);
+    function showSuccess(msg) {
+      globalSuccess.textContent = msg;
+      globalSuccess.classList.remove('hidden');
+      setTimeout(() => globalSuccess.classList.add('hidden'), 3000);
     }
 
-    document.getElementById('loginClientBtn').addEventListener('click', ()=>{
+    function renderAuth() {
+      document.getElementById('clientTab').classList.toggle('active', authMode === 'client');
+      document.getElementById('employeeTab').classList.toggle('active', authMode === 'employee');
+      
+      if (authMode === 'client') {
+        authForms.innerHTML = `
+          <h2>Вход в аккаунт</h2>
+          <div class="input-field"><label>Почта</label><input type="email" id="loginEmail" placeholder="your@email.com"></div>
+          <div class="input-field"><label>Пароль</label><input type="password" id="loginPass" placeholder="••••••••"></div>
+          <button class="btn btn-primary" id="loginClientBtn">Войти</button>
+          <p class="link-text">Нет аккаунта? <a href="#" id="showRegister">Зарегистрироваться</a></p>
+        `;
+        document.getElementById('loginClientBtn').addEventListener('click', clientLogin);
+        document.getElementById('showRegister').addEventListener('click', (e) => {
+          e.preventDefault();
+          authForms.innerHTML = `
+            <h2>Регистрация</h2>
+            <div class="input-field"><label>Имя *</label><input id="regName"></div>
+            <div class="input-field"><label>Почта *</label><input type="email" id="regEmail"></div>
+            <div class="input-field"><label>Телефон *</label><input type="tel" id="regPhone"></div>
+            <div class="input-field"><label>Пароль *</label><input type="password" id="regPass"></div>
+            <button class="btn btn-primary" id="registerBtn">Зарегистрироваться</button>
+            <p class="link-text"><a href="#" id="backToLogin">Назад ко входу</a></p>
+          `;
+          document.getElementById('registerBtn').addEventListener('click', () => {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const pass = document.getElementById('regPass').value.trim();
+            if (!name || !email || !phone || !pass) return alert('Все поля обязательны');
+            let u = users();
+            if (u.find(x => x.email === email)) return alert('Почта занята');
+            u.push({ id: Date.now().toString(), name, email, phone, password: pass });
+            store('tumix_users', u);
+            showSuccess('✅ Успешная регистрация! Теперь войдите.');
+            renderAuth();
+          });
+          document.getElementById('backToLogin').addEventListener('click', (e) => { e.preventDefault(); renderAuth(); });
+        });
+      } else {
+        authForms.innerHTML = `
+          <h2>Вход для сотрудников</h2>
+          <div class="input-field"><label>Табельный номер</label><input id="empTab" placeholder="TUM-0001"></div>
+          <div class="input-field"><label>Пароль</label><input type="password" id="empPass"></div>
+          <button class="btn btn-primary" id="loginEmpBtn">Войти</button>
+        `;
+        document.getElementById('loginEmpBtn').addEventListener('click', () => {
+          const tab = document.getElementById('empTab').value.trim();
+          const pass = document.getElementById('empPass').value.trim();
+          if (tab === TEST_EMP.tab && pass === TEST_EMP.password) {
+            currentEmployee = { ...TEST_EMP };
+            authScreen.classList.add('hidden');
+            empDash.classList.remove('hidden');
+            clientDash.classList.add('hidden');
+            renderEmployeeView('empChat');
+          } else alert('Неверные данные');
+        });
+      }
+    }
+
+    function clientLogin() {
       const email = document.getElementById('loginEmail').value.trim();
-      const pass = document.getElementById('loginPassword').value.trim();
-      const users = getData(STORAGE_USERS);
-      const user = users.find(u=>u.email===email && u.password===pass);
-      if(!user) return alert('Неверные данные');
-      currentClient = user;
-      authScreen.classList.add('hidden');
-      clientDash.classList.remove('hidden');
-      empDash.classList.add('hidden');
-      renderClientView('delivery');
-    });
-
-    document.getElementById('loginEmployeeBtn').addEventListener('click', ()=>{
-      const tab = document.getElementById('empId').value.trim();
-      const pass = document.getElementById('empPassword').value.trim();
-      if(tab===TEST_EMPLOYEE.tab && pass===TEST_EMPLOYEE.password){
-        currentEmployee = { tab, name: TEST_EMPLOYEE.name };
+      const pass = document.getElementById('loginPass').value.trim();
+      const user = users().find(u => u.email === email && u.password === pass);
+      if (user) {
+        currentClient = user;
         authScreen.classList.add('hidden');
-        empDash.classList.remove('hidden');
-        clientDash.classList.add('hidden');
-        renderEmployeeView('empChat');
-      } else alert('Неверный табельный или пароль');
-    });
+        clientDash.classList.remove('hidden');
+        empDash.classList.add('hidden');
+        renderClientView('delivery');
+      } else alert('Неверная почта или пароль');
+    }
 
-    // Навигация клиент
-    document.querySelectorAll('#clientDashboard .sidebar button').forEach(btn=>{
-      btn.addEventListener('click', (e)=>{
-        document.querySelectorAll('#clientDashboard .sidebar button').forEach(b=>b.classList.remove('active-nav'));
-        btn.classList.add('active-nav');
+    // Навигация клиента
+    document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
         renderClientView(btn.dataset.view);
       });
     });
 
-    function renderClientView(view){
-      const panel = document.getElementById('clientContent');
-      switch(view){
-        case 'delivery': panel.innerHTML = getDeliveryForm(); break;
-        case 'appeals': panel.innerHTML = getClientAppealsList(); break;
-        case 'myOrders': panel.innerHTML = getMyOrders(); break;
-        case 'support': panel.innerHTML = getSupportChat(); initSupportChat(); break;
+    function renderClientView(view) {
+      const area = document.getElementById('clientContent');
+      switch(view) {
+        case 'delivery': area.innerHTML = deliveryForm(); break;
+        case 'appeals': area.innerHTML = clientAppealsList(); break;
+        case 'orders': area.innerHTML = clientOrders(); break;
+        case 'support': area.innerHTML = supportChat(); initSupportChat(); break;
       }
     }
 
-    function getDeliveryForm(){
+    function deliveryForm() {
       return `
-        <h3>Заполните данные для доставки</h3>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-          <div><label>ФИО отправителя*</label><input id="senderName"></div>
-          <div><label>Телефон отправителя*</label><input id="senderPhone"></div>
-          <div><label>Адрес отправки*</label><input id="senderAddr"></div>
+        <div class="card"><h3>📦 Новая доставка</h3>
+        <div class="grid-2col">
+          <div class="input-field"><label>ФИО отправителя *</label><input id="sName"></div>
+          <div class="input-field"><label>Телефон отправителя *</label><input id="sPhone"></div>
+          <div class="input-field"><label>Адрес отправки *</label><input id="sAddr"></div>
         </div>
-        <h4 style="margin:20px 0 10px;">Получатель</h4>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-          <div><label>ФИО получателя*</label><input id="recName"></div>
-          <div><label>Телефон получателя*</label><input id="recPhone"></div>
-          <div><label>Адрес получателя*</label><input id="recAddr"></div>
+        <h4 style="margin-top:20px;">Получатель</h4>
+        <div class="grid-2col">
+          <div class="input-field"><label>ФИО получателя *</label><input id="rName"></div>
+          <div class="input-field"><label>Телефон получателя *</label><input id="rPhone"></div>
+          <div class="input-field"><label>Адрес получателя *</label><input id="rAddr"></div>
         </div>
-        <div><label>Город (Москва/МО)</label><input value="Москва" disabled></div>
-        <div><label>Содержимое*</label><input id="contentDesc"></div>
-        <div class="checkbox-group">
-          <label><input type="checkbox" class="pack" value="Пакет"> Пакет (60₽)</label>
-          <label><input type="checkbox" class="pack" value="Конверт"> Конверт (90₽)</label>
-          <label><input type="checkbox" class="pack" value="Коробка S"> Коробка S (120₽)</label>
-          <label><input type="checkbox" class="pack" value="Коробка M"> Коробка M (220₽)</label>
-          <label><input type="checkbox" class="pack" value="Коробка L"> Коробка L (280₽)</label>
-          <label><input type="checkbox" class="pack" value="Коробка XL"> Коробка XL (350₽)</label>
+        <div class="input-field"><label>Город</label><input value="Москва и МО" disabled></div>
+        <div class="input-field"><label>Содержимое *</label><input id="contentDesc"></div>
+        <div class="checkbox-group" id="packCheckboxes">
+          <label class="checkbox-pill"><input type="checkbox" value="Пакет" hidden> 📦 Пакет (60₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Конверт" hidden> ✉️ Конверт (90₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка S" hidden> 📦 Коробка S (120₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка M" hidden> 📦 Коробка M (220₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка L" hidden> 📦 Коробка L (280₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка XL" hidden> 📦 Коробка XL (350₽)</label>
         </div>
-        <button class="btn-primary" id="calcDeliveryBtn">Рассчитать и оформить</button>
-        <div id="priceBreakdown" style="margin-top:20px;"></div>
+        <button class="btn btn-primary" id="calcDelivery">Рассчитать и оформить</button>
+        <div id="priceDetails" style="margin-top:20px;"></div></div>
       `;
     }
 
-    document.addEventListener('click', function(e){
-      if(e.target.id === 'calcDeliveryBtn'){
-        const packs = [...document.querySelectorAll('.pack:checked')].map(cb=>cb.value);
-        if(!packs.length) return alert('Выберите упаковку');
-        const prices = {Пакет:60, Конверт:90, 'Коробка S':120, 'Коробка M':220, 'Коробка L':280, 'Коробка XL':350};
-        let packCost = packs.reduce((sum,p)=>sum+prices[p],0);
-        let distance = Math.floor(Math.random()*25)+5; // 5-30 км
-        let kmCost = distance * 6;
-        let serviceFee = 29;
-        let weatherMultiplier = 1;
-        if(Math.random()<0.4) weatherMultiplier = 1.3; // имитация непогоды
-        let total = (packCost + kmCost + serviceFee) * weatherMultiplier;
-        document.getElementById('priceBreakdown').innerHTML = `
-          <p>📦 Упаковка: ${packCost}₽ | 🚚 ${distance}км ×6₽ = ${kmCost}₽ | 🔧 Сервисный сбор 29₽</p>
-          ${weatherMultiplier>1 ? '<p style="color:red;">🌧️ Непогода +30%</p>':''}
-          <strong>Итого: ${total.toFixed(0)}₽</strong>
-          <button class="btn-primary" id="confirmOrderBtn">Оформить доставку</button>
+    document.addEventListener('click', e => {
+      if (e.target.id === 'calcDelivery') {
+        const packs = [...document.querySelectorAll('#packCheckboxes input:checked')].map(cb => cb.value);
+        if (!packs.length) return alert('Выберите упаковку');
+        const prices = { 'Пакет': 60, 'Конверт': 90, 'Коробка S': 120, 'Коробка M': 220, 'Коробка L': 280, 'Коробка XL': 350 };
+        let packCost = packs.reduce((s, p) => s + prices[p], 0);
+        let dist = Math.floor(Math.random() * 20) + 5;
+        let kmCost = dist * 6;
+        let service = 29;
+        let weather = Math.random() < 0.35 ? 1.3 : 1;
+        let total = Math.round((packCost + kmCost + service) * weather);
+        document.getElementById('priceDetails').innerHTML = `
+          <p>📦 Упаковка: ${packCost}₽ | 🛣️ ${dist}км × 6₽ = ${kmCost}₽ | 🔧 Сервис: 29₽</p>
+          ${weather > 1 ? '<p style="color:#ff7b4a;">🌧️ Непогода +30%</p>' : ''}
+          <h3>Итого: ${total}₽</h3>
+          <button class="btn btn-primary" id="confirmOrder">Оформить доставку</button>
         `;
       }
-      if(e.target.id === 'confirmOrderBtn'){
+      if (e.target.id === 'confirmOrder') {
         const order = {
-          id: generateId(), clientId: currentClient.id,
-          sender: document.getElementById('senderName').value,
-          senderPhone: document.getElementById('senderPhone').value,
-          senderAddr: document.getElementById('senderAddr').value,
-          recName: document.getElementById('recName').value,
-          recPhone: document.getElementById('recPhone').value,
-          recAddr: document.getElementById('recAddr').value,
+          id: Date.now().toString(),
+          clientId: currentClient.id,
+          sender: document.getElementById('sName').value,
+          sPhone: document.getElementById('sPhone').value,
+          sAddr: document.getElementById('sAddr').value,
+          recName: document.getElementById('rName').value,
+          rPhone: document.getElementById('rPhone').value,
+          rAddr: document.getElementById('rAddr').value,
           content: document.getElementById('contentDesc').value,
-          packs: [...document.querySelectorAll('.pack:checked')].map(cb=>cb.value),
-          status: 'Оформлен'
+          packs: [...document.querySelectorAll('#packCheckboxes input:checked')].map(cb => cb.value),
+          status: 'Оформлен',
+          date: new Date().toLocaleString()
         };
-        let orders = getData(STORAGE_ORDERS);
-        orders.push(order);
-        setData(STORAGE_ORDERS, orders);
-        alert('Доставка успешно оформлена! Следите за статусом во вкладке "Мои заказы".');
-        document.querySelector('#clientDashboard .sidebar button[data-view="myOrders"]').click();
+        store('tumix_orders', [...orders(), order]);
+        alert('✅ Доставка успешно оформлена! Отслеживайте во вкладке "Мои заказы".');
+        document.querySelector('#clientDashboard .sidebar-btn[data-view="orders"]').click();
+      }
+      // Чекбоксы стиль
+      if (e.target.closest('.checkbox-pill')) {
+        const pill = e.target.closest('.checkbox-pill');
+        const cb = pill.querySelector('input');
+        cb.checked = !cb.checked;
+        pill.classList.toggle('checked', cb.checked);
       }
     });
 
-    function getMyOrders(){
-      let orders = getData(STORAGE_ORDERS).filter(o=>o.clientId===currentClient.id);
-      return `<h3>Мои заказы</h3>`+ orders.map(o=>`<div style="background:white; border-radius:20px; padding:15px; margin:10px 0;">${o.sender} → ${o.recName}, стаус: ${o.status}</div>`).join('');
+    function clientOrders() {
+      const ords = orders().filter(o => o.clientId === currentClient?.id);
+      return `<h3>Мои заказы</h3>` + ords.map(o => `
+        <div class="order-item"><b>${o.sender} → ${o.recName}</b> | Статус: ${o.status} | ${o.date}</div>
+      `).join('') || '<p>Нет заказов</p>';
     }
 
-    function getSupportChat(){
-      return `<div class="chat-window"><div class="messages" id="chatMessages"><div class="msg support">Здравствуйте! Это поддержка TUMIX, какой у вас вопрос?</div></div>
-      <input id="chatInput" placeholder="Введите сообщение..." style="border-radius:20px;"><button id="sendChatBtn">Отправить</button></div>`;
+    function clientAppealsList() {
+      const apps = appeals().filter(a => a.clientEmail === currentClient?.email);
+      return `<h3>Мои обращения</h3>` + apps.map(a => `
+        <div class="appeal-item"><b>#${a.id}</b> ${a.problem} | Статус: ${a.status || 'Открыто'}</div>
+      `).join('') || '<p>Обращений нет</p>';
     }
-    function initSupportChat(){
-      document.getElementById('sendChatBtn')?.addEventListener('click', ()=>{
-        const input = document.getElementById('chatInput');
-        if(!input.value.trim()) return;
-        const msgDiv = document.createElement('div'); msgDiv.className='msg client'; msgDiv.textContent=input.value;
-        document.getElementById('chatMessages').appendChild(msgDiv);
-        setTimeout(()=>{
-          const auto = document.createElement('div'); auto.className='msg support'; auto.textContent='Оператор скоро ответит вам, пожалуйста подождите';
-          document.getElementById('chatMessages').appendChild(auto);
-        },500);
-        input.value='';
+
+    function supportChat() {
+      return `<div class="chat-window"><div class="chat-messages" id="chatMsgs"><div class="msg-bubble msg-support">Здравствуйте! Это поддержка TUMIX, какой у вас вопрос?</div></div>
+      <div style="display:flex;gap:10px;"><input id="chatInput" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px; color:white;" placeholder="Сообщение..."><button class="btn btn-primary" id="sendChat" style="width:auto;">Отправить</button></div></div>`;
+    }
+    function initSupportChat() {
+      document.getElementById('sendChat')?.addEventListener('click', () => {
+        const inp = document.getElementById('chatInput');
+        if (!inp.value.trim()) return;
+        const div = document.createElement('div');
+        div.className = 'msg-bubble msg-client'; div.textContent = inp.value;
+        document.getElementById('chatMsgs').appendChild(div);
+        setTimeout(() => {
+          const auto = document.createElement('div');
+          auto.className = 'msg-bubble msg-support'; auto.textContent = 'Оператор скоро ответит вам, пожалуйста подождите.';
+          document.getElementById('chatMsgs').appendChild(auto);
+        }, 600);
+        inp.value = '';
       });
     }
 
-    // Интерфейс сотрудника
-    document.querySelectorAll('#employeeDashboard .sidebar button[data-view]').forEach(b=>{
-      b.addEventListener('click', (e)=>{
-        document.querySelectorAll('#employeeDashboard .sidebar button[data-view]').forEach(x=>x.classList.remove('active-nav'));
-        b.classList.add('active-nav');
-        renderEmployeeView(b.dataset.view);
+    // Навигация сотрудника
+    document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderEmployeeView(btn.dataset.view);
       });
     });
-    document.getElementById('appealsDropBtn').addEventListener('click', ()=>{
-      document.getElementById('appealsDropdown').classList.toggle('hidden');
+
+    function renderEmployeeView(view) {
+      const area = document.getElementById('employeeContent');
+      if (view === 'empChat') area.innerHTML = empChatInterface();
+      else if (view === 'empAppeals') area.innerHTML = empAppealsPanel();
+      else if (view === 'allOrders') area.innerHTML = `<h3>Все заказы</h3>` + orders().map(o => `<div class="order-item">${o.sender} → ${o.recName} | ${o.status}</div>`).join('');
+    }
+
+    function empChatInterface() {
+      return `<h3>Чаты клиентов</h3><div id="empChatList"></div>`;
+    }
+
+    function empAppealsPanel() {
+      return `
+        <h3>Обращения</h3>
+        <button class="btn btn-outline" id="createClientAppealBtn">+ Создать обращение клиента</button>
+        <button class="btn btn-outline" id="createEmpAppealBtn" style="margin-left:10px;">+ Обращение сотрудника</button>
+        <div id="appealsListContainer" style="margin-top:20px;">${appeals().map(a=>`<div class="appeal-item">#${a.id} ${a.problem}</div>`).join('')}</div>
+      `;
+    }
+
+    document.addEventListener('click', e => {
+      if (e.target.id === 'createClientAppealBtn') {
+        const form = `
+          <div class="card"><h4>Новое обращение клиента</h4>
+          <input placeholder="ФИО сотрудника" id="empName"><input placeholder="Табельный номер" id="empTabNum">
+          <input placeholder="ФИО клиента" id="cliName"><input placeholder="Почта клиента" id="cliEmail">
+          <input placeholder="Телефон клиента" id="cliPhone"><textarea placeholder="Суть проблемы" id="problemDesc"></textarea>
+          <button class="btn btn-primary" id="submitClientAppeal">Оформить</button></div>`;
+        document.getElementById('appealsListContainer').innerHTML = form;
+      }
+      if (e.target.id === 'submitClientAppeal') {
+        const newApp = {
+          id: String(appeals().length + 1).padStart(7, '0'),
+          empName: document.getElementById('empName').value,
+          empTab: document.getElementById('empTabNum').value,
+          clientName: document.getElementById('cliName').value,
+          clientEmail: document.getElementById('cliEmail').value,
+          clientPhone: document.getElementById('cliPhone').value,
+          problem: document.getElementById('problemDesc').value,
+          status: 'Открыто'
+        };
+        store('tumix_appeals', [...appeals(), newApp]);
+        alert('Обращение создано');
+        renderEmployeeView('empAppeals');
+      }
+      if (e.target.id === 'createEmpAppealBtn') {
+        document.getElementById('appealsListContainer').innerHTML = `
+          <div class="card"><h4>Обращение сотрудника</h4>
+          <input placeholder="ФИО сотрудника" id="empName2"><input placeholder="Табельный номер" id="empTab2">
+          <p><strong>Кому: Руководителю поддержки TUMIX</strong></p>
+          <textarea placeholder="Руководителю отдела поддержки сотрудников TUMIX." id="empProblem"></textarea>
+          <button class="btn btn-primary" id="submitEmpAppeal">Оформить</button></div>`;
+      }
     });
 
-    function renderEmployeeView(view){
-      const panel = document.getElementById('employeeContent');
-      if(view==='empChat') panel.innerHTML = empChatList();
-      else if(view==='clientAppealsList') panel.innerHTML = appealsList('client');
-      else if(view==='createClientAppeal') panel.innerHTML = createAppealForm();
-      else if(view==='employeeAppealsList') panel.innerHTML = appealsList('employee');
-      else if(view==='createEmployeeAppeal') panel.innerHTML = createEmpAppealForm();
-      else if(view==='allOrders') panel.innerHTML = allOrdersView();
-    }
-    function empChatList(){
-      return `<h3>Чаты</h3><div id="chatListContainer"></div>`;
-    }
-    // Остальные функции заглушки для демонстрации
-    function appealsList(type){ return `<h3>${type==='client'?'Обращения клиентов':'Обращения сотрудников'}</h3><p>Список загрузится ...</p>`; }
-    function createAppealForm(){ return `<h3>Создать обращение клиента</h3><p>Форма (демо)</p>`; }
-    function createEmpAppealForm(){ return `<h3>Обращение сотрудника руководителю</h3><p>Форма</p>`; }
-    function allOrdersView(){ return `<h3>Все заказы</h3>`; }
+    renderAuth();
   })();
 </script>
 </body>
