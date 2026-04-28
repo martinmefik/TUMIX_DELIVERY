@@ -6,7 +6,8 @@
   <title>TUMIX — Доставка с душой</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23F15A2C'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold' font-size='18'>T</text></svg>">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+  </script>
   <style>
     * {
       margin: 0;
@@ -17,10 +18,7 @@
     body {
       font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
       background: #0a0a14;
-      background-image:
-        radial-gradient(ellipse at 15% 40%, rgba(241, 90, 44, 0.08) 0%, transparent 55%),
-        radial-gradient(ellipse at 85% 70%, rgba(255, 160, 80, 0.06) 0%, transparent 55%),
-        radial-gradient(ellipse at 40% 90%, rgba(140, 100, 255, 0.05) 0%, transparent 55%);
+      background-image: radial-gradient(ellipse at 15% 40%, rgba(241, 90, 44, 0.08) 0%, transparent 55%), radial-gradient(ellipse at 85% 70%, rgba(255, 160, 80, 0.06) 0%, transparent 55%), radial-gradient(ellipse at 40% 90%, rgba(140, 100, 255, 0.05) 0%, transparent 55%);
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -30,20 +28,41 @@
     }
 
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(-16px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(-16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(241, 90, 44, 0.4); }
-      50% { box-shadow: 0 0 0 12px rgba(241, 90, 44, 0); }
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(241, 90, 44, 0.4);
+      }
+      50% {
+        box-shadow: 0 0 0 12px rgba(241, 90, 44, 0);
+      }
     }
     @keyframes shimmer {
-      0% { background-position: -200% center; }
-      100% { background-position: 200% center; }
+      0% {
+        background-position: -200% center;
+      }
+      100% {
+        background-position: 200% center;
+      }
     }
 
     .app-wrapper {
@@ -129,7 +148,8 @@
       transform: scale(1.03);
     }
 
-    .auth-card, .form-card {
+    .auth-card,
+    .form-card {
       background: rgba(22, 22, 40, 0.7);
       backdrop-filter: blur(22px);
       border-radius: 32px;
@@ -140,7 +160,8 @@
       box-shadow: 0 30px 50px rgba(0, 0, 0, 0.55);
       transition: all 0.3s ease;
     }
-    .auth-card h2, .form-card h3 {
+    .auth-card h2,
+    .form-card h3 {
       font-size: 24px;
       font-weight: 700;
       margin-bottom: 26px;
@@ -214,8 +235,13 @@
     }
     .btn-outline {
       background: transparent;
-      border: 1.5px solid rgba(255,255,255,0.22);
+      border: 1.5px solid rgba(255, 255, 255, 0.22);
       color: #d0c6d8;
+    }
+    .btn-danger {
+      background: #c0392b;
+      color: white;
+      border: none;
     }
     .link-text {
       text-align: center;
@@ -223,7 +249,11 @@
       font-size: 14px;
       color: #9088a0;
     }
-    .link-text a { color: #F15A2C; text-decoration: none; font-weight: 600; }
+    .link-text a {
+      color: #F15A2C;
+      text-decoration: none;
+      font-weight: 600;
+    }
 
     .success-popup {
       background: #1e3a2a;
@@ -250,7 +280,7 @@
       display: flex;
       flex-direction: column;
       gap: 4px;
-      border-right: 1px solid rgba(255,255,255,0.05);
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
     }
     .sidebar-btn {
       background: transparent;
@@ -265,34 +295,34 @@
       font-size: 14px;
     }
     .sidebar-btn:hover {
-      background: rgba(241,90,44,0.15);
+      background: rgba(241, 90, 44, 0.15);
       color: #ff9f7c;
       transform: translateX(4px);
     }
     .sidebar-btn.active {
-      background: rgba(241,90,44,0.25);
+      background: rgba(241, 90, 44, 0.25);
       color: #F15A2C;
-      box-shadow: 0 4px 15px rgba(241,90,44,0.2);
+      box-shadow: 0 4px 15px rgba(241, 90, 44, 0.2);
     }
     .content-area {
       flex: 1;
       padding: 30px;
       overflow-y: auto;
-      background: rgba(8,8,18,0.3);
+      background: rgba(8, 8, 18, 0.3);
       animation: fadeInUp 0.4s ease;
     }
     .card {
-      background: rgba(20,20,36,0.55);
+      background: rgba(20, 20, 36, 0.55);
       backdrop-filter: blur(14px);
       border-radius: 26px;
       padding: 28px;
-      border: 1px solid rgba(255,255,255,0.06);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       margin-bottom: 20px;
       transition: all 0.3s ease;
     }
     .card:hover {
-      border-color: rgba(255,255,255,0.1);
-      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
     }
     .grid-2col {
       display: grid;
@@ -306,8 +336,8 @@
       margin: 14px 0;
     }
     .checkbox-pill {
-      background: rgba(255,255,255,0.03);
-      border: 1.5px solid rgba(255,255,255,0.14);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1.5px solid rgba(255, 255, 255, 0.14);
       border-radius: 30px;
       padding: 10px 18px;
       cursor: pointer;
@@ -321,13 +351,14 @@
       transform: translateY(-2px);
     }
     .checkbox-pill.checked {
-      background: rgba(241,90,44,0.25);
+      background: rgba(241, 90, 44, 0.25);
       border-color: #F15A2C;
       color: #ffa07c;
-      box-shadow: 0 4px 15px rgba(241,90,44,0.2);
+      box-shadow: 0 4px 15px rgba(241, 90, 44, 0.2);
     }
-    .order-item, .appeal-item {
-      background: rgba(255,255,255,0.03);
+    .order-item,
+    .appeal-item {
+      background: rgba(255, 255, 255, 0.03);
       border-radius: 16px;
       padding: 16px;
       margin: 8px 0;
@@ -335,11 +366,14 @@
       transition: all 0.3s ease;
       cursor: pointer;
     }
-    .order-item:hover, .appeal-item:hover {
-      background: rgba(255,255,255,0.06);
+    .order-item:hover,
+    .appeal-item:hover {
+      background: rgba(255, 255, 255, 0.06);
       transform: translateX(4px);
     }
-    .hidden { display: none !important; }
+    .hidden {
+      display: none !important;
+    }
 
     .tabs-inner {
       display: flex;
@@ -350,8 +384,8 @@
     .tab-inner {
       padding: 10px 20px;
       border-radius: 24px;
-      background: rgba(255,255,255,0.04);
-      border: 1.5px solid rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
       color: #aaa;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -366,7 +400,7 @@
       background: #F15A2C;
       color: white;
       border-color: #F15A2C;
-      box-shadow: 0 6px 20px rgba(241,90,44,0.4);
+      box-shadow: 0 6px 20px rgba(241, 90, 44, 0.4);
       transform: scale(1.03);
     }
 
@@ -374,83 +408,135 @@
       display: flex;
       justify-content: space-between;
       padding: 6px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: left;
+      direction: ltr;
+    }
+    .detail-row span:first-child {
+      font-weight: 600;
+      color: #b0a0b8;
+    }
+    .detail-row span:last-child {
+      color: #f0e6dc;
+      text-align: left;
     }
     #map {
       height: 250px;
       border-radius: 16px;
       margin: 16px 0;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .admin-reply {
+      color: #e74c3c;
+      font-weight: 700;
+      margin-top: 8px;
+      padding: 8px;
+      background: rgba(231, 76, 60, 0.1);
+      border-radius: 8px;
+    }
+    .chat-messages {
+      max-height: 400px;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .chat-msg {
+      padding: 10px 14px;
+      border-radius: 14px;
+      margin: 6px 0;
+      max-width: 70%;
+      clear: both;
+    }
+    .chat-msg.mine {
+      background: #F15A2C;
+      color: white;
+      float: right;
+    }
+    .chat-msg.other {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ddd;
+      float: left;
     }
   </style>
 </head>
 <body>
-<div class="app-wrapper" id="appWrapper">
-  <div class="logo-header">
-    <div class="logo-icon">T</div>
-    <span class="logo-text">TUMIX</span>
-  </div>
-
-  <div id="authScreen" class="auth-screen">
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="clientTab">👤 Клиент</button>
-      <button class="auth-tab" id="employeeTab">🛡️ Сотрудник</button>
+  <div class="app-wrapper" id="appWrapper">
+    <div class="logo-header">
+      <div class="logo-icon">T</div>
+      <span class="logo-text">TUMIX</span>
     </div>
-    <div id="authFormsContainer" class="auth-card"></div>
-    <div id="globalSuccess" class="success-popup hidden"></div>
-  </div>
 
-  <div id="clientDashboard" class="dashboard hidden">
-    <div class="sidebar">
-      <button class="sidebar-btn active" data-view="delivery">📦 Доставка</button>
-      <button class="sidebar-btn" data-view="appeals">📋 Обращения</button>
-      <button class="sidebar-btn" data-view="orders">📑 Мои заказы</button>
-      <button class="sidebar-btn" data-view="support">💬 Поддержка</button>
+    <div id="authScreen" class="auth-screen">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="clientTab">👤 Клиент</button>
+        <button class="auth-tab" id="employeeTab">🛡️ Сотрудник</button>
+      </div>
+      <div id="authFormsContainer" class="auth-card"></div>
+      <div id="globalSuccess" class="success-popup hidden"></div>
     </div>
-    <div class="content-area" id="clientContent"></div>
-  </div>
 
-  <div id="employeeDashboard" class="dashboard hidden">
-    <div class="sidebar">
-      <button class="sidebar-btn active" data-view="empChat">💬 Чат</button>
-      <button class="sidebar-btn" data-view="empAppeals">📋 Обращения</button>
-      <button class="sidebar-btn" data-view="allOrders">📦 Все заказы</button>
+    <div id="clientDashboard" class="dashboard hidden">
+      <div class="sidebar">
+        <button class="sidebar-btn active" data-view="delivery">📦 Доставка</button>
+        <button class="sidebar-btn" data-view="appeals">📋 Обращения</button>
+        <button class="sidebar-btn" data-view="orders">📑 Мои заказы</button>
+        <button class="sidebar-btn" data-view="support">💬 Поддержка</button>
+      </div>
+      <div class="content-area" id="clientContent"></div>
     </div>
-    <div class="content-area" id="employeeContent"></div>
+
+    <div id="employeeDashboard" class="dashboard hidden">
+      <div class="sidebar">
+        <button class="sidebar-btn active" data-view="empChat">💬 Чат поддержки</button>
+        <button class="sidebar-btn" data-view="empAppeals">📋 Обращения</button>
+        <button class="sidebar-btn" data-view="allOrders">📦 Все заказы</button>
+        <button class="sidebar-btn" data-view="colleagueChat">👥 Чат коллег</button>
+      </div>
+      <div class="content-area" id="employeeContent"></div>
+    </div>
   </div>
-</div>
 
-<script>
-  (() => {
-    const store = (k, v) => v !== undefined ? localStorage.setItem(k, JSON.stringify(v)) : JSON.parse(localStorage.getItem(k) || 'null');
-    const users = () => store('tumix_users') || [];
-    const orders = () => store('tumix_orders') || [];
-    const appeals = () => store('tumix_appeals') || [];
-    const empAppeals = () => store('tumix_emp_appeals') || [];
+  <script>
+    (() => {
+      const store = (k, v) => v !== undefined ? localStorage.setItem(k, JSON.stringify(v)) : JSON.parse(localStorage
+        .getItem(k) || 'null');
+      const users = () => store('tumix_users') || [];
+      const orders = () => store('tumix_orders') || [];
+      const appeals = () => store('tumix_appeals') || [];
+      const empAppeals = () => store('tumix_emp_appeals') || [];
+      const colleagueChats = () => store('tumix_colleague_chats') || [];
 
-    let currentClient = null, currentEmployee = null;
-    const TEST_EMP = { tab: 'TUM-0001', password: 'Password0001', name: 'Алексей Смирнов' };
+      let currentClient = null,
+        currentEmployee = null;
+      const TEST_EMP = { tab: 'TUM-0001', password: 'Password0001', name: 'Алексей Смирнов' };
+      const ADMIN_EMP = { tab: 'OWNER_MARTIN_MEFIKOV0001', password: 'MARTIN_MEFIKOV0001', name: 'Мартин Мефиков',
+        role: 'admin' };
 
-    const authScreen = document.getElementById('authScreen');
-    const clientDash = document.getElementById('clientDashboard');
-    const empDash = document.getElementById('employeeDashboard');
-    const authForms = document.getElementById('authFormsContainer');
-    const globalSuccess = document.getElementById('globalSuccess');
+      const authScreen = document.getElementById('authScreen');
+      const clientDash = document.getElementById('clientDashboard');
+      const empDash = document.getElementById('employeeDashboard');
+      const authForms = document.getElementById('authFormsContainer');
+      const globalSuccess = document.getElementById('globalSuccess');
 
-    let authMode = 'client';
-    document.getElementById('clientTab').addEventListener('click', () => { authMode = 'client'; renderAuth(); });
-    document.getElementById('employeeTab').addEventListener('click', () => { authMode = 'employee'; renderAuth(); });
+      let authMode = 'client';
+      document.getElementById('clientTab').addEventListener('click', () => { authMode = 'client';
+        renderAuth(); });
+      document.getElementById('employeeTab').addEventListener('click', () => { authMode = 'employee';
+        renderAuth(); });
 
-    function showSuccess(msg) {
-      globalSuccess.textContent = msg; globalSuccess.classList.remove('hidden');
-      setTimeout(() => globalSuccess.classList.add('hidden'), 3500);
-    }
+      function showSuccess(msg) {
+        globalSuccess.textContent = msg;
+        globalSuccess.classList.remove('hidden');
+        setTimeout(() => globalSuccess.classList.add('hidden'), 3500);
+      }
 
-    function renderAuth() {
-      document.getElementById('clientTab').classList.toggle('active', authMode==='client');
-      document.getElementById('employeeTab').classList.toggle('active', authMode==='employee');
-      if (authMode === 'client') {
-        authForms.innerHTML = `
+      function renderAuth() {
+        document.getElementById('clientTab').classList.toggle('active', authMode === 'client');
+        document.getElementById('employeeTab').classList.toggle('active', authMode === 'employee');
+        if (authMode === 'client') {
+          authForms.innerHTML = `
           <h2>Вход в аккаунт</h2>
           <div class="input-column">
             <div class="field-group"><label>Почта</label><input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="off"></div>
@@ -458,10 +544,10 @@
           </div>
           <button class="btn btn-primary" id="loginClientBtn">Войти</button>
           <p class="link-text">Нет аккаунта? <a href="#" id="showRegister">Зарегистрироваться</a></p>`;
-        document.getElementById('loginClientBtn').addEventListener('click', clientLogin);
-        document.getElementById('showRegister').addEventListener('click', (e) => {
-          e.preventDefault();
-          authForms.innerHTML = `
+          document.getElementById('loginClientBtn').addEventListener('click', clientLogin);
+          document.getElementById('showRegister').addEventListener('click', (e) => {
+            e.preventDefault();
+            authForms.innerHTML = `
             <h2>Регистрация</h2>
             <div class="input-column">
               <div class="field-group"><label>Имя *</label><input id="regName" autocomplete="off"></div>
@@ -471,81 +557,112 @@
             </div>
             <button class="btn btn-primary" id="registerBtn">Зарегистрироваться</button>
             <p class="link-text"><a href="#" id="backToLogin">Назад ко входу</a></p>`;
-          document.getElementById('registerBtn').addEventListener('click', () => {
-            const n=document.getElementById('regName').value.trim(), e=document.getElementById('regEmail').value.trim(), p=document.getElementById('regPhone').value.trim(), pw=document.getElementById('regPass').value.trim();
-            if(!n||!e||!p||!pw) return alert('Все поля обязательны');
-            let u=users(); if(u.find(x=>x.email===e)) return alert('Почта занята');
-            u.push({id:Date.now().toString(), name:n, email:e, phone:p, password:pw});
-            store('tumix_users',u); showSuccess('✅ Успешная регистрация! Теперь войдите.'); renderAuth();
+            document.getElementById('registerBtn').addEventListener('click', () => {
+              const n = document.getElementById('regName').value.trim(),
+                e = document.getElementById('regEmail').value.trim(),
+                p = document.getElementById('regPhone').value.trim(),
+                pw = document.getElementById('regPass').value.trim();
+              if (!n || !e || !p || !pw) return alert('Все поля обязательны');
+              if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) return alert('Некорректная почта');
+              if (!/^\+?\d{10,12}$/.test(p.replace(/[\s()-]/g, ''))) return alert(
+                'Некорректный номер телефона');
+              let u = users();
+              if (u.find(x => x.email === e)) return alert('Почта занята');
+              u.push({ id: Date.now().toString(), name: n, email: e, phone: p, password: pw });
+              store('tumix_users', u);
+              showSuccess('✅ Успешная регистрация! Теперь войдите.');
+              renderAuth();
+            });
+            document.getElementById('backToLogin').addEventListener('click', (e) => { e.preventDefault();
+              renderAuth(); });
           });
-          document.getElementById('backToLogin').addEventListener('click', (e)=>{e.preventDefault(); renderAuth();});
-        });
-      } else {
-        authForms.innerHTML = `
+        } else {
+          authForms.innerHTML = `
           <h2>Вход для сотрудников</h2>
           <div class="input-column">
             <div class="field-group"><label>Табельный номер</label><input id="empTab" placeholder="TUM-0001" autocomplete="off"></div>
             <div class="field-group"><label>Пароль</label><input type="password" id="empPass" autocomplete="off"></div>
           </div>
           <button class="btn btn-primary" id="loginEmpBtn">Войти</button>`;
-        document.getElementById('loginEmpBtn').addEventListener('click', ()=>{
-          if(document.getElementById('empTab').value.trim()===TEST_EMP.tab && document.getElementById('empPass').value.trim()===TEST_EMP.password){
-            currentEmployee={...TEST_EMP}; authScreen.classList.add('hidden'); empDash.classList.remove('hidden'); clientDash.classList.add('hidden'); renderEmployeeView('empChat');
-          } else alert('Неверные данные');
-        });
+          document.getElementById('loginEmpBtn').addEventListener('click', () => {
+            const tab = document.getElementById('empTab').value.trim();
+            const pass = document.getElementById('empPass').value.trim();
+            if (tab === TEST_EMP.tab && pass === TEST_EMP.password) {
+              currentEmployee = { ...TEST_EMP };
+            } else if (tab === ADMIN_EMP.tab && pass === ADMIN_EMP.password) {
+              currentEmployee = { ...ADMIN_EMP };
+            } else {
+              return alert('Неверные данные');
+            }
+            authScreen.classList.add('hidden');
+            empDash.classList.remove('hidden');
+            clientDash.classList.add('hidden');
+            renderEmployeeView('empChat');
+          });
+        }
       }
-    }
 
-    function clientLogin(){
-      const e=document.getElementById('loginEmail').value.trim(), p=document.getElementById('loginPass').value.trim();
-      const u=users().find(x=>x.email===e&&x.password===p);
-      if(u){currentClient=u; authScreen.classList.add('hidden'); clientDash.classList.remove('hidden'); empDash.classList.add('hidden'); renderClientView('delivery');}
-      else alert('Неверные данные');
-    }
+      function clientLogin() {
+        const e = document.getElementById('loginEmail').value.trim(),
+          p = document.getElementById('loginPass').value.trim();
+        const u = users().find(x => x.email === e && x.password === p);
+        if (u) {
+          currentClient = u;
+          authScreen.classList.add('hidden');
+          clientDash.classList.remove('hidden');
+          empDash.classList.add('hidden');
+          renderClientView('delivery');
+        } else alert('Неверные данные');
+      }
 
-    document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(b=>b.addEventListener('click',()=>{
-      document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderClientView(b.dataset.view);
-    }));
+      document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(b => b.addEventListener('click', () => {
+        document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(x => x.classList.remove(
+          'active'));
+        b.classList.add('active');
+        renderClientView(b.dataset.view);
+      }));
 
-    let deliveryMap = null;
-    let deliveryMarkers = [];
+      let deliveryMap = null;
+      let deliveryMarkers = [];
 
-    function initDeliveryMap() {
-      setTimeout(() => {
-        const mapEl = document.getElementById('map');
-        if (!mapEl || deliveryMap) return;
-        deliveryMap = L.map('map').setView([55.7558, 37.6173], 10);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(deliveryMap);
-        mapEl.style.height = '250px';
-        deliveryMap.invalidateSize();
-      }, 300);
-    }
+      function initDeliveryMap() {
+        setTimeout(() => {
+          const mapEl = document.getElementById('map');
+          if (!mapEl || deliveryMap) return;
+          deliveryMap = L.map('map').setView([55.7558, 37.6173], 10);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+          }).addTo(deliveryMap);
+          deliveryMap.invalidateSize();
+        }, 400);
+      }
 
-    function geocodeAddress(address) {
-      return fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Москва')}&limit=1`)
-        .then(r => r.json())
-        .then(data => {
-          if (data.length > 0) {
-            return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0].display_name };
-          }
-          return null;
-        })
-        .catch(() => null);
-    }
+      function geocodeAddress(address) {
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Москва')}&limit=1`;
+        return fetch(url)
+          .then(r => r.json())
+          .then(data => {
+            if (data && data.length > 0) {
+              return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0]
+                  .display_name };
+            }
+            return null;
+          })
+          .catch(() => null);
+      }
 
-    function calculateRealDistance(lat1, lng1, lat2, lng2) {
-      const R = 6371;
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLng = (lng2 - lng1) * Math.PI / 180;
-      const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) * Math.sin(dLng/2) * Math.sin(dLng/2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-      return Math.round(R * c * 1.3);
-    }
+      function calculateRealDistance(lat1, lng1, lat2, lng2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLng = (lng2 - lng1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI /
+          180) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return Math.max(1, Math.round(R * c * 1.35));
+      }
 
-    function deliveryForm(){
-      return `<div class="card"><h3>📦 Новая доставка</h3><div class="input-column">
+      function deliveryForm() {
+        return `<div class="card"><h3>📦 Новая доставка</h3><div class="input-column">
         <div class="field-group"><label>ФИО отправителя *</label><input id="sName" autocomplete="off"></div>
         <div class="field-group"><label>Телефон отправителя *</label><input id="sPhone" autocomplete="off"></div>
         <div class="field-group"><label>Адрес отправки *</label><input id="sAddr" placeholder="ул. Тверская, 1" autocomplete="off"></div>
@@ -565,72 +682,81 @@
         <div id="map"></div>
         <button class="btn btn-primary" id="calcDelivery">Рассчитать и оформить</button>
         <div id="priceDetails"></div></div></div>`;
-    }
+      }
 
-    document.addEventListener('click', e=>{
-      if(e.target.id==='calcDelivery'){
-        const packs=[...document.querySelectorAll('#packCheckboxes input:checked')].map(c=>c.value);
-        if(!packs.length) return alert('Выберите упаковку');
-        const sAddr=document.getElementById('sAddr').value.trim();
-        const rAddr=document.getElementById('rAddr').value.trim();
-        if(!sAddr||!rAddr) return alert('Заполните адреса');
-        document.getElementById('priceDetails').innerHTML='<p>🔄 Рассчитываем расстояние по карте...</p>';
-        Promise.all([geocodeAddress(sAddr), geocodeAddress(rAddr)]).then(([from, to]) => {
-          if(!from || !to) {
-            document.getElementById('priceDetails').innerHTML='<p style="color:#ff7043;">❌ Не удалось найти адреса на карте. Проверьте написание.</p>';
-            return;
-          }
-          const dist = calculateRealDistance(from.lat, from.lng, to.lat, to.lng);
-          if (deliveryMap) {
-            deliveryMarkers.forEach(m => deliveryMap.removeLayer(m));
-            deliveryMarkers = [];
-            const m1 = L.marker([from.lat, from.lng]).addTo(deliveryMap).bindPopup('Отправитель');
-            const m2 = L.marker([to.lat, to.lng]).addTo(deliveryMap).bindPopup('Получатель');
-            deliveryMarkers.push(m1, m2);
-            const group = L.featureGroup([m1, m2]);
-            deliveryMap.fitBounds(group.getBounds().pad(0.2));
-          }
-          const pr={Пакет:60,Конверт:90,'Коробка S':120,'Коробка M':220,'Коробка L':280,'Коробка XL':350};
-          let pc=packs.reduce((s,p)=>s+pr[p],0), km=dist*22, serv=29, total=pc+km+serv;
-          document.getElementById('priceDetails').innerHTML=`
+      document.addEventListener('click', e => {
+        if (e.target.id === 'calcDelivery') {
+          const packs = [...document.querySelectorAll('#packCheckboxes input:checked')].map(c => c.value);
+          if (!packs.length) return alert('Выберите упаковку');
+          const sAddr = document.getElementById('sAddr').value.trim();
+          const rAddr = document.getElementById('rAddr').value.trim();
+          if (!sAddr || !rAddr) return alert('Заполните адреса');
+          document.getElementById('priceDetails').innerHTML = '<p>🔄 Рассчитываем расстояние по карте...</p>';
+          Promise.all([geocodeAddress(sAddr), geocodeAddress(rAddr)]).then(([from, to]) => {
+            if (!from || !to) {
+              document.getElementById('priceDetails').innerHTML =
+                '<p style="color:#ff7043;">❌ Адрес не найден. Проверьте написание (например: ул. Тверская, 1).</p>';
+              return;
+            }
+            const dist = calculateRealDistance(from.lat, from.lng, to.lat, to.lng);
+            if (deliveryMap) {
+              deliveryMarkers.forEach(m => deliveryMap.removeLayer(m));
+              deliveryMarkers = [];
+              const m1 = L.marker([from.lat, from.lng]).addTo(deliveryMap).bindPopup('Отправитель');
+              const m2 = L.marker([to.lat, to.lng]).addTo(deliveryMap).bindPopup('Получатель');
+              deliveryMarkers.push(m1, m2);
+              deliveryMap.fitBounds(L.featureGroup([m1, m2]).getBounds().pad(0.2));
+            }
+            const pr = { Пакет: 60, Конверт: 90, 'Коробка S': 120, 'Коробка M': 220, 'Коробка L': 280,
+              'Коробка XL': 350 };
+            let pc = packs.reduce((s, p) => s + pr[p], 0),
+              km = dist * 22,
+              serv = 29,
+              total = pc + km + serv;
+            document.getElementById('priceDetails').innerHTML = `
             <div class="card" style="margin-top:16px;">
-              <p>📍 Адрес отправителя: ${from.display}</p>
-              <p>📍 Адрес получателя: ${to.display}</p>
+              <p>📍 Адрес отправителя найден</p>
+              <p>📍 Адрес получателя найден</p>
               <p>📦 Упаковка: ${pc}₽</p>
               <p>🛣️ Расстояние: ${dist} км × 22₽ = ${km}₽</p>
               <p>🔧 Сервисный сбор: 29₽</p>
               <h3 style="margin-top:8px;">💰 Итого: ${total}₽</h3>
               <button class="btn btn-primary" id="confirmOrder">Оформить доставку</button>
             </div>`;
-        });
-      }
-      if(e.target.id==='confirmOrder'){
-        const ords=orders();
-        const newId=String(ords.length+1).padStart(8,'0');
-        const order={
-          id:newId, clientId:currentClient.id,
-          sender:document.getElementById('sName').value,
-          sPhone:document.getElementById('sPhone').value,
-          sAddr:document.getElementById('sAddr').value,
-          recName:document.getElementById('rName').value,
-          rPhone:document.getElementById('rPhone').value,
-          rAddr:document.getElementById('rAddr').value,
-          content:document.getElementById('contentDesc').value,
-          packs:[...document.querySelectorAll('#packCheckboxes input:checked')].map(c=>c.value),
-          status:'Оформлен', date:new Date().toLocaleString()
-        };
-        store('tumix_orders',[...ords,order]);
-        alert('✅ Доставка оформлена! Номер заказа: '+newId);
-        document.querySelector('#clientDashboard .sidebar-btn[data-view="orders"]').click();
-      }
-      if(e.target.closest('.checkbox-pill')){
-        const pill=e.target.closest('.checkbox-pill'), cb=pill.querySelector('input'); cb.checked=!cb.checked; pill.classList.toggle('checked',cb.checked);
-      }
-    });
+          });
+        }
+        if (e.target.id === 'confirmOrder') {
+          const ords = orders();
+          const newId = String(ords.length + 1).padStart(8, '0');
+          const order = {
+            id: newId,
+            clientId: currentClient.id,
+            sender: document.getElementById('sName').value,
+            sPhone: document.getElementById('sPhone').value,
+            sAddr: document.getElementById('sAddr').value,
+            recName: document.getElementById('rName').value,
+            rPhone: document.getElementById('rPhone').value,
+            rAddr: document.getElementById('rAddr').value,
+            content: document.getElementById('contentDesc').value,
+            packs: [...document.querySelectorAll('#packCheckboxes input:checked')].map(c => c.value),
+            status: 'Оформлен',
+            date: new Date().toLocaleString()
+          };
+          store('tumix_orders', [...ords, order]);
+          alert('✅ Доставка оформлена! Номер заказа: ' + newId);
+          document.querySelector('#clientDashboard .sidebar-btn[data-view="orders"]').click();
+        }
+        if (e.target.closest('.checkbox-pill')) {
+          const pill = e.target.closest('.checkbox-pill'),
+            cb = pill.querySelector('input');
+          cb.checked = !cb.checked;
+          pill.classList.toggle('checked', cb.checked);
+        }
+      });
 
-    function clientOrders(){
-      const ords=orders().filter(o=>o.clientId===currentClient?.id);
-      return `<h3>📑 Мои заказы</h3>`+ords.map(o=>`
+      function clientOrders() {
+        const ords = orders().filter(o => o.clientId === currentClient?.id);
+        return `<h3>📑 Мои заказы</h3>` + ords.map(o => `
         <div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
           <b>#${o.id}</b>
           <div class="details hidden" style="margin-top:10px;">
@@ -641,69 +767,86 @@
             <div class="detail-row"><span>Содержимое:</span><span>${o.content}</span></div>
             <div class="detail-row"><span>Упаковка:</span><span>${o.packs?.join(', ')}</span></div>
             <div class="detail-row"><span>Статус:</span><span>${o.status}</span></div>
-            <div class="detail-row"><span>Дата:</span><span>${o.date}</span></div>
           </div>
-        </div>`).join('')||'<p>Нет заказов</p>';
-    }
+        </div>`).join('') || '<p>Нет заказов</p>';
+      }
 
-    function clientAppeals(){
-      const apps=appeals().filter(a=>a.clientEmail===currentClient?.email);
-      return `<h3>📋 Мои обращения</h3>`+apps.map(a=>`
+      function clientAppeals() {
+        const apps = appeals().filter(a => a.clientEmail === currentClient?.email);
+        return `<h3>📋 Мои обращения</h3>` + apps.map(a => `
         <div class="appeal-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
           <b>#${a.id}</b>
           <div class="details hidden" style="margin-top:10px;">
             <div class="detail-row"><span>Сотрудник:</span><span>${a.empName}</span></div>
-            <div class="detail-row"><span>Клиент:</span><span>${a.clientName}</span></div>
-            <div class="detail-row"><span>Почта:</span><span>${a.clientEmail}</span></div>
-            <div class="detail-row"><span>Телефон:</span><span>${a.clientPhone}</span></div>
             <div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>
-            <div class="detail-row"><span>Статус:</span><span>${a.status||'Открыто'}</span></div>
+            <div class="detail-row"><span>Статус:</span><span>${a.status || 'Открыто'}</span></div>
+            ${a.reply ? `<div class="admin-reply">🔴 Руководитель отдела TUMIX: ${a.reply}</div>` : ''}
           </div>
-        </div>`).join('')||'<p>Обращений нет</p>';
-    }
+        </div>`).join('') || '<p>Обращений нет</p>';
+      }
 
-    function supportChat(){
-      return `<div class="card"><h3>💬 Поддержка</h3><div id="chatMsgs" style="max-height:300px;overflow-y:auto;"><div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:14px;margin:8px 0;">Здравствуйте! Это поддержка TUMIX, какой у вас вопрос?</div></div><div style="display:flex;gap:10px;margin-top:12px;"><input id="chatInput" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px;color:white;" placeholder="Сообщение..."><button class="btn btn-primary" id="sendChat" style="width:auto;">Отправить</button></div></div>`;
-    }
+      function supportChat() {
+        return `<div class="card"><h3>💬 Поддержка</h3><div id="chatMsgs" style="max-height:300px;overflow-y:auto;"><div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:14px;margin:8px 0;">Здравствуйте! Это поддержка TUMIX, какой у вас вопрос?</div></div><div style="display:flex;gap:10px;margin-top:12px;"><input id="chatInput" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px;color:white;" placeholder="Сообщение..."><button class="btn btn-primary" id="sendChat" style="width:auto;">Отправить</button></div></div>`;
+      }
 
-    function renderClientView(view){
-      const a=document.getElementById('clientContent');
-      if(view==='delivery') { a.innerHTML=deliveryForm(); initDeliveryMap(); }
-      else if(view==='appeals') a.innerHTML=clientAppeals();
-      else if(view==='orders') a.innerHTML=clientOrders();
-      else if(view==='support') a.innerHTML=supportChat();
-    }
+      function renderClientView(view) {
+        const a = document.getElementById('clientContent');
+        if (view === 'delivery') { a.innerHTML = deliveryForm();
+          initDeliveryMap(); } else if (view === 'appeals') a.innerHTML = clientAppeals();
+        else if (view === 'orders') a.innerHTML = clientOrders();
+        else if (view === 'support') a.innerHTML = supportChat();
+      }
 
-    document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(b=>b.addEventListener('click',()=>{
-      document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderEmployeeView(b.dataset.view);
-    }));
+      document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(b => b.addEventListener('click', () => {
+        document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(x => x.classList.remove(
+          'active'));
+        b.classList.add('active');
+        renderEmployeeView(b.dataset.view);
+      }));
 
-    function renderEmployeeView(view){
-      const a=document.getElementById('employeeContent');
-      if(view==='empChat') a.innerHTML='<div class="card"><h3>💬 Чаты клиентов</h3><p>Список чатов появится после подключения базы данных.</p></div>';
-      else if(view==='empAppeals') a.innerHTML=empAppealsPanel();
-      else if(view==='allOrders') a.innerHTML='<h3>📦 Все заказы</h3>'+orders().map(o=>`<div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')"><b>#${o.id}</b><div class="details hidden" style="margin-top:10px;"><div class="detail-row"><span>Отправитель:</span><span>${o.sender}</span></div><div class="detail-row"><span>Получатель:</span><span>${o.recName}</span></div><div class="detail-row"><span>Статус:</span><span>${o.status}</span></div></div></div>`).join('');
-    }
+      function renderEmployeeView(view) {
+        const a = document.getElementById('employeeContent');
+        if (view === 'empChat') a.innerHTML =
+          '<div class="card"><h3>💬 Чаты с клиентами</h3><p>Список чатов появится после подключения базы данных.</p></div>';
+        else if (view === 'empAppeals') a.innerHTML = empAppealsPanel();
+        else if (view === 'allOrders') a.innerHTML = '<h3>📦 Все заказы</h3>' + orders().map(o => `
+        <div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')"><b>#${o.id}</b><div class="details hidden" style="margin-top:10px;"><div class="detail-row"><span>Отправитель:</span><span>${o.sender}</span></div><div class="detail-row"><span>Получатель:</span><span>${o.recName}</span></div><div class="detail-row"><span>Статус:</span><span>${o.status}</span></div></div></div>`)
+          .join('');
+        else if (view === 'colleagueChat') a.innerHTML = colleagueChatPanel();
+      }
 
-    function empAppealsPanel(){
-      setTimeout(()=>{
-        const tab = document.getElementById('tabClientAppeals');
-        if(tab) tab.click();
-      },60);
-      return `<div class="tabs-inner">
+      function empAppealsPanel() {
+        setTimeout(() => {
+          const tab = document.getElementById('tabClientAppeals');
+          if (tab) tab.click();
+        }, 60);
+        return `<div class="tabs-inner">
         <button class="tab-inner active" id="tabClientAppeals">👥 Обращения клиентов</button>
         <button class="tab-inner" id="tabEmpAppeals">👔 Обращения сотрудников</button>
         <button class="tab-inner" id="tabCreateClient">➕ Создать клиенту</button>
         <button class="tab-inner" id="tabCreateEmp">📝 Создать сотруднику</button>
       </div><div id="appealsSubContent"></div>`;
-    }
+      }
 
-    document.addEventListener('click', e=>{
-      if(e.target.classList.contains('tab-inner')){
-        document.querySelectorAll('.tab-inner').forEach(t=>t.classList.remove('active'));
-        e.target.classList.add('active');
-        const sub=document.getElementById('appealsSubContent');
-        if(e.target.id==='tabClientAppeals') sub.innerHTML=appeals().map(a=>`
+      function colleagueChatPanel() {
+        const msgs = colleagueChats();
+        return `<div class="card"><h3>👥 Чат коллег</h3>
+        <div class="chat-messages" id="colleagueMessages">${msgs.map(m => {
+          const isMine = m.from === currentEmployee?.name;
+          return `<div class="chat-msg ${isMine ? 'mine' : 'other'}"><strong>${m.from}:</strong> ${m.text}</div>`;
+        }).join('')}</div>
+        <div style="display:flex;gap:10px;">
+          <input id="colleagueInput" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px;color:white;" placeholder="Сообщение коллегам...">
+          <button class="btn btn-primary" id="sendColleague" style="width:auto;">Отправить</button>
+        </div></div>`;
+      }
+
+      document.addEventListener('click', e => {
+        if (e.target.classList.contains('tab-inner')) {
+          document.querySelectorAll('.tab-inner').forEach(t => t.classList.remove('active'));
+          e.target.classList.add('active');
+          const sub = document.getElementById('appealsSubContent');
+          if (e.target.id === 'tabClientAppeals') sub.innerHTML = appeals().map(a => `
           <div class="appeal-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
             <b>#${a.id}</b>
             <div class="details hidden" style="margin-top:10px;">
@@ -712,38 +855,102 @@
               <div class="detail-row"><span>Почта:</span><span>${a.clientEmail}</span></div>
               <div class="detail-row"><span>Телефон:</span><span>${a.clientPhone}</span></div>
               <div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>
-              <div class="detail-row"><span>Статус:</span><span>${a.status||'Открыто'}</span></div>
+              <div class="detail-row"><span>Статус:</span><span>${a.status || 'Открыто'}</span></div>
+              ${a.reply ? `<div class="admin-reply">🔴 Руководитель отдела TUMIX: ${a.reply}</div>` : ''}
+              ${currentEmployee?.role === 'admin' ? `
+                <div style="margin-top:10px;">
+                  <textarea id="replyText_${a.id}" placeholder="Ответ руководителя..." style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px;color:white;"></textarea>
+                  <button class="btn btn-primary reply-btn" data-id="${a.id}" style="margin-top:5px;">Ответить</button>
+                  <button class="btn btn-danger delete-btn" data-id="${a.id}" style="margin-top:5px;">Удалить</button>
+                </div>` : ''}
             </div>
-          </div>`).join('')||'<p>Нет обращений</p>';
-        if(e.target.id==='tabEmpAppeals') sub.innerHTML=empAppeals().map(a=>`
+          </div>`).join('') || '<p>Нет обращений</p>';
+          if (e.target.id === 'tabEmpAppeals') sub.innerHTML = empAppeals().map(a => `
           <div class="appeal-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
             <b>${a.empName}</b> → Руководителю
             <div class="details hidden" style="margin-top:10px;">
               <div class="detail-row"><span>Текст:</span><span>${a.text}</span></div>
             </div>
-          </div>`).join('')||'<p>Нет обращений</p>';
-        if(e.target.id==='tabCreateClient') sub.innerHTML=`<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName"></div><div class="field-group"><label>Табельный номер</label><input id="eTab"></div><div class="field-group"><label>ФИО клиента</label><input id="cName"></div><div class="field-group"><label>Почта клиента</label><input id="cEmail"></div><div class="field-group"><label>Телефон клиента</label><input id="cPhone"></div><div class="field-group"><label>Суть проблемы</label><textarea id="cProblem"></textarea></div><button class="btn btn-primary" id="submitClientAppeal">Оформить обращение</button></div></div>`;
-        if(e.target.id==='tabCreateEmp') sub.innerHTML=`<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName2"></div><div class="field-group"><label>Табельный номер</label><input id="eTab2"></div><div class="field-group"><label>Кому</label><input disabled value="Руководителю поддержки TUMIX"></div><div class="field-group"><label>Текст обращения</label><textarea id="eText" readonly style="background:rgba(255,255,255,0.05); cursor:default;">Руководителю отдела поддержки сотрудников TUMIX.</textarea></div><button class="btn btn-primary" id="submitEmpAppeal">Оформить</button></div></div>`;
-      }
-      if(e.target.id==='submitClientAppeal'){
-        const app={id:String(appeals().length+1).padStart(7,'0'),empName:document.getElementById('eName').value,empTab:document.getElementById('eTab').value,clientName:document.getElementById('cName').value,clientEmail:document.getElementById('cEmail').value,clientPhone:document.getElementById('cPhone').value,problem:document.getElementById('cProblem').value,status:'Открыто'};
-        store('tumix_appeals',[...appeals(),app]); alert('Обращение создано'); renderEmployeeView('empAppeals');
-      }
-      if(e.target.id==='submitEmpAppeal'){
-        store('tumix_emp_appeals',[...empAppeals(),{empName:document.getElementById('eName2').value,empTab:document.getElementById('eTab2').value,text:'Руководителю отдела поддержки сотрудников TUMIX.'}]);
-        alert('Обращение сотрудника создано'); renderEmployeeView('empAppeals');
-      }
-      if(e.target.id==='sendChat'){
-        const inp=document.getElementById('chatInput'); if(!inp.value.trim()) return;
-        const d=document.createElement('div'); d.style.cssText='background:rgba(241,90,44,0.25);padding:10px;border-radius:12px;margin:6px 0;color:white;'; d.textContent=inp.value;
-        document.getElementById('chatMsgs').appendChild(d);
-        setTimeout(()=>{const r=document.createElement('div'); r.style.cssText='background:rgba(255,255,255,0.05);padding:10px;border-radius:12px;'; r.textContent='Оператор скоро ответит вам, пожалуйста подождите.'; document.getElementById('chatMsgs').appendChild(r);},700);
-        inp.value='';
-      }
-    });
+          </div>`).join('') || '<p>Нет обращений</p>';
+          if (e.target.id === 'tabCreateClient') sub.innerHTML =
+            `<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName" placeholder="Иванов Иван"></div><div class="field-group"><label>Табельный номер</label><input id="eTab" placeholder="TUM-0001"></div><div class="field-group"><label>ФИО клиента</label><input id="cName"></div><div class="field-group"><label>Почта клиента</label><input id="cEmail"></div><div class="field-group"><label>Телефон клиента</label><input id="cPhone"></div><div class="field-group"><label>Суть проблемы</label><textarea id="cProblem"></textarea></div><button class="btn btn-primary" id="submitClientAppeal">Оформить обращение</button></div></div>`;
+          if (e.target.id === 'tabCreateEmp') sub.innerHTML =
+            `<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName2" placeholder="Иванов Иван"></div><div class="field-group"><label>Табельный номер</label><input id="eTab2" placeholder="TUM-0001"></div><div class="field-group"><label>Кому</label><input disabled value="Руководителю поддержки TUMIX"></div><div class="field-group"><label>Текст обращения</label><textarea id="eText">Руководителю отдела поддержки сотрудников TUMIX.</textarea></div><button class="btn btn-primary" id="submitEmpAppeal">Оформить</button></div></div>`;
+        }
+        if (e.target.id === 'submitClientAppeal') {
+          const empName = document.getElementById('eName').value.trim();
+          const empTab = document.getElementById('eTab').value.trim();
+          if (!/^[A-ZА-ЯЁ]+-[0-9]{4}$/.test(empTab)) return alert(
+            'Табельный номер должен быть в формате TUM-0001');
+          const app = {
+            id: String(appeals().length + 1).padStart(7, '0'),
+            empName,
+            empTab,
+            clientName: document.getElementById('cName').value,
+            clientEmail: document.getElementById('cEmail').value,
+            clientPhone: document.getElementById('cPhone').value,
+            problem: document.getElementById('cProblem').value,
+            status: 'Открыто'
+          };
+          store('tumix_appeals', [...appeals(), app]);
+          alert('Обращение создано');
+          renderEmployeeView('empAppeals');
+        }
+        if (e.target.id === 'submitEmpAppeal') {
+          const empName = document.getElementById('eName2').value.trim();
+          const empTab = document.getElementById('eTab2').value.trim();
+          if (!/^[A-ZА-ЯЁ]+-[0-9]{4}$/.test(empTab)) return alert(
+            'Табельный номер должен быть в формате TUM-0001');
+          store('tumix_emp_appeals', [...empAppeals(), { empName, empTab,
+            text: 'Руководителю отдела поддержки сотрудников TUMIX.' }]);
+          alert('Обращение сотрудника создано');
+          renderEmployeeView('empAppeals');
+        }
+        if (e.target.classList.contains('reply-btn')) {
+          const id = e.target.dataset.id;
+          const replyText = document.getElementById('replyText_' + id).value;
+          if (!replyText) return alert('Введите текст ответа');
+          const updated = appeals().map(a => a.id === id ? { ...a, reply: replyText, status: 'Отвечено' } :
+            a);
+          store('tumix_appeals', updated);
+          renderEmployeeView('empAppeals');
+        }
+        if (e.target.classList.contains('delete-btn')) {
+          const id = e.target.dataset.id;
+          if (confirm('Удалить обращение #' + id + '?')) {
+            store('tumix_appeals', appeals().filter(a => a.id !== id));
+            renderEmployeeView('empAppeals');
+          }
+        }
+        if (e.target.id === 'sendColleague') {
+          const inp = document.getElementById('colleagueInput');
+          if (!inp.value.trim()) return;
+          const msg = { from: currentEmployee?.name || 'Сотрудник', text: inp.value, time: new Date()
+              .toLocaleString() };
+          store('tumix_colleague_chats', [...colleagueChats(), msg]);
+          renderEmployeeView('colleagueChat');
+        }
+        if (e.target.id === 'sendChat') {
+          const inp = document.getElementById('chatInput');
+          if (!inp.value.trim()) return;
+          const d = document.createElement('div');
+          d.style.cssText =
+            'background:rgba(241,90,44,0.25);padding:10px;border-radius:12px;margin:6px 0;color:white;';
+          d.textContent = inp.value;
+          document.getElementById('chatMsgs').appendChild(d);
+          setTimeout(() => {
+            const r = document.createElement('div');
+            r.style.cssText =
+              'background:rgba(255,255,255,0.05);padding:10px;border-radius:12px;';
+            r.textContent = 'Оператор скоро ответит вам, пожалуйста подождите.';
+            document.getElementById('chatMsgs').appendChild(r);
+          }, 700);
+          inp.value = '';
+        }
+      });
 
-    renderAuth();
-  })();
-</script>
+      renderAuth();
+    })();
+  </script>
 </body>
 </html>
