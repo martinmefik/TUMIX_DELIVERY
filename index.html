@@ -354,6 +354,46 @@
       gap: 14px;
     }
 
+    /* Красивые модальные окна */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      animation: fadeInUp 0.3s ease;
+    }
+    .modal-window {
+      background: rgba(22,22,40,0.95);
+      border: 1.5px solid rgba(241,90,44,0.4);
+      border-radius: 28px;
+      padding: 32px;
+      min-width: 380px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+    }
+    .modal-window h3 {
+      margin-bottom: 20px;
+      color: #efe6da;
+    }
+    .modal-window input, .modal-window select {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1.5px solid rgba(255,255,255,0.15);
+      border-radius: 16px;
+      color: white;
+      font-size: 15px;
+      margin-bottom: 16px;
+    }
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
     .dashboard {
       flex: 1;
       display: flex;
@@ -516,6 +556,7 @@
       color: #f2e8dc;
       text-align: left;
       flex: 1;
+      white-space: pre-wrap;
     }
 
     #map {
@@ -535,6 +576,13 @@
       border-radius: 14px;
       border-left: 4px solid #e74c3c;
       animation: fadeInUp 0.4s ease;
+    }
+    .reply-block {
+      margin-top: 12px;
+      padding: 12px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      border-left: 3px solid #F15A2C;
     }
 
     .chat-messages {
@@ -617,6 +665,7 @@
     const appeals = () => store('tumix_appeals') || [];
     const empAppeals = () => store('tumix_emp_appeals') || [];
     const resolvedAppeals = () => store('tumix_resolved_appeals') || [];
+    const resolvedEmpAppeals = () => store('tumix_resolved_emp_appeals') || [];
     const colleagueChats = () => store('tumix_colleague_chats') || [];
 
     let currentClient = null,
@@ -634,6 +683,28 @@
       setTimeout(() => { toast.style.opacity = '0';
         toast.style.transition = 'opacity 0.4s ease';
         setTimeout(() => toast.remove(), 400); }, 3200);
+    }
+
+    function showModal(title, content, onConfirm) {
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay';
+      overlay.innerHTML = `
+        <div class="modal-window">
+          <h3>${title}</h3>
+          ${content}
+          <div class="modal-buttons">
+            <button class="btn btn-outline cancel-modal" style="width:auto;">Отмена</button>
+            <button class="btn btn-primary confirm-modal" style="width:auto;">Подтвердить</button>
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
+      overlay.querySelector('.cancel-modal').addEventListener('click', () => overlay.remove());
+      overlay.querySelector('.confirm-modal').addEventListener('click', () => {
+        const input = overlay.querySelector('input, select');
+        const value = input ? input.value : true;
+        overlay.remove();
+        if (onConfirm) onConfirm(value);
+      });
     }
 
     const authScreen = document.getElementById('authScreen');
@@ -797,12 +868,15 @@
 
     async function geocodeAddress(address) {
       try {
+        let query = address;
+        if (!query.toLowerCase().includes('москва') && !query.toLowerCase().includes('мск') && !query.toLowerCase().includes('москов')) {
+          query += ', Московская область';
+        }
         const resp = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Московская область')}&limit=1`
-          );
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&accept-language=ru`
+        );
         const data = await resp.json();
-        if (data && data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0]
-            .display_name };
+        if (data && data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0].display_name };
         return null;
       } catch (e) { return null; }
     }
@@ -811,8 +885,7 @@
       const R = 6371,
         dLat = (lat2 - lat1) * Math.PI / 180,
         dLng = (lng2 - lng1) * Math.PI / 180;
-      const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng /
-        2) ** 2;
+      const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
       return Math.max(1, Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))));
     }
 
@@ -850,7 +923,7 @@
         Promise.all([geocodeAddress(sAddr), geocodeAddress(rAddr)]).then(([from, to]) => {
           if (!from || !to) {
             document.getElementById('priceDetails').innerHTML =
-              '<p style="color:#ff7043;text-align:center;">❌ Адрес не найден. Попробуйте: Город, улица, дом</p>';
+              '<p style="color:#ff7043;text-align:center;">❌ Адрес не найден. Попробуйте: Город, улица, дом (например: Москва, Тверская, 1)</p>';
             return;
           }
           const dist = calculateRealDistance(from.lat, from.lng, to.lat, to.lng);
@@ -859,19 +932,12 @@
             deliveryMap.eachLayer(l => { if (l instanceof L.Marker) deliveryMap.removeLayer(l); });
             L.marker([from.lat, from.lng]).addTo(deliveryMap).bindPopup('📍 Отправитель');
             L.marker([to.lat, to.lng]).addTo(deliveryMap).bindPopup('📍 Получатель');
-            const line = L.polyline([
-              [from.lat, from.lng],
-              [to.lat, to.lng]
-            ], { color: '#F15A2C', weight: 6, opacity: 0.8, dashArray: '10, 10' }).addTo(deliveryMap);
+            const line = L.polyline([[from.lat, from.lng], [to.lat, to.lng]], { color: '#F15A2C', weight: 6, opacity: 0.8 }).addTo(deliveryMap);
             deliveryMap.fitBounds(line.getBounds().pad(0.4));
             deliveryRoute = line;
           }
-          const pr = { Пакет: 60, Конверт: 90, 'Коробка S': 120, 'Коробка M': 220, 'Коробка L': 280,
-            'Коробка XL': 350 };
-          let pc = packs.reduce((s, p) => s + pr[p], 0),
-            km = dist * 22,
-            serv = 29,
-            total = pc + km + serv;
+          const pr = { Пакет: 60, Конверт: 90, 'Коробка S': 120, 'Коробка M': 220, 'Коробка L': 280, 'Коробка XL': 350 };
+          let pc = packs.reduce((s, p) => s + pr[p], 0), km = dist * 22, serv = 29, total = pc + km + serv;
           document.getElementById('priceDetails').innerHTML = `
             <div class="card" style="margin-top:20px; animation: fadeInUp 0.5s ease;">
               <div class="detail-row"><span>📦 Упаковка:</span><span>${pc} ₽</span></div>
@@ -885,29 +951,21 @@
       if (e.target.id === 'confirmOrder') {
         const ords = orders();
         const newId = String(ords.length + 1).padStart(8, '0');
-        const order = {
-          id: newId,
-          clientId: currentClient.id,
-          sender: document.getElementById('sName').value,
-          sPhone: document.getElementById('sPhone').value,
-          sAddr: document.getElementById('sAddr').value,
-          recName: document.getElementById('rName').value,
-          rPhone: document.getElementById('rPhone').value,
-          rAddr: document.getElementById('rAddr').value,
+        store('tumix_orders', [...ords, {
+          id: newId, clientId: currentClient.id,
+          sender: document.getElementById('sName').value, sPhone: document.getElementById('sPhone').value,
+          sAddr: document.getElementById('sAddr').value, recName: document.getElementById('rName').value,
+          rPhone: document.getElementById('rPhone').value, rAddr: document.getElementById('rAddr').value,
           content: document.getElementById('contentDesc').value,
           packs: [...document.querySelectorAll('#packCheckboxes input:checked')].map(c => c.value),
-          status: 'Оформлен',
-          date: new Date().toLocaleString('ru-RU')
-        };
-        store('tumix_orders', [...ords, order]);
+          status: 'Оформлен', date: new Date().toLocaleString('ru-RU')
+        }]);
         showToast('Доставка оформлена! Номер заказа: ' + newId);
         document.querySelector('#clientDashboard .sidebar-btn[data-view="orders"]').click();
       }
       if (e.target.closest('.checkbox-pill')) {
-        const pill = e.target.closest('.checkbox-pill'),
-          cb = pill.querySelector('input');
-        cb.checked = !cb.checked;
-        pill.classList.toggle('checked', cb.checked);
+        const pill = e.target.closest('.checkbox-pill'), cb = pill.querySelector('input');
+        cb.checked = !cb.checked; pill.classList.toggle('checked', cb.checked);
       }
     });
 
@@ -944,14 +1002,11 @@
     }
 
     let supportSessionAnswered = false;
-
     function supportChat() {
       supportSessionAnswered = false;
       return `<div class="card"><h3>💬 Чат с поддержкой TUMIX</h3>
         <div id="chatMsgs" class="chat-messages">
-          <div style="background:rgba(255,255,255,0.06);padding:14px;border-radius:16px;margin:8px 0;">
-            👋 Здравствуйте! Это поддержка TUMIX. Какой у вас вопрос?
-          </div>
+          <div style="background:rgba(255,255,255,0.06);padding:14px;border-radius:16px;margin:8px 0;">👋 Здравствуйте! Это поддержка TUMIX. Какой у вас вопрос?</div>
         </div>
         <div style="display:flex;gap:12px;">
           <input id="chatInput" style="flex:1;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.12);border-radius:16px;padding:14px;color:white;font-size:15px;" placeholder="Введите ваше сообщение...">
@@ -961,22 +1016,20 @@
 
     function renderClientView(view) {
       const a = document.getElementById('clientContent');
-      if (view === 'delivery') { a.innerHTML = deliveryForm();
-        initDeliveryMap(); } else if (view === 'appeals') a.innerHTML = clientAppeals();
+      if (view === 'delivery') { a.innerHTML = deliveryForm(); initDeliveryMap(); }
+      else if (view === 'appeals') a.innerHTML = clientAppeals();
       else if (view === 'orders') a.innerHTML = clientOrders();
       else if (view === 'support') a.innerHTML = supportChat();
     }
 
     document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(b => b.addEventListener('click', () => {
       document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(x => x.classList.remove('active'));
-      b.classList.add('active');
-      renderEmployeeView(b.dataset.view);
+      b.classList.add('active'); renderEmployeeView(b.dataset.view);
     }));
 
     function renderEmployeeView(view) {
       const a = document.getElementById('employeeContent');
-      if (view === 'empChat') a.innerHTML =
-        '<div class="card"><h3>💬 Чаты с клиентами</h3><p style="text-align:center;padding:40px;">Список активных чатов появится после подключения базы данных.</p></div>';
+      if (view === 'empChat') a.innerHTML = '<div class="card"><h3>💬 Чаты с клиентами</h3><p style="text-align:center;padding:40px;">Список активных чатов появится после подключения базы данных.</p></div>';
       else if (view === 'empAppeals') a.innerHTML = empAppealsPanel();
       else if (view === 'allOrders') a.innerHTML = allOrdersView();
       else if (view === 'colleagueChat') a.innerHTML = colleagueChatPanel();
@@ -1006,24 +1059,18 @@
       return `<div class="tabs-inner">
         <button class="tab-inner active" id="tabClientAppeals">👥 Обращения клиентов</button>
         <button class="tab-inner" id="tabEmpAppeals">👔 Обращения сотрудников</button>
-        <button class="tab-inner" id="tabResolvedAppeals">✅ Решенные клиентские</button>
-        <button class="tab-inner" id="tabCreateClient">➕ Создать обращение клиента</button>
-        <button class="tab-inner" id="tabCreateEmp">📝 Создать обращение сотрудника</button>
+        <button class="tab-inner" id="tabResolvedClient">✅ Решенные клиентские</button>
+        <button class="tab-inner" id="tabResolvedEmp">✅ Решенные сотрудников</button>
+        <button class="tab-inner" id="tabCreateClient">➕ Создать клиенту</button>
+        <button class="tab-inner" id="tabCreateEmp">📝 Создать сотруднику</button>
       </div><div id="appealsSubContent"></div>`;
     }
 
     function colleagueChatPanel() {
       const msgs = colleagueChats();
       return `<div class="card"><h3>👥 Чат коллег TUMIX</h3>
-        <div class="chat-messages" id="colleagueMessages">${msgs.map(m => `
-          <div class="chat-msg ${m.from === currentEmployee?.name ? 'mine' : 'other'}">
-            <strong>${m.from}:</strong> ${m.text}
-            <div style="font-size:10px;opacity:0.6;margin-top:4px;">${m.time || ''}</div>
-          </div>`).join('')}</div>
-        <div style="display:flex;gap:12px;">
-          <input id="colleagueInput" style="flex:1;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.12);border-radius:16px;padding:14px;color:white;" placeholder="Введите сообщение для коллег...">
-          <button class="btn btn-primary" id="sendColleague" style="width:auto;margin-top:0;">📤 Отправить</button>
-        </div></div>`;
+        <div class="chat-messages" id="colleagueMessages">${msgs.map(m => `<div class="chat-msg ${m.from === currentEmployee?.name ? 'mine' : 'other'}"><strong>${m.from}:</strong> ${m.text}<div style="font-size:10px;opacity:0.6;margin-top:4px;">${m.time || ''}</div></div>`).join('')}</div>
+        <div style="display:flex;gap:12px;"><input id="colleagueInput" style="flex:1;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.12);border-radius:16px;padding:14px;color:white;" placeholder="Введите сообщение для коллег..."><button class="btn btn-primary" id="sendColleague" style="width:auto;margin-top:0;">📤 Отправить</button></div></div>`;
     }
 
     document.addEventListener('click', e => {
@@ -1032,89 +1079,72 @@
         e.target.classList.add('active');
         const sub = document.getElementById('appealsSubContent');
         if (e.target.id === 'tabClientAppeals') sub.innerHTML = appeals().map(a => `
-          <div class="appeal-item">
-            <b>🎫 Обращение #${a.id}</b> — ${a.status || 'Открыто'}
-            <div class="details" style="margin-top:14px;">
-              <div class="detail-row"><span>👤 Сотрудник:</span><span>${a.empName} (${a.empTab})</span></div>
-              <div class="detail-row"><span>👤 Клиент:</span><span>${a.clientName}</span></div>
-              <div class="detail-row"><span>📧 Почта:</span><span>${a.clientEmail}</span></div>
-              <div class="detail-row"><span>📱 Телефон:</span><span>${a.clientPhone}</span></div>
-              <div class="detail-row"><span>📝 Проблема:</span><span>${a.problem}</span></div>
-              ${a.reply ? `<div class="admin-reply">🔴 <b>Руководитель отдела TUMIX:</b><br>${a.reply}</div>` : ''}
-              ${currentEmployee?.role === 'admin' ? `
-                <textarea id="replyText_${a.id}" placeholder="Введите ответ руководителя..." style="width:100%;margin-top:12px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.15);border-radius:14px;padding:12px;color:white;min-height:80px;"></textarea>
-                <button class="btn btn-primary reply-btn" data-id="${a.id}" style="margin-top:8px;">📩 Ответить как руководитель</button>
-                <button class="btn btn-outline close-btn" data-id="${a.id}" style="margin-top:6px;">✅ Закрыть обращение</button>
-                <button class="btn btn-danger delete-btn" data-id="${a.id}" style="margin-top:6px;">🗑️ Удалить</button>
-              ` : ''}
-            </div>
-          </div>`).join('') || '<p style="text-align:center;padding:40px;">Обращений клиентов нет</p>';
-        if (e.target.id === 'tabEmpAppeals') sub.innerHTML = empAppeals().filter(a => a.empTab === currentEmployee?.tab || currentEmployee?.role === 'admin').map(a => `
-          <div class="appeal-item">
-            <b>👔 ${a.empName}</b> → Руководителю поддержки TUMIX
-            <div class="details" style="margin-top:14px;">
-              <div class="detail-row"><span>🪪 Табельный:</span><span>${a.empTab}</span></div>
-              <div class="detail-row"><span>📝 Текст:</span><span style="text-align:left;white-space:pre-wrap;">${a.text}</span></div>
-              ${a.reply ? `<div class="admin-reply">🔴 <b>Ответ руководителя:</b><br>${a.reply}</div>` : ''}
-              ${currentEmployee?.role === 'admin' ? `
-                <textarea id="empReplyText_${a.empName}" placeholder="Ответ руководителя..." style="width:100%;margin-top:12px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.15);border-radius:14px;padding:12px;color:white;min-height:80px;"></textarea>
-                <button class="btn btn-primary emp-reply-btn" data-emp="${a.empName}" style="margin-top:8px;">📩 Ответить сотруднику</button>
-              ` : ''}
-            </div>
-          </div>`).join('') || '<p style="text-align:center;padding:40px;">Обращений сотрудников нет</p>';
-        if (e.target.id === 'tabResolvedAppeals') sub.innerHTML = resolvedAppeals().map(a => `
-          <div class="appeal-item">
-            <b>✅ Решено #${a.id}</b> — ${a.status || 'Закрыто'}
-            <div class="details" style="margin-top:14px;">
-              <div class="detail-row"><span>👤 Сотрудник:</span><span>${a.empName}</span></div>
-              <div class="detail-row"><span>👤 Клиент:</span><span>${a.clientName}</span></div>
-              <div class="detail-row"><span>📝 Проблема:</span><span>${a.problem}</span></div>
-              ${a.reply ? `<div class="admin-reply">🔴 <b>Руководитель:</b><br>${a.reply}</div>` : ''}
-              ${currentEmployee?.role === 'admin' ? `<button class="btn btn-danger delete-resolved-btn" data-id="${a.id}" style="margin-top:8px;">🗑️ Удалить навсегда</button>` : ''}
-            </div>
-          </div>`).join('') || '<p style="text-align:center;padding:40px;">Решенных обращений нет</p>';
-        if (e.target.id === 'tabCreateClient') sub.innerHTML = `
-          <div class="form-card">
-            <h3>➕ Новое обращение клиента</h3>
-            <div class="input-column">
-              <div class="field-group"><label>👤 ФИО сотрудника *</label><input id="eName" placeholder="Иванов Иван"></div>
-              <div class="field-group"><label>🪪 Табельный номер *</label><input id="eTab" placeholder="TUM-0001"></div>
-              <div class="field-group"><label>👤 ФИО клиента *</label><input id="cName" placeholder="Петров Петр"></div>
-              <div class="field-group"><label>📧 Почта клиента *</label><input id="cEmail" placeholder="client@mail.ru"></div>
-              <div class="field-group"><label>📱 Телефон клиента *</label><input id="cPhone" value="+7" placeholder="+79161234567"></div>
-              <div class="field-group"><label>📝 Суть проблемы *</label><textarea id="cProblem" placeholder="Опишите проблему..."></textarea></div>
-              <button class="btn btn-primary" id="submitClientAppeal">✅ Оформить обращение</button>
-            </div></div>`;
-        if (e.target.id === 'tabCreateEmp') sub.innerHTML = `
-          <div class="form-card">
-            <h3>📝 Обращение сотрудника</h3>
-            <div class="input-column">
-              <div class="field-group"><label>👤 ФИО сотрудника *</label><input id="eName2" placeholder="Смирнов Алексей"></div>
-              <div class="field-group"><label>🪪 Табельный номер *</label><input id="eTab2" placeholder="TUM-0001"></div>
-              <div class="field-group"><label>📌 Кому</label><input disabled value="Руководителю поддержки TUMIX"></div>
-              <div class="field-group"><label>📝 Текст обращения</label><textarea id="eText">Руководителю отдела поддержки сотрудников TUMIX.</textarea></div>
-              <button class="btn btn-primary" id="submitEmpAppeal">✅ Оформить обращение</button>
-            </div></div>`;
+          <div class="appeal-item"><b>🎫 #${a.id}</b> — ${a.status||'Открыто'}<div class="details" style="margin-top:14px;">
+            <div class="detail-row"><span>👤 Сотрудник:</span><span>${a.empName} (${a.empTab})</span></div>
+            <div class="detail-row"><span>👤 Клиент:</span><span>${a.clientName}</span></div>
+            <div class="detail-row"><span>📝 Проблема:</span><span>${a.problem}</span></div>
+            ${a.replies ? a.replies.map(r => `<div class="reply-block">🔴 <b>Руководитель:</b> ${r}</div>`).join('') : ''}
+            ${currentEmployee?.role==='admin' ? `<textarea id="replyText_${a.id}" placeholder="Ответ руководителя..." style="width:100%;margin-top:10px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.15);border-radius:14px;padding:12px;color:white;min-height:70px;"></textarea>
+            <button class="btn btn-primary reply-btn" data-id="${a.id}" style="margin-top:6px;">📩 Ответить</button>
+            <button class="btn btn-outline close-btn" data-id="${a.id}" style="margin-top:6px;">✅ Закрыть</button>
+            <button class="btn btn-danger delete-btn" data-id="${a.id}" style="margin-top:6px;">🗑️ Удалить</button>` : ''}
+          </div></div>`).join('')||'<p>Нет обращений</p>';
+        if (e.target.id === 'tabEmpAppeals') sub.innerHTML = empAppeals().filter(a=>a.empTab===currentEmployee?.tab||currentEmployee?.role==='admin').map(a=>`
+          <div class="appeal-item"><b>👔 ${a.empName}</b> → Руководителю<div class="details" style="margin-top:14px;">
+            <div class="detail-row"><span>🪪 Табельный:</span><span>${a.empTab}</span></div>
+            <div class="detail-row"><span>📝 Текст:</span><span style="white-space:pre-wrap;">${a.text}</span></div>
+            ${a.replies ? a.replies.map(r => `<div class="reply-block">🔴 <b>Ответ:</b> ${r}</div>`).join('') : ''}
+            ${currentEmployee?.role==='admin' ? `<textarea id="empReplyText_${a.empName}" placeholder="Ответ..." style="width:100%;margin-top:10px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.15);border-radius:14px;padding:12px;color:white;min-height:70px;"></textarea>
+            <button class="btn btn-primary emp-reply-btn" data-emp="${a.empName}" style="margin-top:6px;">📩 Ответить</button>
+            <button class="btn btn-outline close-emp-btn" data-emp="${a.empName}" style="margin-top:6px;">✅ Закрыть</button>` : ''}
+          </div></div>`).join('')||'<p>Нет обращений</p>';
+        if (e.target.id === 'tabResolvedClient') sub.innerHTML = resolvedAppeals().map(a=>`
+          <div class="appeal-item"><b>✅ #${a.id}</b><div class="details" style="margin-top:14px;">
+            <div class="detail-row"><span>Клиент:</span><span>${a.clientName}</span></div>
+            <div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>
+            ${a.replies ? a.replies.map(r=>`<div class="reply-block">🔴 ${r}</div>`).join('') : ''}
+            ${currentEmployee?.role==='admin' ? `<button class="btn btn-danger delete-resolved-btn" data-id="${a.id}" style="margin-top:6px;">🗑️ Удалить</button>` : ''}
+          </div></div>`).join('')||'<p>Нет решенных</p>';
+        if (e.target.id === 'tabResolvedEmp') sub.innerHTML = resolvedEmpAppeals().map(a=>`
+          <div class="appeal-item"><b>✅ ${a.empName}</b><div class="details" style="margin-top:14px;">
+            <div class="detail-row"><span>Текст:</span><span>${a.text}</span></div>
+            ${a.replies ? a.replies.map(r=>`<div class="reply-block">🔴 ${r}</div>`).join('') : ''}
+            ${currentEmployee?.role==='admin' ? `<button class="btn btn-danger delete-resolved-emp-btn" data-emp="${a.empName}" style="margin-top:6px;">🗑️ Удалить</button>` : ''}
+          </div></div>`).join('')||'<p>Нет решенных</p>';
+        if (e.target.id === 'tabCreateClient') sub.innerHTML = `<div class="form-card"><h3>➕ Новое обращение клиента</h3><div class="input-column">
+          <div class="field-group"><label>👤 ФИО сотрудника *</label><input id="eName"></div>
+          <div class="field-group"><label>🪪 Табельный номер *</label><input id="eTab" placeholder="TUM-0001"></div>
+          <div class="field-group"><label>👤 ФИО клиента *</label><input id="cName"></div>
+          <div class="field-group"><label>📧 Почта *</label><input id="cEmail"></div>
+          <div class="field-group"><label>📱 Телефон *</label><input id="cPhone" value="+7"></div>
+          <div class="field-group"><label>📝 Проблема *</label><textarea id="cProblem"></textarea></div>
+          <button class="btn btn-primary" id="submitClientAppeal">Оформить</button></div></div>`;
+        if (e.target.id === 'tabCreateEmp') sub.innerHTML = `<div class="form-card"><h3>📝 Обращение сотрудника</h3><div class="input-column">
+          <div class="field-group"><label>👤 ФИО *</label><input id="eName2"></div>
+          <div class="field-group"><label>🪪 Табельный *</label><input id="eTab2" placeholder="TUM-0001"></div>
+          <div class="field-group"><label>📌 Кому</label><input disabled value="Руководителю поддержки TUMIX"></div>
+          <div class="field-group"><label>📝 Текст</label><textarea id="eText">Руководителю отдела поддержки сотрудников TUMIX.</textarea></div>
+          <button class="btn btn-primary" id="submitEmpAppeal">Оформить</button></div></div>`;
       }
       if (e.target.classList.contains('reply-btn')) {
         e.stopPropagation();
         const id = e.target.dataset.id;
         const text = document.getElementById('replyText_' + id).value.trim();
-        if (!text) return showToast('Введите текст ответа');
-        const upd = appeals().map(a => a.id === id ? { ...a, reply: text, status: 'Отвечено' } : a);
+        if (!text) return showToast('Введите ответ');
+        const upd = appeals().map(a => a.id === id ? { ...a, replies: [...(a.replies||[]), text] } : a);
         store('tumix_appeals', upd);
-        showToast('Ответ руководителя добавлен');
-        renderEmployeeView('empAppeals');
+        showToast('Ответ добавлен');
+        document.getElementById('tabClientAppeals').click();
       }
       if (e.target.classList.contains('emp-reply-btn')) {
         e.stopPropagation();
         const emp = e.target.dataset.emp;
         const text = document.getElementById('empReplyText_' + emp).value.trim();
-        if (!text) return showToast('Введите текст ответа');
-        const upd = empAppeals().map(a => a.empName === emp ? { ...a, reply: text } : a);
+        if (!text) return showToast('Введите ответ');
+        const upd = empAppeals().map(a => a.empName === emp ? { ...a, replies: [...(a.replies||[]), text] } : a);
         store('tumix_emp_appeals', upd);
-        showToast('Ответ для ' + emp + ' отправлен');
-        renderEmployeeView('empAppeals');
+        showToast('Ответ отправлен');
+        document.getElementById('tabEmpAppeals').click();
       }
       if (e.target.classList.contains('close-btn')) {
         e.stopPropagation();
@@ -1123,99 +1153,108 @@
         if (!app) return;
         store('tumix_resolved_appeals', [...resolvedAppeals(), { ...app, status: 'Закрыто', closedAt: new Date().toISOString() }]);
         store('tumix_appeals', appeals().filter(a => a.id !== id));
-        showToast('Обращение закрыто и перемещено в решенные');
-        setTimeout(() => {
-          const resolved = resolvedAppeals().filter(a => a.id !== id || new Date() - new Date(a.closedAt) < 172800000);
-          store('tumix_resolved_appeals', resolved);
-        }, 2000);
-        renderEmployeeView('empAppeals');
+        showToast('Обращение закрыто');
+        document.getElementById('tabClientAppeals').click();
+      }
+      if (e.target.classList.contains('close-emp-btn')) {
+        e.stopPropagation();
+        const emp = e.target.dataset.emp;
+        const app = empAppeals().find(a => a.empName === emp);
+        if (!app) return;
+        store('tumix_resolved_emp_appeals', [...resolvedEmpAppeals(), { ...app, status: 'Закрыто' }]);
+        store('tumix_emp_appeals', empAppeals().filter(a => a.empName !== emp));
+        showToast('Обращение сотрудника закрыто');
+        document.getElementById('tabEmpAppeals').click();
       }
       if (e.target.classList.contains('delete-btn')) {
         e.stopPropagation();
         const id = e.target.dataset.id;
-        if (confirm('Удалить обращение #' + id + '?')) {
+        showModal('Удаление обращения', '<p>Удалить обращение #' + id + '?</p>', () => {
           store('tumix_appeals', appeals().filter(a => a.id !== id));
           showToast('Обращение удалено');
-          renderEmployeeView('empAppeals');
-        }
+          document.getElementById('tabClientAppeals').click();
+        });
       }
       if (e.target.classList.contains('delete-resolved-btn')) {
         e.stopPropagation();
         const id = e.target.dataset.id;
-        if (confirm('Удалить решенное обращение #' + id + ' навсегда?')) {
+        showModal('Удаление решенного', '<p>Удалить решенное обращение #' + id + ' навсегда?</p>', () => {
           store('tumix_resolved_appeals', resolvedAppeals().filter(a => a.id !== id));
-          showToast('Решенное обращение удалено');
-          renderEmployeeView('empAppeals');
-        }
+          showToast('Решенное удалено');
+          document.getElementById('tabResolvedClient').click();
+        });
+      }
+      if (e.target.classList.contains('delete-resolved-emp-btn')) {
+        e.stopPropagation();
+        const emp = e.target.dataset.emp;
+        showModal('Удаление', '<p>Удалить решенное обращение сотрудника ' + emp + '?</p>', () => {
+          store('tumix_resolved_emp_appeals', resolvedEmpAppeals().filter(a => a.empName !== emp));
+          showToast('Удалено');
+          document.getElementById('tabResolvedEmp').click();
+        });
       }
       if (e.target.classList.contains('edit-order-btn')) {
         e.stopPropagation();
         const id = e.target.dataset.id;
-        const status = prompt('Введите новый статус (Оформлен / В пути / Доставлен / Отменён)');
-        if (status) {
+        showModal('Изменение статуса заказа #' + id, `
+          <select id="statusSelect">
+            <option>Оформлен</option><option>В пути</option><option>Доставлен</option><option>Отменён</option>
+          </select>`, (status) => {
           store('tumix_orders', orders().map(o => o.id === id ? { ...o, status } : o));
-          showToast('Статус заказа #' + id + ' обновлён');
+          showToast('Статус обновлён');
           renderEmployeeView('allOrders');
-        }
+        });
       }
       if (e.target.classList.contains('cancel-order-btn')) {
         e.stopPropagation();
         const id = e.target.dataset.id;
-        if (confirm('Отменить заказ #' + id + '?')) {
+        showModal('Отмена заказа #' + id, '<p>Вы уверены, что хотите отменить заказ?</p>', () => {
           store('tumix_orders', orders().map(o => o.id === id ? { ...o, status: 'Отменён' } : o));
-          showToast('Заказ #' + id + ' отменён');
+          showToast('Заказ отменён');
           renderEmployeeView('allOrders');
-        }
+        });
       }
       if (e.target.id === 'submitClientAppeal') {
-        const empName = document.getElementById('eName').value.trim();
-        const empTab = document.getElementById('eTab').value.trim();
-        if (!empName || !empTab) return showToast('Заполните данные сотрудника');
-        if (!/^[A-ZА-ЯЁ]+-\d{4}$/i.test(empTab)) return showToast('Табельный номер: TUM-0001');
         const app = {
           id: String(appeals().length + 1).padStart(7, '0'),
-          empName,
-          empTab,
+          empName: document.getElementById('eName').value,
+          empTab: document.getElementById('eTab').value,
           clientName: document.getElementById('cName').value,
           clientEmail: document.getElementById('cEmail').value,
           clientPhone: document.getElementById('cPhone').value,
           problem: document.getElementById('cProblem').value,
-          status: 'Открыто'
+          status: 'Открыто', replies: []
         };
         store('tumix_appeals', [...appeals(), app]);
-        showToast('Обращение клиента создано');
-        renderEmployeeView('empAppeals');
+        showToast('Обращение создано');
+        document.getElementById('tabClientAppeals').click();
       }
       if (e.target.id === 'submitEmpAppeal') {
-        const empName = document.getElementById('eName2').value.trim();
-        const empTab = document.getElementById('eTab2').value.trim();
-        if (!empName || !empTab) return showToast('Заполните данные сотрудника');
-        if (!/^[A-ZА-ЯЁ]+-\d{4}$/i.test(empTab)) return showToast('Табельный номер: TUM-0001');
-        store('tumix_emp_appeals', [...empAppeals(), { empName, empTab,
-          text: 'Руководителю отдела поддержки сотрудников TUMIX.' }]);
-        showToast('Обращение сотрудника создано');
-        renderEmployeeView('empAppeals');
+        store('tumix_emp_appeals', [...empAppeals(), {
+          empName: document.getElementById('eName2').value,
+          empTab: document.getElementById('eTab2').value,
+          text: 'Руководителю отдела поддержки сотрудников TUMIX.', replies: []
+        }]);
+        showToast('Создано');
+        document.getElementById('tabEmpAppeals').click();
       }
       if (e.target.id === 'sendColleague') {
         const inp = document.getElementById('colleagueInput');
         if (!inp.value.trim()) return;
-        store('tumix_colleague_chats', [...colleagueChats(), { from: currentEmployee?.name || 'Сотрудник',
-          text: inp.value, time: new Date().toLocaleTimeString('ru-RU') }]);
+        store('tumix_colleague_chats', [...colleagueChats(), { from: currentEmployee?.name || 'Сотрудник', text: inp.value, time: new Date().toLocaleTimeString('ru-RU') }]);
         renderEmployeeView('colleagueChat');
       }
       if (e.target.id === 'sendChat') {
         const inp = document.getElementById('chatInput');
         if (!inp.value.trim()) return;
         const d = document.createElement('div');
-        d.style.cssText =
-          'background:rgba(241,90,44,0.3);padding:12px 16px;border-radius:16px;margin:8px 0;color:white;text-align:right;';
+        d.style.cssText = 'background:rgba(241,90,44,0.3);padding:12px 16px;border-radius:16px;margin:8px 0;color:white;text-align:right;';
         d.textContent = inp.value;
         document.getElementById('chatMsgs').appendChild(d);
         if (!supportSessionAnswered) {
           setTimeout(() => {
             const r = document.createElement('div');
-            r.style.cssText =
-              'background:rgba(255,255,255,0.06);padding:12px 16px;border-radius:16px;margin:8px 0;';
+            r.style.cssText = 'background:rgba(255,255,255,0.06);padding:12px 16px;border-radius:16px;margin:8px 0;';
             r.textContent = '👩‍💼 Оператор скоро ответит вам, пожалуйста подождите.';
             document.getElementById('chatMsgs').appendChild(r);
             supportSessionAnswered = true;
