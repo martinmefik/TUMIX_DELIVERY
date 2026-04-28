@@ -4,9 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>TUMIX — Доставка с душой</title>
-  <!-- Фавикон (SVG в base64) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23F15A2C'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold' font-size='18'>T</text></svg>">
-  
+
   <style>
     * {
       margin: 0;
@@ -16,195 +15,209 @@
 
     body {
       font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-      background: #0f0f1a;
-      background-image: 
-        radial-gradient(ellipse at 20% 50%, rgba(241, 90, 44, 0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(255, 180, 100, 0.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 80%, rgba(180, 130, 255, 0.04) 0%, transparent 50%);
+      background: #0b0b16;
+      background-image:
+        radial-gradient(ellipse at 15% 40%, rgba(241, 90, 44, 0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 70%, rgba(255, 160, 80, 0.05) 0%, transparent 55%),
+        radial-gradient(ellipse at 40% 90%, rgba(140, 100, 255, 0.04) 0%, transparent 55%);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
-      color: #e8e6f0;
+      padding: 16px;
+      color: #e4e0ee;
     }
 
+    /* Основной контейнер */
     .app-wrapper {
       width: 100%;
-      max-width: 1440px;
-      min-height: 90vh;
-      background: rgba(20, 20, 35, 0.7);
-      backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
+      max-width: 1400px;
+      min-height: 92vh;
+      background: rgba(16, 16, 30, 0.75);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
       border-radius: 40px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow: 0 40px 70px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.04);
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
 
-    /* Логотип */
+    /* Шапка с лого */
     .logo-header {
-      padding: 24px 32px;
+      padding: 22px 32px;
       display: flex;
       align-items: center;
       gap: 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
     .logo-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, #F15A2C, #ff7b4a);
-      border-radius: 16px;
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #F15A2C, #ff7043);
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 900;
-      font-size: 24px;
-      color: white;
-      box-shadow: 0 12px 28px rgba(241, 90, 44, 0.4);
-      letter-spacing: -1px;
+      font-size: 22px;
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(241, 90, 44, 0.45);
     }
     .logo-text {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 800;
-      letter-spacing: -0.5px;
-      background: linear-gradient(to right, #fff, #e0cfc0);
+      letter-spacing: -0.4px;
+      background: linear-gradient(to right, #f0e0d0, #c0b0a0);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    /* Экран авторизации */
+    /* Экраны */
     .auth-screen {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 40px;
+      padding: 40px 20px;
     }
     .auth-tabs {
       display: flex;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.04);
-      padding: 6px;
-      border-radius: 20px;
-      margin-bottom: 36px;
-      backdrop-filter: blur(10px);
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 5px;
+      border-radius: 22px;
+      margin-bottom: 32px;
     }
     .auth-tab {
-      padding: 12px 32px;
-      border-radius: 16px;
+      padding: 11px 30px;
+      border-radius: 18px;
       border: none;
       background: transparent;
-      color: #a09aaa;
+      color: #9a90a8;
       font-weight: 600;
-      font-size: 15px;
+      font-size: 14px;
       cursor: pointer;
-      transition: all 0.3s ease;
-      letter-spacing: 0.3px;
+      transition: 0.25s;
     }
     .auth-tab.active {
       background: #F15A2C;
-      color: white;
-      box-shadow: 0 8px 24px rgba(241, 90, 44, 0.5);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(241, 90, 44, 0.5);
     }
-    .auth-card {
-      background: rgba(30, 30, 50, 0.6);
-      backdrop-filter: blur(20px);
+
+    /* Карточки форм */
+    .auth-card, .form-card {
+      background: rgba(22, 22, 40, 0.7);
+      backdrop-filter: blur(22px);
       border-radius: 32px;
-      padding: 40px;
+      padding: 36px 32px;
       width: 100%;
-      max-width: 460px;
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+      max-width: 500px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.55);
     }
-    .auth-card h2 {
-      font-size: 26px;
+    .auth-card h2, .form-card h3 {
+      font-size: 24px;
       font-weight: 700;
-      margin-bottom: 28px;
+      margin-bottom: 26px;
       text-align: center;
-      color: #f0e6e0;
+      color: #ede4d8;
     }
-    .input-field {
-      margin-bottom: 20px;
+
+    /* ПОЛЯ ВВОДА – красивые, с контуром, в столбик */
+    .input-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
-    .input-field label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: #b0a5b8;
-      margin-bottom: 8px;
-      letter-spacing: 0.5px;
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .field-group label {
+      font-size: 12px;
+      font-weight: 700;
       text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #b0a0b8;
     }
-    .input-field input {
+    .field-group input,
+    .field-group textarea,
+    .field-group select {
       width: 100%;
       padding: 14px 18px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
       border-radius: 16px;
-      font-size: 16px;
-      color: #f0e6e0;
+      font-size: 15px;
+      color: #f0e6dc;
       outline: none;
-      transition: all 0.3s ease;
+      transition: all 0.25s;
+      font-family: inherit;
+      resize: vertical;
+      backdrop-filter: blur(4px);
     }
-    .input-field input:focus {
+    .field-group input:focus,
+    .field-group textarea:focus {
       border-color: #F15A2C;
       box-shadow: 0 0 0 4px rgba(241, 90, 44, 0.15);
       background: rgba(255, 255, 255, 0.06);
     }
+    .field-group textarea {
+      min-height: 100px;
+    }
+
     .btn {
-      width: 100%;
-      padding: 16px;
+      padding: 15px 24px;
       border-radius: 18px;
       border: none;
       font-weight: 700;
-      font-size: 16px;
+      font-size: 15px;
       cursor: pointer;
-      transition: all 0.3s ease;
-      letter-spacing: 0.5px;
-      margin-top: 8px;
+      transition: 0.25s;
+      letter-spacing: 0.4px;
+      width: 100%;
+      margin-top: 10px;
     }
     .btn-primary {
-      background: linear-gradient(135deg, #F15A2C, #e0481f);
+      background: linear-gradient(135deg, #F15A2C, #d9441c);
       color: white;
-      box-shadow: 0 12px 30px rgba(241, 90, 44, 0.4);
+      box-shadow: 0 12px 28px rgba(241, 90, 44, 0.45);
     }
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 16px 36px rgba(241, 90, 44, 0.55);
+      box-shadow: 0 16px 34px rgba(241, 90, 44, 0.6);
     }
     .btn-outline {
       background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #d0c8d8;
+      border: 1.5px solid rgba(255,255,255,0.22);
+      color: #d0c6d8;
     }
     .link-text {
       text-align: center;
-      margin-top: 18px;
+      margin-top: 16px;
       font-size: 14px;
       color: #9088a0;
     }
-    .link-text a {
-      color: #F15A2C;
-      text-decoration: none;
-      font-weight: 600;
-    }
+    .link-text a { color: #F15A2C; text-decoration: none; font-weight: 600; }
+
     .success-popup {
-      background: linear-gradient(135deg, #1a3a2a, #0f2a1e);
+      background: #1e3a2a;
       border: 1px solid #2ecc71;
       color: #2ecc71;
-      padding: 20px 28px;
-      border-radius: 20px;
+      padding: 18px 24px;
+      border-radius: 18px;
       text-align: center;
       font-weight: 600;
       margin-bottom: 24px;
-      animation: fadeSlide 0.4s ease;
+      animation: fadeSlide 0.4s;
     }
     @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(-16px); }
+      from { opacity: 0; transform: translateY(-12px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -215,128 +228,95 @@
       min-height: 0;
     }
     .sidebar {
-      width: 260px;
-      background: rgba(18, 18, 32, 0.6);
-      backdrop-filter: blur(20px);
-      padding: 28px 16px;
+      width: 250px;
+      background: rgba(14, 14, 28, 0.55);
+      backdrop-filter: blur(18px);
+      padding: 24px 12px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      gap: 4px;
+      border-right: 1px solid rgba(255,255,255,0.05);
     }
     .sidebar-btn {
       background: transparent;
       border: none;
-      color: #b0a5b8;
-      padding: 14px 20px;
-      border-radius: 16px;
+      color: #b0a2b8;
+      padding: 13px 18px;
+      border-radius: 14px;
       font-weight: 600;
-      font-size: 15px;
       text-align: left;
       cursor: pointer;
-      transition: all 0.25s ease;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      transition: 0.2s;
+      font-size: 14px;
     }
     .sidebar-btn:hover, .sidebar-btn.active {
-      background: rgba(241, 90, 44, 0.2);
+      background: rgba(241,90,44,0.2);
       color: #F15A2C;
-    }
-    .sidebar-btn.active {
-      background: rgba(241, 90, 44, 0.25);
-      box-shadow: 0 0 20px rgba(241, 90, 44, 0.2);
     }
     .content-area {
       flex: 1;
-      padding: 32px;
+      padding: 30px;
       overflow-y: auto;
-      background: rgba(12, 12, 24, 0.3);
+      background: rgba(8,8,18,0.3);
     }
     .card {
-      background: rgba(25, 25, 45, 0.5);
-      backdrop-filter: blur(16px);
-      border-radius: 24px;
+      background: rgba(20,20,36,0.55);
+      backdrop-filter: blur(14px);
+      border-radius: 26px;
       padding: 28px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255,255,255,0.06);
       margin-bottom: 20px;
     }
     .grid-2col {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 18px;
     }
     .checkbox-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      margin: 16px 0;
+      gap: 10px;
+      margin: 14px 0;
     }
     .checkbox-pill {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255,255,255,0.03);
+      border: 1.5px solid rgba(255,255,255,0.14);
       border-radius: 30px;
       padding: 10px 18px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
+      color: #c8bdd0;
       transition: 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #c8bfd0;
     }
     .checkbox-pill.checked {
-      background: rgba(241, 90, 44, 0.25);
+      background: rgba(241,90,44,0.2);
       border-color: #F15A2C;
-      color: #ff9f7c;
+      color: #ffa07c;
     }
     .order-item, .appeal-item {
       background: rgba(255,255,255,0.03);
       border-radius: 16px;
-      padding: 18px;
-      margin: 10px 0;
+      padding: 16px;
+      margin: 8px 0;
       border-left: 3px solid #F15A2C;
     }
-    .chat-window {
+    .hidden { display: none !important; }
+    .tabs-inner {
       display: flex;
-      flex-direction: column;
-      height: 400px;
-      background: rgba(0,0,0,0.2);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .tab-inner {
+      padding: 8px 20px;
       border-radius: 20px;
-      padding: 20px;
+      background: rgba(255,255,255,0.04);
+      border: none;
+      color: #aaa;
+      cursor: pointer;
     }
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      margin-bottom: 16px;
-    }
-    .msg-bubble {
-      max-width: 75%;
-      padding: 12px 18px;
-      border-radius: 20px;
-      margin: 8px 0;
-      font-size: 14px;
-    }
-    .msg-support {
-      background: rgba(255,255,255,0.08);
-      color: #ddd;
-      align-self: flex-start;
-    }
-    .msg-client {
+    .tab-inner.active {
       background: #F15A2C;
       color: white;
-      margin-left: auto;
-    }
-    .hidden {
-      display: none !important;
-    }
-    .badge {
-      background: #F15A2C;
-      color: white;
-      border-radius: 12px;
-      padding: 2px 10px;
-      font-size: 12px;
-      margin-left: 8px;
     }
   </style>
 </head>
@@ -347,7 +327,6 @@
     <span class="logo-text">TUMIX</span>
   </div>
 
-  <!-- Экран авторизации -->
   <div id="authScreen" class="auth-screen">
     <div class="auth-tabs">
       <button class="auth-tab active" id="clientTab">👤 Клиент</button>
@@ -357,7 +336,6 @@
     <div id="globalSuccess" class="success-popup hidden"></div>
   </div>
 
-  <!-- Дашборд клиента -->
   <div id="clientDashboard" class="dashboard hidden">
     <div class="sidebar">
       <button class="sidebar-btn active" data-view="delivery">📦 Доставка</button>
@@ -368,7 +346,6 @@
     <div class="content-area" id="clientContent"></div>
   </div>
 
-  <!-- Дашборд сотрудника -->
   <div id="employeeDashboard" class="dashboard hidden">
     <div class="sidebar">
       <button class="sidebar-btn active" data-view="empChat">💬 Чат</button>
@@ -381,300 +358,181 @@
 
 <script>
   (() => {
-    // Хранилище
-    const store = (key, val) => val !== undefined ? localStorage.setItem(key, JSON.stringify(val)) : JSON.parse(localStorage.getItem(key) || 'null');
+    const store = (k, v) => v !== undefined ? localStorage.setItem(k, JSON.stringify(v)) : JSON.parse(localStorage.getItem(k) || 'null');
     const users = () => store('tumix_users') || [];
     const orders = () => store('tumix_orders') || [];
     const appeals = () => store('tumix_appeals') || [];
     const empAppeals = () => store('tumix_emp_appeals') || [];
-    const chats = () => store('tumix_chats') || [];
 
-    let currentClient = null;
-    let currentEmployee = null;
+    let currentClient = null, currentEmployee = null;
+    const TEST_EMP = { tab: 'TUM-0001', password: 'Password0001', name: 'Алексей Смирнов' };
 
-    // DOM элементы
     const authScreen = document.getElementById('authScreen');
     const clientDash = document.getElementById('clientDashboard');
     const empDash = document.getElementById('employeeDashboard');
     const authForms = document.getElementById('authFormsContainer');
     const globalSuccess = document.getElementById('globalSuccess');
 
-    // Тестовый сотрудник
-    const TEST_EMP = { tab: 'TUM-0001', password: 'Password0001', name: 'Алексей Смирнов' };
-
-    // Переключение вкладок авторизации
     let authMode = 'client';
     document.getElementById('clientTab').addEventListener('click', () => { authMode = 'client'; renderAuth(); });
     document.getElementById('employeeTab').addEventListener('click', () => { authMode = 'employee'; renderAuth(); });
 
     function showSuccess(msg) {
-      globalSuccess.textContent = msg;
-      globalSuccess.classList.remove('hidden');
+      globalSuccess.textContent = msg; globalSuccess.classList.remove('hidden');
       setTimeout(() => globalSuccess.classList.add('hidden'), 3000);
     }
 
     function renderAuth() {
-      document.getElementById('clientTab').classList.toggle('active', authMode === 'client');
-      document.getElementById('employeeTab').classList.toggle('active', authMode === 'employee');
-      
+      document.getElementById('clientTab').classList.toggle('active', authMode==='client');
+      document.getElementById('employeeTab').classList.toggle('active', authMode==='employee');
       if (authMode === 'client') {
         authForms.innerHTML = `
           <h2>Вход в аккаунт</h2>
-          <div class="input-field"><label>Почта</label><input type="email" id="loginEmail" placeholder="your@email.com"></div>
-          <div class="input-field"><label>Пароль</label><input type="password" id="loginPass" placeholder="••••••••"></div>
+          <div class="input-column">
+            <div class="field-group"><label>Почта</label><input type="email" id="loginEmail" placeholder="your@email.com"></div>
+            <div class="field-group"><label>Пароль</label><input type="password" id="loginPass" placeholder="••••••••"></div>
+          </div>
           <button class="btn btn-primary" id="loginClientBtn">Войти</button>
-          <p class="link-text">Нет аккаунта? <a href="#" id="showRegister">Зарегистрироваться</a></p>
-        `;
+          <p class="link-text">Нет аккаунта? <a href="#" id="showRegister">Зарегистрироваться</a></p>`;
         document.getElementById('loginClientBtn').addEventListener('click', clientLogin);
         document.getElementById('showRegister').addEventListener('click', (e) => {
           e.preventDefault();
           authForms.innerHTML = `
             <h2>Регистрация</h2>
-            <div class="input-field"><label>Имя *</label><input id="regName"></div>
-            <div class="input-field"><label>Почта *</label><input type="email" id="regEmail"></div>
-            <div class="input-field"><label>Телефон *</label><input type="tel" id="regPhone"></div>
-            <div class="input-field"><label>Пароль *</label><input type="password" id="regPass"></div>
+            <div class="input-column">
+              <div class="field-group"><label>Имя *</label><input id="regName"></div>
+              <div class="field-group"><label>Почта *</label><input type="email" id="regEmail"></div>
+              <div class="field-group"><label>Телефон *</label><input type="tel" id="regPhone"></div>
+              <div class="field-group"><label>Пароль *</label><input type="password" id="regPass"></div>
+            </div>
             <button class="btn btn-primary" id="registerBtn">Зарегистрироваться</button>
-            <p class="link-text"><a href="#" id="backToLogin">Назад ко входу</a></p>
-          `;
+            <p class="link-text"><a href="#" id="backToLogin">Назад ко входу</a></p>`;
           document.getElementById('registerBtn').addEventListener('click', () => {
-            const name = document.getElementById('regName').value.trim();
-            const email = document.getElementById('regEmail').value.trim();
-            const phone = document.getElementById('regPhone').value.trim();
-            const pass = document.getElementById('regPass').value.trim();
-            if (!name || !email || !phone || !pass) return alert('Все поля обязательны');
-            let u = users();
-            if (u.find(x => x.email === email)) return alert('Почта занята');
-            u.push({ id: Date.now().toString(), name, email, phone, password: pass });
-            store('tumix_users', u);
-            showSuccess('✅ Успешная регистрация! Теперь войдите.');
-            renderAuth();
+            const n=document.getElementById('regName').value.trim(), e=document.getElementById('regEmail').value.trim(), p=document.getElementById('regPhone').value.trim(), pw=document.getElementById('regPass').value.trim();
+            if(!n||!e||!p||!pw) return alert('Все поля обязательны');
+            let u=users(); if(u.find(x=>x.email===e)) return alert('Почта занята');
+            u.push({id:Date.now().toString(), name:n, email:e, phone:p, password:pw});
+            store('tumix_users',u); showSuccess('✅ Успешная регистрация! Теперь войдите.'); renderAuth();
           });
-          document.getElementById('backToLogin').addEventListener('click', (e) => { e.preventDefault(); renderAuth(); });
+          document.getElementById('backToLogin').addEventListener('click', (e)=>{e.preventDefault(); renderAuth();});
         });
       } else {
         authForms.innerHTML = `
           <h2>Вход для сотрудников</h2>
-          <div class="input-field"><label>Табельный номер</label><input id="empTab" placeholder="TUM-0001"></div>
-          <div class="input-field"><label>Пароль</label><input type="password" id="empPass"></div>
-          <button class="btn btn-primary" id="loginEmpBtn">Войти</button>
-        `;
-        document.getElementById('loginEmpBtn').addEventListener('click', () => {
-          const tab = document.getElementById('empTab').value.trim();
-          const pass = document.getElementById('empPass').value.trim();
-          if (tab === TEST_EMP.tab && pass === TEST_EMP.password) {
-            currentEmployee = { ...TEST_EMP };
-            authScreen.classList.add('hidden');
-            empDash.classList.remove('hidden');
-            clientDash.classList.add('hidden');
-            renderEmployeeView('empChat');
+          <div class="input-column">
+            <div class="field-group"><label>Табельный номер</label><input id="empTab" placeholder="TUM-0001"></div>
+            <div class="field-group"><label>Пароль</label><input type="password" id="empPass"></div>
+          </div>
+          <button class="btn btn-primary" id="loginEmpBtn">Войти</button>`;
+        document.getElementById('loginEmpBtn').addEventListener('click', ()=>{
+          if(document.getElementById('empTab').value.trim()===TEST_EMP.tab && document.getElementById('empPass').value.trim()===TEST_EMP.password){
+            currentEmployee={...TEST_EMP}; authScreen.classList.add('hidden'); empDash.classList.remove('hidden'); clientDash.classList.add('hidden'); renderEmployeeView('empChat');
           } else alert('Неверные данные');
         });
       }
     }
 
-    function clientLogin() {
-      const email = document.getElementById('loginEmail').value.trim();
-      const pass = document.getElementById('loginPass').value.trim();
-      const user = users().find(u => u.email === email && u.password === pass);
-      if (user) {
-        currentClient = user;
-        authScreen.classList.add('hidden');
-        clientDash.classList.remove('hidden');
-        empDash.classList.add('hidden');
-        renderClientView('delivery');
-      } else alert('Неверная почта или пароль');
+    function clientLogin(){
+      const e=document.getElementById('loginEmail').value.trim(), p=document.getElementById('loginPass').value.trim();
+      const u=users().find(x=>x.email===e&&x.password===p);
+      if(u){currentClient=u; authScreen.classList.add('hidden'); clientDash.classList.remove('hidden'); empDash.classList.add('hidden'); renderClientView('delivery');}
+      else alert('Неверные данные');
     }
 
-    // Навигация клиента
-    document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderClientView(btn.dataset.view);
-      });
-    });
-
-    function renderClientView(view) {
-      const area = document.getElementById('clientContent');
-      switch(view) {
-        case 'delivery': area.innerHTML = deliveryForm(); break;
-        case 'appeals': area.innerHTML = clientAppealsList(); break;
-        case 'orders': area.innerHTML = clientOrders(); break;
-        case 'support': area.innerHTML = supportChat(); initSupportChat(); break;
-      }
+    document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(b=>b.addEventListener('click',()=>{
+      document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderClientView(b.dataset.view);
+    }));
+    function renderClientView(view){
+      const a=document.getElementById('clientContent');
+      if(view==='delivery') a.innerHTML=deliveryForm();
+      else if(view==='appeals') a.innerHTML=clientAppeals();
+      else if(view==='orders') a.innerHTML=clientOrders();
+      else if(view==='support') a.innerHTML=supportChat();
     }
 
-    function deliveryForm() {
-      return `
-        <div class="card"><h3>📦 Новая доставка</h3>
-        <div class="grid-2col">
-          <div class="input-field"><label>ФИО отправителя *</label><input id="sName"></div>
-          <div class="input-field"><label>Телефон отправителя *</label><input id="sPhone"></div>
-          <div class="input-field"><label>Адрес отправки *</label><input id="sAddr"></div>
-        </div>
-        <h4 style="margin-top:20px;">Получатель</h4>
-        <div class="grid-2col">
-          <div class="input-field"><label>ФИО получателя *</label><input id="rName"></div>
-          <div class="input-field"><label>Телефон получателя *</label><input id="rPhone"></div>
-          <div class="input-field"><label>Адрес получателя *</label><input id="rAddr"></div>
-        </div>
-        <div class="input-field"><label>Город</label><input value="Москва и МО" disabled></div>
-        <div class="input-field"><label>Содержимое *</label><input id="contentDesc"></div>
+    function deliveryForm(){
+      return `<div class="card"><h3>📦 Новая доставка</h3><div class="input-column">
+        <div class="field-group"><label>ФИО отправителя *</label><input id="sName"></div>
+        <div class="field-group"><label>Телефон отправителя *</label><input id="sPhone"></div>
+        <div class="field-group"><label>Адрес отправки *</label><input id="sAddr"></div>
+        <div class="field-group"><label>ФИО получателя *</label><input id="rName"></div>
+        <div class="field-group"><label>Телефон получателя *</label><input id="rPhone"></div>
+        <div class="field-group"><label>Адрес получателя *</label><input id="rAddr"></div>
+        <div class="field-group"><label>Город</label><input value="Москва и МО" disabled></div>
+        <div class="field-group"><label>Содержимое *</label><input id="contentDesc"></div>
         <div class="checkbox-group" id="packCheckboxes">
-          <label class="checkbox-pill"><input type="checkbox" value="Пакет" hidden> 📦 Пакет (60₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Конверт" hidden> ✉️ Конверт (90₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка S" hidden> 📦 Коробка S (120₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка M" hidden> 📦 Коробка M (220₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка L" hidden> 📦 Коробка L (280₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка XL" hidden> 📦 Коробка XL (350₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Пакет" hidden> Пакет (60₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Конверт" hidden> Конверт (90₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка S" hidden> Коробка S (120₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка M" hidden> Коробка M (220₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка L" hidden> Коробка L (280₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка XL" hidden> Коробка XL (350₽)</label>
         </div>
         <button class="btn btn-primary" id="calcDelivery">Рассчитать и оформить</button>
-        <div id="priceDetails" style="margin-top:20px;"></div></div>
-      `;
+        <div id="priceDetails"></div></div></div>`;
     }
 
-    document.addEventListener('click', e => {
-      if (e.target.id === 'calcDelivery') {
-        const packs = [...document.querySelectorAll('#packCheckboxes input:checked')].map(cb => cb.value);
-        if (!packs.length) return alert('Выберите упаковку');
-        const prices = { 'Пакет': 60, 'Конверт': 90, 'Коробка S': 120, 'Коробка M': 220, 'Коробка L': 280, 'Коробка XL': 350 };
-        let packCost = packs.reduce((s, p) => s + prices[p], 0);
-        let dist = Math.floor(Math.random() * 20) + 5;
-        let kmCost = dist * 6;
-        let service = 29;
-        let weather = Math.random() < 0.35 ? 1.3 : 1;
-        let total = Math.round((packCost + kmCost + service) * weather);
-        document.getElementById('priceDetails').innerHTML = `
-          <p>📦 Упаковка: ${packCost}₽ | 🛣️ ${dist}км × 6₽ = ${kmCost}₽ | 🔧 Сервис: 29₽</p>
-          ${weather > 1 ? '<p style="color:#ff7b4a;">🌧️ Непогода +30%</p>' : ''}
-          <h3>Итого: ${total}₽</h3>
-          <button class="btn btn-primary" id="confirmOrder">Оформить доставку</button>
-        `;
+    document.addEventListener('click', e=>{
+      if(e.target.id==='calcDelivery'){
+        const packs=[...document.querySelectorAll('#packCheckboxes input:checked')].map(c=>c.value);
+        if(!packs.length) return alert('Выберите упаковку');
+        const pr={Пакет:60,Конверт:90,'Коробка S':120,'Коробка M':220,'Коробка L':280,'Коробка XL':350};
+        let pc=packs.reduce((s,p)=>s+pr[p],0), dist=Math.floor(Math.random()*20)+5, km=dist*6, serv=29, w=Math.random()<0.35?1.3:1;
+        let total=Math.round((pc+km+serv)*w);
+        document.getElementById('priceDetails').innerHTML=`<p>📦 Упаковка: ${pc}₽ | 🛣️ ${dist}км ×6₽ = ${km}₽ | 🔧 Сервис: 29₽</p>${w>1?'<p style="color:#ff7b4a;">🌧️ Непогода +30%</p>':''}<h3>Итого: ${total}₽</h3><button class="btn btn-primary" id="confirmOrder">Оформить доставку</button>`;
       }
-      if (e.target.id === 'confirmOrder') {
-        const order = {
-          id: Date.now().toString(),
-          clientId: currentClient.id,
-          sender: document.getElementById('sName').value,
-          sPhone: document.getElementById('sPhone').value,
-          sAddr: document.getElementById('sAddr').value,
-          recName: document.getElementById('rName').value,
-          rPhone: document.getElementById('rPhone').value,
-          rAddr: document.getElementById('rAddr').value,
-          content: document.getElementById('contentDesc').value,
-          packs: [...document.querySelectorAll('#packCheckboxes input:checked')].map(cb => cb.value),
-          status: 'Оформлен',
-          date: new Date().toLocaleString()
-        };
-        store('tumix_orders', [...orders(), order]);
-        alert('✅ Доставка успешно оформлена! Отслеживайте во вкладке "Мои заказы".');
-        document.querySelector('#clientDashboard .sidebar-btn[data-view="orders"]').click();
+      if(e.target.id==='confirmOrder'){
+        store('tumix_orders',[...orders(),{id:Date.now().toString(),clientId:currentClient.id,sender:document.getElementById('sName').value,recName:document.getElementById('rName').value,status:'Оформлен'}]);
+        alert('✅ Доставка оформлена!'); document.querySelector('#clientDashboard .sidebar-btn[data-view="orders"]').click();
       }
-      // Чекбоксы стиль
-      if (e.target.closest('.checkbox-pill')) {
-        const pill = e.target.closest('.checkbox-pill');
-        const cb = pill.querySelector('input');
-        cb.checked = !cb.checked;
-        pill.classList.toggle('checked', cb.checked);
+      if(e.target.closest('.checkbox-pill')){
+        const pill=e.target.closest('.checkbox-pill'), cb=pill.querySelector('input'); cb.checked=!cb.checked; pill.classList.toggle('checked',cb.checked);
       }
     });
 
-    function clientOrders() {
-      const ords = orders().filter(o => o.clientId === currentClient?.id);
-      return `<h3>Мои заказы</h3>` + ords.map(o => `
-        <div class="order-item"><b>${o.sender} → ${o.recName}</b> | Статус: ${o.status} | ${o.date}</div>
-      `).join('') || '<p>Нет заказов</p>';
+    function clientOrders(){ return `<h3>Мои заказы</h3>`+orders().filter(o=>o.clientId===currentClient?.id).map(o=>`<div class="order-item">${o.sender} → ${o.recName} | ${o.status}</div>`).join('')||'<p>Нет заказов</p>'; }
+    function clientAppeals(){ return `<h3>Мои обращения</h3>`+appeals().filter(a=>a.clientEmail===currentClient?.email).map(a=>`<div class="appeal-item">#${a.id} ${a.problem} | ${a.status||'Открыто'}</div>`).join('')||'<p>Обращений нет</p>'; }
+    function supportChat(){ return `<div class="card"><h3>Поддержка</h3><div id="chatMsgs" style="max-height:300px;overflow-y:auto;"><div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:14px;margin:8px 0;">Здравствуйте! Это поддержка TUMIX, какой у вас вопрос?</div></div><div style="display:flex;gap:10px;margin-top:12px;"><input id="chatInput" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px;color:white;"><button class="btn btn-primary" id="sendChat" style="width:auto;">Отправить</button></div></div>`; }
+
+    // Сотрудник
+    document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(b=>b.addEventListener('click',()=>{
+      document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderEmployeeView(b.dataset.view);
+    }));
+    function renderEmployeeView(view){
+      const a=document.getElementById('employeeContent');
+      if(view==='empChat') a.innerHTML='<h3>Чаты клиентов</h3><p>Список чатов появится после подключения базы данных.</p>';
+      else if(view==='empAppeals') a.innerHTML=empAppealsPanel();
+      else if(view==='allOrders') a.innerHTML='<h3>Все заказы</h3>'+orders().map(o=>`<div class="order-item">${o.sender} → ${o.recName} | ${o.status}</div>`).join('');
     }
 
-    function clientAppealsList() {
-      const apps = appeals().filter(a => a.clientEmail === currentClient?.email);
-      return `<h3>Мои обращения</h3>` + apps.map(a => `
-        <div class="appeal-item"><b>#${a.id}</b> ${a.problem} | Статус: ${a.status || 'Открыто'}</div>
-      `).join('') || '<p>Обращений нет</p>';
+    function empAppealsPanel(){
+      return `<div class="tabs-inner">
+        <button class="tab-inner active" id="tabClientAppeals">Обращения клиентов</button>
+        <button class="tab-inner" id="tabEmpAppeals">Обращения сотрудников</button>
+        <button class="tab-inner" id="tabCreateClient">+ Создать клиенту</button>
+        <button class="tab-inner" id="tabCreateEmp">+ Создать сотруднику</button>
+      </div><div id="appealsSubContent"></div>`;
     }
 
-    function supportChat() {
-      return `<div class="chat-window"><div class="chat-messages" id="chatMsgs"><div class="msg-bubble msg-support">Здравствуйте! Это поддержка TUMIX, какой у вас вопрос?</div></div>
-      <div style="display:flex;gap:10px;"><input id="chatInput" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px; color:white;" placeholder="Сообщение..."><button class="btn btn-primary" id="sendChat" style="width:auto;">Отправить</button></div></div>`;
-    }
-    function initSupportChat() {
-      document.getElementById('sendChat')?.addEventListener('click', () => {
-        const inp = document.getElementById('chatInput');
-        if (!inp.value.trim()) return;
-        const div = document.createElement('div');
-        div.className = 'msg-bubble msg-client'; div.textContent = inp.value;
-        document.getElementById('chatMsgs').appendChild(div);
-        setTimeout(() => {
-          const auto = document.createElement('div');
-          auto.className = 'msg-bubble msg-support'; auto.textContent = 'Оператор скоро ответит вам, пожалуйста подождите.';
-          document.getElementById('chatMsgs').appendChild(auto);
-        }, 600);
-        inp.value = '';
-      });
-    }
-
-    // Навигация сотрудника
-    document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderEmployeeView(btn.dataset.view);
-      });
-    });
-
-    function renderEmployeeView(view) {
-      const area = document.getElementById('employeeContent');
-      if (view === 'empChat') area.innerHTML = empChatInterface();
-      else if (view === 'empAppeals') area.innerHTML = empAppealsPanel();
-      else if (view === 'allOrders') area.innerHTML = `<h3>Все заказы</h3>` + orders().map(o => `<div class="order-item">${o.sender} → ${o.recName} | ${o.status}</div>`).join('');
-    }
-
-    function empChatInterface() {
-      return `<h3>Чаты клиентов</h3><div id="empChatList"></div>`;
-    }
-
-    function empAppealsPanel() {
-      return `
-        <h3>Обращения</h3>
-        <button class="btn btn-outline" id="createClientAppealBtn">+ Создать обращение клиента</button>
-        <button class="btn btn-outline" id="createEmpAppealBtn" style="margin-left:10px;">+ Обращение сотрудника</button>
-        <div id="appealsListContainer" style="margin-top:20px;">${appeals().map(a=>`<div class="appeal-item">#${a.id} ${a.problem}</div>`).join('')}</div>
-      `;
-    }
-
-    document.addEventListener('click', e => {
-      if (e.target.id === 'createClientAppealBtn') {
-        const form = `
-          <div class="card"><h4>Новое обращение клиента</h4>
-          <input placeholder="ФИО сотрудника" id="empName"><input placeholder="Табельный номер" id="empTabNum">
-          <input placeholder="ФИО клиента" id="cliName"><input placeholder="Почта клиента" id="cliEmail">
-          <input placeholder="Телефон клиента" id="cliPhone"><textarea placeholder="Суть проблемы" id="problemDesc"></textarea>
-          <button class="btn btn-primary" id="submitClientAppeal">Оформить</button></div>`;
-        document.getElementById('appealsListContainer').innerHTML = form;
+    document.addEventListener('click', e=>{
+      if(e.target.id==='tabClientAppeals') document.getElementById('appealsSubContent').innerHTML=appeals().map(a=>`<div class="appeal-item">#${a.id} ${a.problem} | ${a.status||'Открыто'}</div>`).join('')||'Нет обращений';
+      if(e.target.id==='tabEmpAppeals') document.getElementById('appealsSubContent').innerHTML=empAppeals().map(a=>`<div class="appeal-item">${a.empName} → Руководителю | ${a.text}</div>`).join('')||'Нет обращений';
+      if(e.target.id==='tabCreateClient') document.getElementById('appealsSubContent').innerHTML=`<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName"></div><div class="field-group"><label>Табельный номер</label><input id="eTab"></div><div class="field-group"><label>ФИО клиента</label><input id="cName"></div><div class="field-group"><label>Почта клиента</label><input id="cEmail"></div><div class="field-group"><label>Телефон клиента</label><input id="cPhone"></div><div class="field-group"><label>Суть проблемы</label><textarea id="cProblem"></textarea></div><button class="btn btn-primary" id="submitClientAppeal">Оформить обращение</button></div></div>`;
+      if(e.target.id==='submitClientAppeal'){
+        const app={id:String(appeals().length+1).padStart(7,'0'),empName:document.getElementById('eName').value,problem:document.getElementById('cProblem').value,clientEmail:document.getElementById('cEmail').value,status:'Открыто'};
+        store('tumix_appeals',[...appeals(),app]); alert('Обращение создано'); renderEmployeeView('empAppeals');
       }
-      if (e.target.id === 'submitClientAppeal') {
-        const newApp = {
-          id: String(appeals().length + 1).padStart(7, '0'),
-          empName: document.getElementById('empName').value,
-          empTab: document.getElementById('empTabNum').value,
-          clientName: document.getElementById('cliName').value,
-          clientEmail: document.getElementById('cliEmail').value,
-          clientPhone: document.getElementById('cliPhone').value,
-          problem: document.getElementById('problemDesc').value,
-          status: 'Открыто'
-        };
-        store('tumix_appeals', [...appeals(), newApp]);
-        alert('Обращение создано');
-        renderEmployeeView('empAppeals');
+      if(e.target.id==='tabCreateEmp') document.getElementById('appealsSubContent').innerHTML=`<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName2"></div><div class="field-group"><label>Табельный номер</label><input id="eTab2"></div><div class="field-group"><label>Кому: Руководителю поддержки TUMIX</label><input disabled value="Руководитель поддержки TUMIX"></div><div class="field-group"><label>Текст обращения</label><textarea id="eText">Руководителю отдела поддержки сотрудников TUMIX.</textarea></div><button class="btn btn-primary" id="submitEmpAppeal">Оформить</button></div></div>`;
+      if(e.target.id==='submitEmpAppeal'){
+        store('tumix_emp_appeals',[...empAppeals(),{empName:document.getElementById('eName2').value,text:document.getElementById('eText').value}]);
+        alert('Обращение сотрудника создано'); renderEmployeeView('empAppeals');
       }
-      if (e.target.id === 'createEmpAppealBtn') {
-        document.getElementById('appealsListContainer').innerHTML = `
-          <div class="card"><h4>Обращение сотрудника</h4>
-          <input placeholder="ФИО сотрудника" id="empName2"><input placeholder="Табельный номер" id="empTab2">
-          <p><strong>Кому: Руководителю поддержки TUMIX</strong></p>
-          <textarea placeholder="Руководителю отдела поддержки сотрудников TUMIX." id="empProblem"></textarea>
-          <button class="btn btn-primary" id="submitEmpAppeal">Оформить</button></div>`;
+      if(e.target.id==='sendChat'){
+        const inp=document.getElementById('chatInput'); if(!inp.value.trim()) return;
+        const d=document.createElement('div'); d.style.cssText='background:rgba(241,90,44,0.2);padding:10px;border-radius:12px;margin:6px 0;'; d.textContent=inp.value;
+        document.getElementById('chatMsgs').appendChild(d);
+        setTimeout(()=>{const r=document.createElement('div'); r.style.cssText='background:rgba(255,255,255,0.05);padding:10px;border-radius:12px;'; r.textContent='Оператор скоро ответит вам, пожалуйста подождите.'; document.getElementById('chatMsgs').appendChild(r);},700);
+        inp.value='';
       }
     });
 
