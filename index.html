@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>TUMIX — Доставка с кайфом</title>
+  <title>TUMIX — Доставка с душой</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23F15A2C'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold' font-size='18'>T</text></svg>">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
@@ -15,7 +15,6 @@
       box-sizing: border-box;
     }
 
-    /* Кастомный скроллбар — произведение искусства */
     ::-webkit-scrollbar {
       width: 10px;
       height: 10px;
@@ -104,7 +103,6 @@
       animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1), borderGlow 6s infinite;
     }
 
-    /* Хедер */
     .logo-header {
       padding: 20px 36px;
       display: flex;
@@ -159,7 +157,6 @@
       transform: translateY(-2px);
     }
 
-    /* Экран авторизации */
     .auth-screen {
       flex: 1;
       display: flex;
@@ -337,7 +334,6 @@
       text-decoration: underline;
     }
 
-    /* Уведомления */
     .toast-notification {
       position: fixed;
       top: 28px;
@@ -358,7 +354,6 @@
       gap: 14px;
     }
 
-    /* Дашборд */
     .dashboard {
       flex: 1;
       display: flex;
@@ -621,6 +616,7 @@
     const orders = () => store('tumix_orders') || [];
     const appeals = () => store('tumix_appeals') || [];
     const empAppeals = () => store('tumix_emp_appeals') || [];
+    const resolvedAppeals = () => store('tumix_resolved_appeals') || [];
     const colleagueChats = () => store('tumix_colleague_chats') || [];
 
     let currentClient = null,
@@ -802,7 +798,7 @@
     async function geocodeAddress(address) {
       try {
         const resp = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Москва')}&limit=1`
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Московская область')}&limit=1`
           );
         const data = await resp.json();
         if (data && data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0]
@@ -824,10 +820,10 @@
       return `<div class="card"><h3>📦 Оформление доставки</h3><div class="input-column">
         <div class="field-group"><label>👤 ФИО отправителя *</label><input id="sName" autocomplete="off" placeholder="Иванов Иван Иванович"></div>
         <div class="field-group"><label>📱 Телефон отправителя *</label><input id="sPhone" value="+7" autocomplete="off" placeholder="+79161234567"></div>
-        <div class="field-group"><label>📍 Адрес отправки *</label><input id="sAddr" placeholder="Москва, ул. Тверская, 1" autocomplete="off"></div>
+        <div class="field-group"><label>📍 Адрес отправки *</label><input id="sAddr" placeholder="Москва, ул. Тверская, 1 или Балашиха, ул. Ленина, 5" autocomplete="off"></div>
         <div class="field-group"><label>👤 ФИО получателя *</label><input id="rName" autocomplete="off" placeholder="Петров Петр Петрович"></div>
         <div class="field-group"><label>📱 Телефон получателя *</label><input id="rPhone" value="+7" autocomplete="off" placeholder="+79169876543"></div>
-        <div class="field-group"><label>📍 Адрес получателя *</label><input id="rAddr" placeholder="Москва, ул. Арбат, 10" autocomplete="off"></div>
+        <div class="field-group"><label>📍 Адрес получателя *</label><input id="rAddr" placeholder="Москва, ул. Арбат, 10 или Химки, ул. Победы, 3" autocomplete="off"></div>
         <div class="field-group"><label>📦 Содержимое отправления *</label><input id="contentDesc" autocomplete="off" placeholder="Документы, подарок и т.д."></div>
         <div class="checkbox-group" id="packCheckboxes">
           <label class="checkbox-pill"><input type="checkbox" value="Пакет" hidden> 🛍️ Пакет (60₽)</label>
@@ -854,7 +850,7 @@
         Promise.all([geocodeAddress(sAddr), geocodeAddress(rAddr)]).then(([from, to]) => {
           if (!from || !to) {
             document.getElementById('priceDetails').innerHTML =
-              '<p style="color:#ff7043;text-align:center;">❌ Адрес не найден. Попробуйте: Москва, улица, дом</p>';
+              '<p style="color:#ff7043;text-align:center;">❌ Адрес не найден. Попробуйте: Город, улица, дом</p>';
             return;
           }
           const dist = calculateRealDistance(from.lat, from.lng, to.lat, to.lng);
@@ -1010,6 +1006,7 @@
       return `<div class="tabs-inner">
         <button class="tab-inner active" id="tabClientAppeals">👥 Обращения клиентов</button>
         <button class="tab-inner" id="tabEmpAppeals">👔 Обращения сотрудников</button>
+        <button class="tab-inner" id="tabResolvedAppeals">✅ Решенные клиентские</button>
         <button class="tab-inner" id="tabCreateClient">➕ Создать обращение клиента</button>
         <button class="tab-inner" id="tabCreateEmp">📝 Создать обращение сотрудника</button>
       </div><div id="appealsSubContent"></div>`;
@@ -1047,22 +1044,35 @@
               ${currentEmployee?.role === 'admin' ? `
                 <textarea id="replyText_${a.id}" placeholder="Введите ответ руководителя..." style="width:100%;margin-top:12px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.15);border-radius:14px;padding:12px;color:white;min-height:80px;"></textarea>
                 <button class="btn btn-primary reply-btn" data-id="${a.id}" style="margin-top:8px;">📩 Ответить как руководитель</button>
-                <button class="btn btn-danger delete-btn" data-id="${a.id}" style="margin-top:6px;">🗑️ Удалить обращение</button>
+                <button class="btn btn-outline close-btn" data-id="${a.id}" style="margin-top:6px;">✅ Закрыть обращение</button>
+                <button class="btn btn-danger delete-btn" data-id="${a.id}" style="margin-top:6px;">🗑️ Удалить</button>
               ` : ''}
             </div>
           </div>`).join('') || '<p style="text-align:center;padding:40px;">Обращений клиентов нет</p>';
-        if (e.target.id === 'tabEmpAppeals') sub.innerHTML = empAppeals().map(a => `
+        if (e.target.id === 'tabEmpAppeals') sub.innerHTML = empAppeals().filter(a => a.empTab === currentEmployee?.tab || currentEmployee?.role === 'admin').map(a => `
           <div class="appeal-item">
             <b>👔 ${a.empName}</b> → Руководителю поддержки TUMIX
             <div class="details" style="margin-top:14px;">
               <div class="detail-row"><span>🪪 Табельный:</span><span>${a.empTab}</span></div>
-              <div class="detail-row"><span>📝 Текст:</span><span style="text-align:left;">${a.text}</span></div>
+              <div class="detail-row"><span>📝 Текст:</span><span style="text-align:left;white-space:pre-wrap;">${a.text}</span></div>
+              ${a.reply ? `<div class="admin-reply">🔴 <b>Ответ руководителя:</b><br>${a.reply}</div>` : ''}
               ${currentEmployee?.role === 'admin' ? `
                 <textarea id="empReplyText_${a.empName}" placeholder="Ответ руководителя..." style="width:100%;margin-top:12px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.15);border-radius:14px;padding:12px;color:white;min-height:80px;"></textarea>
                 <button class="btn btn-primary emp-reply-btn" data-emp="${a.empName}" style="margin-top:8px;">📩 Ответить сотруднику</button>
               ` : ''}
             </div>
           </div>`).join('') || '<p style="text-align:center;padding:40px;">Обращений сотрудников нет</p>';
+        if (e.target.id === 'tabResolvedAppeals') sub.innerHTML = resolvedAppeals().map(a => `
+          <div class="appeal-item">
+            <b>✅ Решено #${a.id}</b> — ${a.status || 'Закрыто'}
+            <div class="details" style="margin-top:14px;">
+              <div class="detail-row"><span>👤 Сотрудник:</span><span>${a.empName}</span></div>
+              <div class="detail-row"><span>👤 Клиент:</span><span>${a.clientName}</span></div>
+              <div class="detail-row"><span>📝 Проблема:</span><span>${a.problem}</span></div>
+              ${a.reply ? `<div class="admin-reply">🔴 <b>Руководитель:</b><br>${a.reply}</div>` : ''}
+              ${currentEmployee?.role === 'admin' ? `<button class="btn btn-danger delete-resolved-btn" data-id="${a.id}" style="margin-top:8px;">🗑️ Удалить навсегда</button>` : ''}
+            </div>
+          </div>`).join('') || '<p style="text-align:center;padding:40px;">Решенных обращений нет</p>';
         if (e.target.id === 'tabCreateClient') sub.innerHTML = `
           <div class="form-card">
             <h3>➕ Новое обращение клиента</h3>
@@ -1101,7 +1111,24 @@
         const emp = e.target.dataset.emp;
         const text = document.getElementById('empReplyText_' + emp).value.trim();
         if (!text) return showToast('Введите текст ответа');
+        const upd = empAppeals().map(a => a.empName === emp ? { ...a, reply: text } : a);
+        store('tumix_emp_appeals', upd);
         showToast('Ответ для ' + emp + ' отправлен');
+        renderEmployeeView('empAppeals');
+      }
+      if (e.target.classList.contains('close-btn')) {
+        e.stopPropagation();
+        const id = e.target.dataset.id;
+        const app = appeals().find(a => a.id === id);
+        if (!app) return;
+        store('tumix_resolved_appeals', [...resolvedAppeals(), { ...app, status: 'Закрыто', closedAt: new Date().toISOString() }]);
+        store('tumix_appeals', appeals().filter(a => a.id !== id));
+        showToast('Обращение закрыто и перемещено в решенные');
+        setTimeout(() => {
+          const resolved = resolvedAppeals().filter(a => a.id !== id || new Date() - new Date(a.closedAt) < 172800000);
+          store('tumix_resolved_appeals', resolved);
+        }, 2000);
+        renderEmployeeView('empAppeals');
       }
       if (e.target.classList.contains('delete-btn')) {
         e.stopPropagation();
@@ -1109,6 +1136,15 @@
         if (confirm('Удалить обращение #' + id + '?')) {
           store('tumix_appeals', appeals().filter(a => a.id !== id));
           showToast('Обращение удалено');
+          renderEmployeeView('empAppeals');
+        }
+      }
+      if (e.target.classList.contains('delete-resolved-btn')) {
+        e.stopPropagation();
+        const id = e.target.dataset.id;
+        if (confirm('Удалить решенное обращение #' + id + ' навсегда?')) {
+          store('tumix_resolved_appeals', resolvedAppeals().filter(a => a.id !== id));
+          showToast('Решенное обращение удалено');
           renderEmployeeView('empAppeals');
         }
       }
