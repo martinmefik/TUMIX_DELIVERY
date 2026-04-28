@@ -6,8 +6,7 @@
   <title>TUMIX — Доставка с душой</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23F15A2C'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold' font-size='18'>T</text></svg>">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-  </script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     * {
       margin: 0;
@@ -18,13 +17,30 @@
     body {
       font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
       background: #0a0a14;
-      background-image: radial-gradient(ellipse at 15% 40%, rgba(241, 90, 44, 0.08) 0%, transparent 55%), radial-gradient(ellipse at 85% 70%, rgba(255, 160, 80, 0.06) 0%, transparent 55%), radial-gradient(ellipse at 40% 90%, rgba(140, 100, 255, 0.05) 0%, transparent 55%);
+      background-image: radial-gradient(ellipse at 15% 40%, rgba(241, 90, 44, 0.15) 0%, transparent 55%), radial-gradient(ellipse at 85% 70%, rgba(255, 160, 80, 0.1) 0%, transparent 55%), radial-gradient(ellipse at 40% 90%, rgba(140, 100, 255, 0.08) 0%, transparent 55%);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 16px;
       color: #e4e0ee;
+      scroll-behavior: smooth;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #F15A2C, #ff7043);
+      border-radius: 10px;
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #ff8a5c;
     }
 
     @keyframes fadeInUp {
@@ -53,7 +69,7 @@
         box-shadow: 0 0 0 0 rgba(241, 90, 44, 0.4);
       }
       50% {
-        box-shadow: 0 0 0 12px rgba(241, 90, 44, 0);
+        box-shadow: 0 0 0 16px rgba(241, 90, 44, 0);
       }
     }
     @keyframes shimmer {
@@ -62,6 +78,24 @@
       }
       100% {
         background-position: 200% center;
+      }
+    }
+    @keyframes float {
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+    @keyframes glow {
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(241, 90, 44, 0.3);
+      }
+      50% {
+        box-shadow: 0 0 40px rgba(241, 90, 44, 0.6);
       }
     }
 
@@ -74,43 +108,59 @@
       -webkit-backdrop-filter: blur(30px);
       border-radius: 40px;
       border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 40px 70px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      animation: fadeInUp 0.6s ease;
+      animation: fadeInUp 0.7s ease;
     }
 
     .logo-header {
-      padding: 22px 32px;
+      padding: 24px 36px;
       display: flex;
       align-items: center;
-      gap: 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      gap: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     }
     .logo-icon {
-      width: 46px;
-      height: 46px;
+      width: 50px;
+      height: 50px;
       background: linear-gradient(135deg, #F15A2C, #ff7043);
-      border-radius: 14px;
+      border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 900;
-      font-size: 24px;
+      font-size: 26px;
       color: #fff;
-      box-shadow: 0 10px 24px rgba(241, 90, 44, 0.5);
-      animation: pulse 2.5s infinite;
+      box-shadow: 0 12px 30px rgba(241, 90, 44, 0.6);
+      animation: pulse 3s infinite, float 4s ease-in-out infinite;
     }
     .logo-text {
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 800;
       letter-spacing: -0.5px;
       background: linear-gradient(135deg, #f0d9c0, #c0a890, #f0d9c0);
       background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: shimmer 3s linear infinite;
+      animation: shimmer 4s linear infinite;
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #1e3a2a, #0f2a1e);
+      border: 1px solid #2ecc71;
+      color: #2ecc71;
+      padding: 18px 28px;
+      border-radius: 24px;
+      font-weight: 600;
+      z-index: 9999;
+      animation: fadeSlide 0.5s ease, glow 2s infinite;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
     }
 
     .auth-screen {
@@ -120,51 +170,52 @@
       align-items: center;
       justify-content: center;
       padding: 40px 20px;
-      animation: fadeInUp 0.5s ease;
+      animation: fadeInUp 0.6s ease;
     }
     .auth-tabs {
       display: flex;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.03);
-      padding: 5px;
-      border-radius: 22px;
-      margin-bottom: 32px;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 6px;
+      border-radius: 24px;
+      margin-bottom: 36px;
     }
     .auth-tab {
-      padding: 11px 30px;
-      border-radius: 18px;
+      padding: 12px 34px;
+      border-radius: 20px;
       border: none;
       background: transparent;
       color: #9a90a8;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 15px;
       cursor: pointer;
       transition: all 0.3s ease;
     }
     .auth-tab.active {
       background: #F15A2C;
       color: #fff;
-      box-shadow: 0 8px 20px rgba(241, 90, 44, 0.5);
-      transform: scale(1.03);
+      box-shadow: 0 10px 25px rgba(241, 90, 44, 0.55);
+      transform: scale(1.04);
     }
 
     .auth-card,
     .form-card {
-      background: rgba(22, 22, 40, 0.7);
-      backdrop-filter: blur(22px);
-      border-radius: 32px;
-      padding: 36px 32px;
+      background: rgba(22, 22, 40, 0.75);
+      backdrop-filter: blur(25px);
+      border-radius: 36px;
+      padding: 40px 36px;
       width: 100%;
-      max-width: 520px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.55);
+      max-width: 540px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 35px 60px rgba(0, 0, 0, 0.6);
       transition: all 0.3s ease;
+      animation: fadeInUp 0.5s ease;
     }
     .auth-card h2,
     .form-card h3 {
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 700;
-      margin-bottom: 26px;
+      margin-bottom: 28px;
       text-align: center;
       color: #ede4d8;
     }
@@ -172,29 +223,29 @@
     .input-column {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 22px;
     }
     .field-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
     }
     .field-group label {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 1px;
       color: #b0a0b8;
     }
     .field-group input,
     .field-group textarea,
     .field-group select {
       width: 100%;
-      padding: 14px 18px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1.5px solid rgba(255, 255, 255, 0.15);
-      border-radius: 16px;
-      font-size: 15px;
+      padding: 15px 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      border-radius: 18px;
+      font-size: 16px;
       color: #f0e6dc;
       outline: none;
       transition: all 0.3s ease;
@@ -204,38 +255,38 @@
     .field-group input:focus,
     .field-group textarea:focus {
       border-color: #F15A2C;
-      box-shadow: 0 0 0 4px rgba(241, 90, 44, 0.2);
+      box-shadow: 0 0 0 5px rgba(241, 90, 44, 0.2);
       background: rgba(255, 255, 255, 0.06);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
     }
     .field-group textarea {
-      min-height: 100px;
+      min-height: 110px;
     }
 
     .btn {
-      padding: 15px 24px;
-      border-radius: 18px;
+      padding: 16px 28px;
+      border-radius: 20px;
       border: none;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 16px;
       cursor: pointer;
-      transition: all 0.3s ease;
-      letter-spacing: 0.4px;
+      transition: all 0.35s ease;
+      letter-spacing: 0.5px;
       width: 100%;
-      margin-top: 10px;
+      margin-top: 12px;
     }
     .btn-primary {
-      background: linear-gradient(135deg, #F15A2C, #d9441c);
+      background: linear-gradient(135deg, #F15A2C, #e0481f);
       color: white;
-      box-shadow: 0 12px 28px rgba(241, 90, 44, 0.45);
+      box-shadow: 0 14px 32px rgba(241, 90, 44, 0.5);
     }
     .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 18px 36px rgba(241, 90, 44, 0.6);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(241, 90, 44, 0.7);
     }
     .btn-outline {
       background: transparent;
-      border: 1.5px solid rgba(255, 255, 255, 0.22);
+      border: 2px solid rgba(255, 255, 255, 0.25);
       color: #d0c6d8;
     }
     .btn-danger {
@@ -245,8 +296,8 @@
     }
     .link-text {
       text-align: center;
-      margin-top: 16px;
-      font-size: 14px;
+      margin-top: 18px;
+      font-size: 15px;
       color: #9088a0;
     }
     .link-text a {
@@ -255,121 +306,107 @@
       font-weight: 600;
     }
 
-    .success-popup {
-      background: #1e3a2a;
-      border: 1px solid #2ecc71;
-      color: #2ecc71;
-      padding: 18px 24px;
-      border-radius: 18px;
-      text-align: center;
-      font-weight: 600;
-      margin-bottom: 24px;
-      animation: fadeSlide 0.5s ease;
-    }
-
     .dashboard {
       flex: 1;
       display: flex;
       min-height: 0;
     }
     .sidebar {
-      width: 250px;
-      background: rgba(14, 14, 28, 0.55);
-      backdrop-filter: blur(18px);
-      padding: 24px 12px;
+      width: 260px;
+      background: rgba(14, 14, 28, 0.6);
+      backdrop-filter: blur(20px);
+      padding: 28px 14px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      gap: 6px;
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
     }
     .sidebar-btn {
       background: transparent;
       border: none;
       color: #b0a2b8;
-      padding: 13px 18px;
-      border-radius: 14px;
+      padding: 14px 20px;
+      border-radius: 16px;
       font-weight: 600;
       text-align: left;
       cursor: pointer;
       transition: all 0.3s ease;
-      font-size: 14px;
+      font-size: 15px;
     }
     .sidebar-btn:hover {
-      background: rgba(241, 90, 44, 0.15);
+      background: rgba(241, 90, 44, 0.18);
       color: #ff9f7c;
-      transform: translateX(4px);
+      transform: translateX(6px);
     }
     .sidebar-btn.active {
-      background: rgba(241, 90, 44, 0.25);
+      background: rgba(241, 90, 44, 0.3);
       color: #F15A2C;
-      box-shadow: 0 4px 15px rgba(241, 90, 44, 0.2);
+      box-shadow: 0 6px 20px rgba(241, 90, 44, 0.25);
     }
     .content-area {
       flex: 1;
-      padding: 30px;
+      padding: 32px;
       overflow-y: auto;
-      background: rgba(8, 8, 18, 0.3);
-      animation: fadeInUp 0.4s ease;
+      background: rgba(8, 8, 18, 0.35);
+      animation: fadeInUp 0.5s ease;
     }
     .card {
-      background: rgba(20, 20, 36, 0.55);
-      backdrop-filter: blur(14px);
-      border-radius: 26px;
-      padding: 28px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      margin-bottom: 20px;
-      transition: all 0.3s ease;
+      background: rgba(20, 20, 38, 0.6);
+      backdrop-filter: blur(16px);
+      border-radius: 28px;
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 22px;
+      transition: all 0.35s ease;
     }
     .card:hover {
-      border-color: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
     }
     .grid-2col {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 18px;
+      gap: 20px;
     }
     .checkbox-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin: 14px 0;
+      gap: 12px;
+      margin: 16px 0;
     }
     .checkbox-pill {
       background: rgba(255, 255, 255, 0.03);
-      border: 1.5px solid rgba(255, 255, 255, 0.14);
+      border: 2px solid rgba(255, 255, 255, 0.14);
       border-radius: 30px;
-      padding: 10px 18px;
+      padding: 11px 20px;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 14px;
       color: #c8bdd0;
       transition: all 0.3s ease;
       user-select: none;
     }
-    .checkbox-pill:hover {
-      border-color: #F15A2C;
-      transform: translateY(-2px);
-    }
     .checkbox-pill.checked {
-      background: rgba(241, 90, 44, 0.25);
+      background: rgba(241, 90, 44, 0.3);
       border-color: #F15A2C;
       color: #ffa07c;
-      box-shadow: 0 4px 15px rgba(241, 90, 44, 0.2);
+      box-shadow: 0 6px 20px rgba(241, 90, 44, 0.3);
     }
     .order-item,
     .appeal-item {
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 16px;
-      padding: 16px;
-      margin: 8px 0;
-      border-left: 3px solid #F15A2C;
-      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 18px;
+      padding: 18px;
+      margin: 10px 0;
+      border-left: 4px solid #F15A2C;
+      transition: all 0.35s ease;
       cursor: pointer;
     }
     .order-item:hover,
     .appeal-item:hover {
-      background: rgba(255, 255, 255, 0.06);
-      transform: translateX(4px);
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateX(6px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
     }
     .hidden {
       display: none !important;
@@ -377,40 +414,35 @@
 
     .tabs-inner {
       display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
+      gap: 10px;
+      margin-bottom: 24px;
       flex-wrap: wrap;
     }
     .tab-inner {
-      padding: 10px 20px;
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      padding: 11px 22px;
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.12);
       color: #aaa;
       cursor: pointer;
       transition: all 0.3s ease;
       font-weight: 600;
-      font-size: 13px;
-    }
-    .tab-inner:hover {
-      border-color: #F15A2C;
-      color: #ff9f7c;
+      font-size: 14px;
     }
     .tab-inner.active {
       background: #F15A2C;
       color: white;
       border-color: #F15A2C;
-      box-shadow: 0 6px 20px rgba(241, 90, 44, 0.4);
-      transform: scale(1.03);
+      box-shadow: 0 8px 25px rgba(241, 90, 44, 0.5);
+      transform: scale(1.05);
     }
 
     .detail-row {
       display: flex;
       justify-content: space-between;
-      padding: 6px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
       text-align: left;
-      direction: ltr;
     }
     .detail-row span:first-child {
       font-weight: 600;
@@ -421,31 +453,31 @@
       text-align: left;
     }
     #map {
-      height: 250px;
-      border-radius: 16px;
-      margin: 16px 0;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      height: 280px;
+      border-radius: 20px;
+      margin: 18px 0;
+      border: 2px solid rgba(255, 255, 255, 0.12);
     }
     .admin-reply {
       color: #e74c3c;
       font-weight: 700;
-      margin-top: 8px;
-      padding: 8px;
-      background: rgba(231, 76, 60, 0.1);
-      border-radius: 8px;
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(231, 76, 60, 0.15);
+      border-radius: 12px;
     }
     .chat-messages {
       max-height: 400px;
       overflow-y: auto;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 16px;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 18px;
     }
     .chat-msg {
-      padding: 10px 14px;
-      border-radius: 14px;
-      margin: 6px 0;
+      padding: 12px 16px;
+      border-radius: 16px;
+      margin: 8px 0;
       max-width: 70%;
       clear: both;
     }
@@ -455,9 +487,17 @@
       float: right;
     }
     .chat-msg.other {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.1);
       color: #ddd;
       float: left;
+    }
+    .archive-badge {
+      background: #7f8c8d;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      margin-left: 8px;
     }
   </style>
 </head>
@@ -467,6 +507,7 @@
       <div class="logo-icon">T</div>
       <span class="logo-text">TUMIX</span>
     </div>
+    <div id="notificationArea"></div>
 
     <div id="authScreen" class="auth-screen">
       <div class="auth-tabs">
@@ -474,7 +515,6 @@
         <button class="auth-tab" id="employeeTab">🛡️ Сотрудник</button>
       </div>
       <div id="authFormsContainer" class="auth-card"></div>
-      <div id="globalSuccess" class="success-popup hidden"></div>
     </div>
 
     <div id="clientDashboard" class="dashboard hidden">
@@ -500,25 +540,49 @@
 
   <script>
     (() => {
-      const store = (k, v) => v !== undefined ? localStorage.setItem(k, JSON.stringify(v)) : JSON.parse(localStorage
-        .getItem(k) || 'null');
+      // Хранилище данных
+      const store = (k, v) => v !== undefined ? localStorage.setItem(k, JSON.stringify(v)) : JSON.parse(localStorage.getItem(k) || 'null');
       const users = () => store('tumix_users') || [];
       const orders = () => store('tumix_orders') || [];
       const appeals = () => store('tumix_appeals') || [];
       const empAppeals = () => store('tumix_emp_appeals') || [];
+      const archivedAppeals = () => store('tumix_archived_appeals') || [];
       const colleagueChats = () => store('tumix_colleague_chats') || [];
+
+      // Проверка и перемещение в архив обращений старше 12 часов после ответа
+      function checkAndArchiveAppeals() {
+        const now = Date.now();
+        const twelveHours = 12 * 60 * 60 * 1000;
+        const activeAppeals = appeals();
+        const toArchive = activeAppeals.filter(a => a.reply && a.replyTime && (now - a.replyTime) > twelveHours);
+        if (toArchive.length > 0) {
+          const remaining = activeAppeals.filter(a => !toArchive.includes(a));
+          const archived = archivedAppeals();
+          store('tumix_appeals', remaining);
+          store('tumix_archived_appeals', [...archived, ...toArchive.map(a => ({ ...a, archivedAt: now }))]);
+        }
+      }
+      checkAndArchiveAppeals();
+      setInterval(checkAndArchiveAppeals, 60000);
 
       let currentClient = null,
         currentEmployee = null;
       const TEST_EMP = { tab: 'TUM-0001', password: 'Password0001', name: 'Алексей Смирнов' };
-      const ADMIN_EMP = { tab: 'OWNER_MARTIN_MEFIKOV0001', password: 'MARTIN_MEFIKOV0001', name: 'Мартин Мефиков',
-        role: 'admin' };
+      const ADMIN_EMP = { tab: 'OWNER_MARTIN_MEFIKOV0001', password: 'MARTIN_MEFIKOV0001', name: 'Мартин Мефиков', role: 'admin' };
+
+      function notify(msg) {
+        const area = document.getElementById('notificationArea');
+        const div = document.createElement('div');
+        div.className = 'notification';
+        div.textContent = msg;
+        area.appendChild(div);
+        setTimeout(() => div.remove(), 4000);
+      }
 
       const authScreen = document.getElementById('authScreen');
       const clientDash = document.getElementById('clientDashboard');
       const empDash = document.getElementById('employeeDashboard');
       const authForms = document.getElementById('authFormsContainer');
-      const globalSuccess = document.getElementById('globalSuccess');
 
       let authMode = 'client';
       document.getElementById('clientTab').addEventListener('click', () => { authMode = 'client';
@@ -526,205 +590,185 @@
       document.getElementById('employeeTab').addEventListener('click', () => { authMode = 'employee';
         renderAuth(); });
 
-      function showSuccess(msg) {
-        globalSuccess.textContent = msg;
-        globalSuccess.classList.remove('hidden');
-        setTimeout(() => globalSuccess.classList.add('hidden'), 3500);
-      }
-
       function renderAuth() {
         document.getElementById('clientTab').classList.toggle('active', authMode === 'client');
         document.getElementById('employeeTab').classList.toggle('active', authMode === 'employee');
         if (authMode === 'client') {
           authForms.innerHTML = `
-          <h2>Вход в аккаунт</h2>
-          <div class="input-column">
-            <div class="field-group"><label>Почта</label><input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="off"></div>
-            <div class="field-group"><label>Пароль</label><input type="password" id="loginPass" placeholder="••••••••" autocomplete="off"></div>
-          </div>
-          <button class="btn btn-primary" id="loginClientBtn">Войти</button>
-          <p class="link-text">Нет аккаунта? <a href="#" id="showRegister">Зарегистрироваться</a></p>`;
-          document.getElementById('loginClientBtn').addEventListener('click', clientLogin);
-          document.getElementById('showRegister').addEventListener('click', (e) => {
-            e.preventDefault();
-            authForms.innerHTML = `
-            <h2>Регистрация</h2>
+            <h2>Вход в аккаунт</h2>
             <div class="input-column">
-              <div class="field-group"><label>Имя *</label><input id="regName" autocomplete="off"></div>
-              <div class="field-group"><label>Почта *</label><input type="email" id="regEmail" autocomplete="off"></div>
-              <div class="field-group"><label>Телефон *</label><input type="tel" id="regPhone" autocomplete="off"></div>
-              <div class="field-group"><label>Пароль *</label><input type="password" id="regPass" autocomplete="off"></div>
+              <div class="field-group"><label>Почта</label><input type="email" id="loginEmail" autocomplete="off"></div>
+              <div class="field-group"><label>Пароль</label><input type="password" id="loginPass" autocomplete="off"></div>
             </div>
-            <button class="btn btn-primary" id="registerBtn">Зарегистрироваться</button>
-            <p class="link-text"><a href="#" id="backToLogin">Назад ко входу</a></p>`;
-            document.getElementById('registerBtn').addEventListener('click', () => {
-              const n = document.getElementById('regName').value.trim(),
-                e = document.getElementById('regEmail').value.trim(),
-                p = document.getElementById('regPhone').value.trim(),
-                pw = document.getElementById('regPass').value.trim();
-              if (!n || !e || !p || !pw) return alert('Все поля обязательны');
-              if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) return alert('Некорректная почта');
-              if (!/^\+?\d{10,12}$/.test(p.replace(/[\s()-]/g, ''))) return alert(
-                'Некорректный номер телефона');
-              let u = users();
-              if (u.find(x => x.email === e)) return alert('Почта занята');
-              u.push({ id: Date.now().toString(), name: n, email: e, phone: p, password: pw });
-              store('tumix_users', u);
-              showSuccess('✅ Успешная регистрация! Теперь войдите.');
-              renderAuth();
-            });
-            document.getElementById('backToLogin').addEventListener('click', (e) => { e.preventDefault();
-              renderAuth(); });
-          });
+            <button class="btn btn-primary" id="loginClientBtn">Войти</button>
+            <p class="link-text">Нет аккаунта? <a href="#" id="showRegister">Зарегистрироваться</a></p>`;
+          document.getElementById('loginClientBtn').addEventListener('click', clientLogin);
+          document.getElementById('showRegister').addEventListener('click', (e) => { e.preventDefault();
+            registerForm(); });
         } else {
           authForms.innerHTML = `
-          <h2>Вход для сотрудников</h2>
-          <div class="input-column">
-            <div class="field-group"><label>Табельный номер</label><input id="empTab" placeholder="TUM-0001" autocomplete="off"></div>
-            <div class="field-group"><label>Пароль</label><input type="password" id="empPass" autocomplete="off"></div>
-          </div>
-          <button class="btn btn-primary" id="loginEmpBtn">Войти</button>`;
-          document.getElementById('loginEmpBtn').addEventListener('click', () => {
-            const tab = document.getElementById('empTab').value.trim();
-            const pass = document.getElementById('empPass').value.trim();
-            if (tab === TEST_EMP.tab && pass === TEST_EMP.password) {
-              currentEmployee = { ...TEST_EMP };
-            } else if (tab === ADMIN_EMP.tab && pass === ADMIN_EMP.password) {
-              currentEmployee = { ...ADMIN_EMP };
-            } else {
-              return alert('Неверные данные');
-            }
-            authScreen.classList.add('hidden');
-            empDash.classList.remove('hidden');
-            clientDash.classList.add('hidden');
-            renderEmployeeView('empChat');
-          });
+            <h2>Вход для сотрудников</h2>
+            <div class="input-column">
+              <div class="field-group"><label>Табельный номер</label><input id="empTab" autocomplete="off"></div>
+              <div class="field-group"><label>Пароль</label><input type="password" id="empPass" autocomplete="off"></div>
+            </div>
+            <button class="btn btn-primary" id="loginEmpBtn">Войти</button>`;
+          document.getElementById('loginEmpBtn').addEventListener('click', employeeLogin);
         }
       }
 
+      function registerForm() {
+        authForms.innerHTML = `
+          <h2>Регистрация</h2>
+          <div class="input-column">
+            <div class="field-group"><label>Имя *</label><input id="regName" autocomplete="off"></div>
+            <div class="field-group"><label>Почта *</label><input type="email" id="regEmail" autocomplete="off"></div>
+            <div class="field-group"><label>Телефон *</label><input type="tel" id="regPhone" placeholder="+7" value="+7" autocomplete="off"></div>
+            <div class="field-group"><label>Пароль *</label><input type="password" id="regPass" autocomplete="off"></div>
+          </div>
+          <button class="btn btn-primary" id="registerBtn">Зарегистрироваться</button>
+          <p class="link-text"><a href="#" id="backToLogin">Назад ко входу</a></p>`;
+        document.getElementById('registerBtn').addEventListener('click', () => {
+          const n = document.getElementById('regName').value.trim();
+          const e = document.getElementById('regEmail').value.trim();
+          const p = document.getElementById('regPhone').value.trim();
+          const pw = document.getElementById('regPass').value.trim();
+          if (!n || !e || !p || !pw) return notify('Все поля обязательны');
+          if (!p.startsWith('+7')) return notify('Телефон должен начинаться с +7');
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) return notify('Некорректная почта');
+          let u = users();
+          if (u.find(x => x.email === e)) return notify('Почта занята');
+          u.push({ id: Date.now().toString(), name: n, email: e, phone: p, password: pw });
+          store('tumix_users', u);
+          notify('✅ Успешная регистрация!');
+          renderAuth();
+        });
+        document.getElementById('backToLogin').addEventListener('click', (e) => { e.preventDefault();
+          renderAuth(); });
+      }
+
       function clientLogin() {
-        const e = document.getElementById('loginEmail').value.trim(),
-          p = document.getElementById('loginPass').value.trim();
+        const e = document.getElementById('loginEmail').value.trim();
+        const p = document.getElementById('loginPass').value.trim();
         const u = users().find(x => x.email === e && x.password === p);
         if (u) {
           currentClient = u;
           authScreen.classList.add('hidden');
           clientDash.classList.remove('hidden');
-          empDash.classList.add('hidden');
           renderClientView('delivery');
-        } else alert('Неверные данные');
+        } else notify('Неверные данные');
       }
 
+      function employeeLogin() {
+        const tab = document.getElementById('empTab').value.trim();
+        const pass = document.getElementById('empPass').value.trim();
+        if (tab === TEST_EMP.tab && pass === TEST_EMP.password) currentEmployee = { ...TEST_EMP };
+        else if (tab === ADMIN_EMP.tab && pass === ADMIN_EMP.password) currentEmployee = { ...ADMIN_EMP };
+        else return notify('Неверные данные');
+        authScreen.classList.add('hidden');
+        empDash.classList.remove('hidden');
+        renderEmployeeView('empChat');
+      }
+
+      // Навигация клиента
       document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(b => b.addEventListener('click', () => {
-        document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(x => x.classList.remove(
-          'active'));
+        document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(x => x.classList.remove('active'));
         b.classList.add('active');
         renderClientView(b.dataset.view);
       }));
 
-      let deliveryMap = null;
-      let deliveryMarkers = [];
+      let deliveryMap = null,
+        deliveryMarkers = [];
 
       function initDeliveryMap() {
         setTimeout(() => {
           const mapEl = document.getElementById('map');
           if (!mapEl || deliveryMap) return;
           deliveryMap = L.map('map').setView([55.7558, 37.6173], 10);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-          }).addTo(deliveryMap);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(deliveryMap);
           deliveryMap.invalidateSize();
-        }, 400);
+        }, 500);
       }
 
-      function geocodeAddress(address) {
+      async function geocodeAddress(address) {
         const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Москва')}&limit=1`;
-        return fetch(url)
-          .then(r => r.json())
-          .then(data => {
-            if (data && data.length > 0) {
-              return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0]
-                  .display_name };
-            }
-            return null;
-          })
-          .catch(() => null);
+        try {
+          const res = await fetch(url);
+          const data = await res.json();
+          if (data && data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0].display_name };
+          return null;
+        } catch (e) { return null; }
       }
 
       function calculateRealDistance(lat1, lng1, lat2, lng2) {
         const R = 6371;
         const dLat = (lat2 - lat1) * Math.PI / 180;
         const dLng = (lng2 - lng1) * Math.PI / 180;
-        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI /
-          180) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return Math.max(1, Math.round(R * c * 1.35));
       }
 
       function deliveryForm() {
         return `<div class="card"><h3>📦 Новая доставка</h3><div class="input-column">
-        <div class="field-group"><label>ФИО отправителя *</label><input id="sName" autocomplete="off"></div>
-        <div class="field-group"><label>Телефон отправителя *</label><input id="sPhone" autocomplete="off"></div>
-        <div class="field-group"><label>Адрес отправки *</label><input id="sAddr" placeholder="ул. Тверская, 1" autocomplete="off"></div>
-        <div class="field-group"><label>ФИО получателя *</label><input id="rName" autocomplete="off"></div>
-        <div class="field-group"><label>Телефон получателя *</label><input id="rPhone" autocomplete="off"></div>
-        <div class="field-group"><label>Адрес получателя *</label><input id="rAddr" placeholder="ул. Арбат, 10" autocomplete="off"></div>
-        <div class="field-group"><label>Город</label><input value="Москва и МО" disabled></div>
-        <div class="field-group"><label>Содержимое *</label><input id="contentDesc" autocomplete="off"></div>
-        <div class="checkbox-group" id="packCheckboxes">
-          <label class="checkbox-pill"><input type="checkbox" value="Пакет" hidden> Пакет (60₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Конверт" hidden> Конверт (90₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка S" hidden> Коробка S (120₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка M" hidden> Коробка M (220₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка L" hidden> Коробка L (280₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка XL" hidden> Коробка XL (350₽)</label>
-        </div>
-        <div id="map"></div>
-        <button class="btn btn-primary" id="calcDelivery">Рассчитать и оформить</button>
-        <div id="priceDetails"></div></div></div>`;
+          <div class="field-group"><label>ФИО отправителя *</label><input id="sName" autocomplete="off"></div>
+          <div class="field-group"><label>Телефон отправителя *</label><input id="sPhone" placeholder="+7" value="+7" autocomplete="off"></div>
+          <div class="field-group"><label>Адрес отправки *</label><input id="sAddr" placeholder="ул. Тверская, 1" autocomplete="off"></div>
+          <div class="field-group"><label>ФИО получателя *</label><input id="rName" autocomplete="off"></div>
+          <div class="field-group"><label>Телефон получателя *</label><input id="rPhone" placeholder="+7" value="+7" autocomplete="off"></div>
+          <div class="field-group"><label>Адрес получателя *</label><input id="rAddr" placeholder="ул. Арбат, 10" autocomplete="off"></div>
+          <div class="field-group"><label>Город</label><input value="Москва и МО" disabled></div>
+          <div class="field-group"><label>Содержимое *</label><input id="contentDesc" autocomplete="off"></div>
+          <div class="checkbox-group" id="packCheckboxes">
+            <label class="checkbox-pill"><input type="checkbox" value="Пакет" hidden> Пакет (60₽)</label>
+            <label class="checkbox-pill"><input type="checkbox" value="Конверт" hidden> Конверт (90₽)</label>
+            <label class="checkbox-pill"><input type="checkbox" value="Коробка S" hidden> Коробка S (120₽)</label>
+            <label class="checkbox-pill"><input type="checkbox" value="Коробка M" hidden> Коробка M (220₽)</label>
+            <label class="checkbox-pill"><input type="checkbox" value="Коробка L" hidden> Коробка L (280₽)</label>
+            <label class="checkbox-pill"><input type="checkbox" value="Коробка XL" hidden> Коробка XL (350₽)</label>
+          </div>
+          <div id="map"></div>
+          <button class="btn btn-primary" id="calcDelivery">Рассчитать и оформить</button>
+          <div id="priceDetails"></div></div></div>`;
       }
 
-      document.addEventListener('click', e => {
+      // Глобальный обработчик событий
+      document.addEventListener('click', async e => {
+        // Расчет доставки
         if (e.target.id === 'calcDelivery') {
           const packs = [...document.querySelectorAll('#packCheckboxes input:checked')].map(c => c.value);
-          if (!packs.length) return alert('Выберите упаковку');
+          if (!packs.length) return notify('Выберите упаковку');
           const sAddr = document.getElementById('sAddr').value.trim();
           const rAddr = document.getElementById('rAddr').value.trim();
-          if (!sAddr || !rAddr) return alert('Заполните адреса');
-          document.getElementById('priceDetails').innerHTML = '<p>🔄 Рассчитываем расстояние по карте...</p>';
-          Promise.all([geocodeAddress(sAddr), geocodeAddress(rAddr)]).then(([from, to]) => {
-            if (!from || !to) {
-              document.getElementById('priceDetails').innerHTML =
-                '<p style="color:#ff7043;">❌ Адрес не найден. Проверьте написание (например: ул. Тверская, 1).</p>';
-              return;
-            }
-            const dist = calculateRealDistance(from.lat, from.lng, to.lat, to.lng);
-            if (deliveryMap) {
-              deliveryMarkers.forEach(m => deliveryMap.removeLayer(m));
-              deliveryMarkers = [];
-              const m1 = L.marker([from.lat, from.lng]).addTo(deliveryMap).bindPopup('Отправитель');
-              const m2 = L.marker([to.lat, to.lng]).addTo(deliveryMap).bindPopup('Получатель');
-              deliveryMarkers.push(m1, m2);
-              deliveryMap.fitBounds(L.featureGroup([m1, m2]).getBounds().pad(0.2));
-            }
-            const pr = { Пакет: 60, Конверт: 90, 'Коробка S': 120, 'Коробка M': 220, 'Коробка L': 280,
-              'Коробка XL': 350 };
-            let pc = packs.reduce((s, p) => s + pr[p], 0),
-              km = dist * 22,
-              serv = 29,
-              total = pc + km + serv;
-            document.getElementById('priceDetails').innerHTML = `
+          if (!sAddr || !rAddr) return notify('Заполните адреса');
+          document.getElementById('priceDetails').innerHTML = '<p>🔄 Ищем адреса на карте...</p>';
+          const [from, to] = await Promise.all([geocodeAddress(sAddr), geocodeAddress(rAddr)]);
+          if (!from || !to) return document.getElementById('priceDetails').innerHTML = '<p style="color:#ff7043;">❌ Адрес не найден. Попробуйте: ул. Тверская, 1</p>';
+          const dist = calculateRealDistance(from.lat, from.lng, to.lat, to.lng);
+          if (deliveryMap) {
+            deliveryMarkers.forEach(m => deliveryMap.removeLayer(m));
+            deliveryMarkers = [];
+            const m1 = L.marker([from.lat, from.lng]).addTo(deliveryMap).bindPopup('Отправитель');
+            const m2 = L.marker([to.lat, to.lng]).addTo(deliveryMap).bindPopup('Получатель');
+            deliveryMarkers.push(m1, m2);
+            deliveryMap.fitBounds(L.featureGroup([m1, m2]).getBounds().pad(0.2));
+          }
+          const pr = { Пакет: 60, Конверт: 90, 'Коробка S': 120, 'Коробка M': 220, 'Коробка L': 280, 'Коробка XL': 350 };
+          let pc = packs.reduce((s, p) => s + pr[p], 0),
+            km = dist * 22,
+            serv = 29,
+            total = pc + km + serv;
+          document.getElementById('priceDetails').innerHTML = `
             <div class="card" style="margin-top:16px;">
-              <p>📍 Адрес отправителя найден</p>
-              <p>📍 Адрес получателя найден</p>
+              <p>📍 Адреса найдены</p>
               <p>📦 Упаковка: ${pc}₽</p>
               <p>🛣️ Расстояние: ${dist} км × 22₽ = ${km}₽</p>
               <p>🔧 Сервисный сбор: 29₽</p>
               <h3 style="margin-top:8px;">💰 Итого: ${total}₽</h3>
               <button class="btn btn-primary" id="confirmOrder">Оформить доставку</button>
             </div>`;
-          });
         }
+        // Подтверждение заказа
         if (e.target.id === 'confirmOrder') {
           const ords = orders();
           const newId = String(ords.length + 1).padStart(8, '0');
@@ -743,50 +787,224 @@
             date: new Date().toLocaleString()
           };
           store('tumix_orders', [...ords, order]);
-          alert('✅ Доставка оформлена! Номер заказа: ' + newId);
+          notify('✅ Заказ #' + newId + ' оформлен!');
           document.querySelector('#clientDashboard .sidebar-btn[data-view="orders"]').click();
         }
+        // Чекбоксы упаковки
         if (e.target.closest('.checkbox-pill')) {
-          const pill = e.target.closest('.checkbox-pill'),
-            cb = pill.querySelector('input');
+          const pill = e.target.closest('.checkbox-pill');
+          const cb = pill.querySelector('input');
           cb.checked = !cb.checked;
           pill.classList.toggle('checked', cb.checked);
         }
+        // Ответ руководителя на обращение клиента
+        if (e.target.classList.contains('reply-btn')) {
+          e.stopPropagation();
+          const id = e.target.dataset.id;
+          const replyText = document.getElementById('replyText_' + id).value;
+          if (!replyText) return notify('Введите текст ответа');
+          const updated = appeals().map(a => a.id === id ? { ...a, reply: replyText, replyTime: Date.now(), status: 'Отвечено' } : a);
+          store('tumix_appeals', updated);
+          notify('✅ Ответ руководителя отправлен');
+          renderEmployeeView('empAppeals');
+        }
+        // Удаление обращения
+        if (e.target.classList.contains('delete-btn')) {
+          e.stopPropagation();
+          const id = e.target.dataset.id;
+          if (confirm('Удалить обращение #' + id + '?')) {
+            store('tumix_appeals', appeals().filter(a => a.id !== id));
+            notify('Обращение удалено');
+            renderEmployeeView('empAppeals');
+          }
+        }
+        // Ответ руководителя на обращение сотрудника
+        if (e.target.classList.contains('emp-reply-btn')) {
+          e.stopPropagation();
+          const empName = e.target.dataset.emp;
+          const replyText = document.getElementById('empReplyText_' + empName).value;
+          if (!replyText) return notify('Введите ответ');
+          const updated = empAppeals().map(a => a.empName === empName ? { ...a, reply: replyText, replyTime: Date.now() } : a);
+          store('tumix_emp_appeals', updated);
+          notify('✅ Ответ руководителя отправлен');
+          renderEmployeeView('empAppeals');
+        }
+        // Изменение статуса заказа
+        if (e.target.classList.contains('edit-order-btn')) {
+          e.stopPropagation();
+          const id = e.target.dataset.id;
+          const ord = orders().find(o => o.id === id);
+          if (!ord) return;
+          const newStatus = prompt('Новый статус (Оформлен/В пути/Доставлен/Отменён):', ord.status);
+          if (newStatus) {
+            store('tumix_orders', orders().map(o => o.id === id ? { ...o, status: newStatus } : o));
+            notify('Статус заказа #' + id + ' обновлён');
+            renderEmployeeView('allOrders');
+          }
+        }
+        // Отправка в чат поддержки
+        if (e.target.id === 'sendChat') {
+          const inp = document.getElementById('chatInput');
+          if (!inp.value.trim()) return;
+          const d = document.createElement('div');
+          d.style.cssText = 'background:rgba(241,90,44,0.25);padding:10px;border-radius:12px;margin:6px 0;color:white;';
+          d.textContent = inp.value;
+          document.getElementById('chatMsgs').appendChild(d);
+          setTimeout(() => {
+            const r = document.createElement('div');
+            r.style.cssText = 'background:rgba(255,255,255,0.05);padding:10px;border-radius:12px;';
+            r.textContent = 'Оператор скоро ответит вам, пожалуйста подождите.';
+            document.getElementById('chatMsgs').appendChild(r);
+          }, 700);
+          inp.value = '';
+        }
+        // Отправка в чат коллег
+        if (e.target.id === 'sendColleague') {
+          const inp = document.getElementById('colleagueInput');
+          if (!inp.value.trim()) return;
+          const msg = { from: currentEmployee?.name || 'Сотрудник', text: inp.value, time: new Date().toLocaleString() };
+          store('tumix_colleague_chats', [...colleagueChats(), msg]);
+          renderEmployeeView('colleagueChat');
+        }
+        // Вкладки обращений сотрудника
+        if (e.target.classList.contains('tab-inner')) {
+          document.querySelectorAll('.tab-inner').forEach(t => t.classList.remove('active'));
+          e.target.classList.add('active');
+          const sub = document.getElementById('appealsSubContent');
+          if (e.target.id === 'tabClientAppeals') {
+            const activeAppeals = appeals();
+            sub.innerHTML = activeAppeals.map(a => `
+              <div class="appeal-item" onclick="event.stopPropagation(); this.querySelector('.details').classList.toggle('hidden')">
+                <b>#${a.id}</b> ${a.status === 'Отвечено' ? '<span class="archive-badge">Отвечено</span>' : ''}
+                <div class="details hidden" style="margin-top:10px;">
+                  <div class="detail-row"><span>Сотрудник:</span><span>${a.empName}</span></div>
+                  <div class="detail-row"><span>Клиент:</span><span>${a.clientName}</span></div>
+                  <div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>
+                  ${a.reply ? `<div class="admin-reply">🔴 Руководитель отдела TUMIX: ${a.reply}</div>` : ''}
+                  ${currentEmployee?.role === 'admin' ? `
+                    <textarea id="replyText_${a.id}" style="width:100%;margin-top:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px;color:white;" placeholder="Ответ руководителя..."></textarea>
+                    <button class="btn btn-primary reply-btn" data-id="${a.id}" style="margin-top:5px;">Ответить</button>
+                    <button class="btn btn-danger delete-btn" data-id="${a.id}" style="margin-top:5px;">Удалить</button>
+                  ` : ''}
+                </div>
+              </div>`).join('') || '<p>Нет активных обращений</p>';
+            // Показываем архив
+            const archived = archivedAppeals();
+            if (archived.length > 0) {
+              sub.innerHTML += '<h4 style="margin-top:20px;">📦 Архив обращений</h4>';
+              sub.innerHTML += archived.map(a => `
+                <div class="appeal-item" style="opacity:0.7;" onclick="this.querySelector('.details').classList.toggle('hidden')">
+                  <b>#${a.id}</b> <span class="archive-badge">Архив</span>
+                  <div class="details hidden" style="margin-top:10px;">
+                    <div class="detail-row"><span>Сотрудник:</span><span>${a.empName}</span></div>
+                    <div class="detail-row"><span>Клиент:</span><span>${a.clientName}</span></div>
+                    <div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>
+                    ${a.reply ? `<div class="admin-reply">🔴 Ответ: ${a.reply}</div>` : ''}
+                  </div>
+                </div>`).join('');
+            }
+          }
+          if (e.target.id === 'tabEmpAppeals') {
+            sub.innerHTML = empAppeals().map(a => `
+              <div class="appeal-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
+                <b>${a.empName}</b> → Руководителю
+                <div class="details hidden" style="margin-top:10px;">
+                  <div class="detail-row"><span>Текст:</span><span style="text-align:left;">${a.text}</span></div>
+                  ${a.reply ? `<div class="admin-reply">🔴 Ответ руководителя: ${a.reply}</div>` : ''}
+                  ${currentEmployee?.role === 'admin' ? `
+                    <textarea id="empReplyText_${a.empName}" style="width:100%;margin-top:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px;color:white;" placeholder="Ответ руководителя..."></textarea>
+                    <button class="btn btn-primary emp-reply-btn" data-emp="${a.empName}" style="margin-top:5px;">Ответить</button>
+                  ` : ''}
+                </div>
+              </div>`).join('') || '<p>Нет обращений</p>';
+          }
+          if (e.target.id === 'tabCreateClient') {
+            sub.innerHTML = `<div class="form-card"><div class="input-column">
+              <div class="field-group"><label>ФИО сотрудника</label><input id="eName" placeholder="Иванов Иван"></div>
+              <div class="field-group"><label>Табельный номер</label><input id="eTab" placeholder="TUM-0001"></div>
+              <div class="field-group"><label>ФИО клиента</label><input id="cName"></div>
+              <div class="field-group"><label>Почта клиента</label><input id="cEmail"></div>
+              <div class="field-group"><label>Телефон клиента</label><input id="cPhone" placeholder="+7" value="+7"></div>
+              <div class="field-group"><label>Суть проблемы</label><textarea id="cProblem"></textarea></div>
+              <button class="btn btn-primary" id="submitClientAppeal">Оформить обращение</button>
+            </div></div>`;
+          }
+          if (e.target.id === 'tabCreateEmp') {
+            sub.innerHTML = `<div class="form-card"><div class="input-column">
+              <div class="field-group"><label>ФИО сотрудника</label><input id="eName2" placeholder="Иванов Иван"></div>
+              <div class="field-group"><label>Табельный номер</label><input id="eTab2" placeholder="TUM-0001"></div>
+              <div class="field-group"><label>Кому</label><input disabled value="Руководителю поддержки TUMIX"></div>
+              <div class="field-group"><label>Текст обращения</label><textarea id="eText">Руководителю отдела поддержки сотрудников TUMIX.</textarea></div>
+              <button class="btn btn-primary" id="submitEmpAppeal">Оформить</button>
+            </div></div>`;
+          }
+        }
+        // Создание обращения клиента
+        if (e.target.id === 'submitClientAppeal') {
+          const empTab = document.getElementById('eTab').value.trim();
+          if (!/^[A-ZА-ЯЁ]+-\d{4}$/i.test(empTab)) return notify('Табельный номер: TUM-0001');
+          const app = {
+            id: String(appeals().length + archivedAppeals().length + 1).padStart(7, '0'),
+            empName: document.getElementById('eName').value,
+            empTab: empTab,
+            clientName: document.getElementById('cName').value,
+            clientEmail: document.getElementById('cEmail').value,
+            clientPhone: document.getElementById('cPhone').value,
+            problem: document.getElementById('cProblem').value,
+            status: 'Открыто',
+            createdAt: Date.now()
+          };
+          store('tumix_appeals', [...appeals(), app]);
+          notify('✅ Обращение #' + app.id + ' создано');
+          renderEmployeeView('empAppeals');
+        }
+        // Создание обращения сотрудника
+        if (e.target.id === 'submitEmpAppeal') {
+          const empTab = document.getElementById('eTab2').value.trim();
+          if (!/^[A-ZА-ЯЁ]+-\d{4}$/i.test(empTab)) return notify('Табельный номер: TUM-0001');
+          store('tumix_emp_appeals', [...empAppeals(), {
+            empName: document.getElementById('eName2').value,
+            empTab: empTab,
+            text: 'Руководителю отдела поддержки сотрудников TUMIX.',
+            createdAt: Date.now()
+          }]);
+          notify('✅ Обращение сотрудника создано');
+          renderEmployeeView('empAppeals');
+        }
       });
 
+      function orderDetails(o) {
+        return `
+          <div class="detail-row"><span>Отправитель:</span><span>${o.sender} (${o.sPhone})</span></div>
+          <div class="detail-row"><span>Адрес отпр.:</span><span>${o.sAddr}</span></div>
+          <div class="detail-row"><span>Получатель:</span><span>${o.recName} (${o.rPhone})</span></div>
+          <div class="detail-row"><span>Адрес получ.:</span><span>${o.rAddr}</span></div>
+          <div class="detail-row"><span>Содержимое:</span><span>${o.content}</span></div>
+          <div class="detail-row"><span>Упаковка:</span><span>${o.packs?.join(', ')}</span></div>
+          <div class="detail-row"><span>Статус:</span><span>${o.status}</span></div>
+          <div class="detail-row"><span>Дата:</span><span>${o.date}</span></div>`;
+      }
+
       function clientOrders() {
-        const ords = orders().filter(o => o.clientId === currentClient?.id);
-        return `<h3>📑 Мои заказы</h3>` + ords.map(o => `
-        <div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
-          <b>#${o.id}</b>
-          <div class="details hidden" style="margin-top:10px;">
-            <div class="detail-row"><span>Отправитель:</span><span>${o.sender} (${o.sPhone})</span></div>
-            <div class="detail-row"><span>Адрес отпр.:</span><span>${o.sAddr}</span></div>
-            <div class="detail-row"><span>Получатель:</span><span>${o.recName} (${o.rPhone})</span></div>
-            <div class="detail-row"><span>Адрес получ.:</span><span>${o.rAddr}</span></div>
-            <div class="detail-row"><span>Содержимое:</span><span>${o.content}</span></div>
-            <div class="detail-row"><span>Упаковка:</span><span>${o.packs?.join(', ')}</span></div>
-            <div class="detail-row"><span>Статус:</span><span>${o.status}</span></div>
-          </div>
-        </div>`).join('') || '<p>Нет заказов</p>';
+        return `<h3>📑 Мои заказы</h3>` + orders().filter(o => o.clientId === currentClient?.id).map(o => `
+          <div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
+            <b>#${o.id}</b>
+            <div class="details hidden" style="margin-top:10px;">${orderDetails(o)}</div>
+          </div>`).join('') || '<p>Нет заказов</p>';
       }
 
       function clientAppeals() {
-        const apps = appeals().filter(a => a.clientEmail === currentClient?.email);
-        return `<h3>📋 Мои обращения</h3>` + apps.map(a => `
-        <div class="appeal-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
-          <b>#${a.id}</b>
-          <div class="details hidden" style="margin-top:10px;">
-            <div class="detail-row"><span>Сотрудник:</span><span>${a.empName}</span></div>
-            <div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>
-            <div class="detail-row"><span>Статус:</span><span>${a.status || 'Открыто'}</span></div>
-            ${a.reply ? `<div class="admin-reply">🔴 Руководитель отдела TUMIX: ${a.reply}</div>` : ''}
-          </div>
-        </div>`).join('') || '<p>Обращений нет</p>';
-      }
-
-      function supportChat() {
-        return `<div class="card"><h3>💬 Поддержка</h3><div id="chatMsgs" style="max-height:300px;overflow-y:auto;"><div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:14px;margin:8px 0;">Здравствуйте! Это поддержка TUMIX, какой у вас вопрос?</div></div><div style="display:flex;gap:10px;margin-top:12px;"><input id="chatInput" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px;color:white;" placeholder="Сообщение..."><button class="btn btn-primary" id="sendChat" style="width:auto;">Отправить</button></div></div>`;
+        const clientApps = appeals().filter(a => a.clientEmail === currentClient?.email);
+        return `<h3>📋 Мои обращения</h3>` + clientApps.map(a => `
+          <div class="appeal-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
+            <b>#${a.id}</b>
+            <div class="details hidden" style="margin-top:10px;">
+              <div class="detail-row"><span>Сотрудник:</span><span>${a.empName}</span></div>
+              <div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>
+              <div class="detail-row"><span>Статус:</span><span>${a.status || 'Открыто'}</span></div>
+              ${a.reply ? `<div class="admin-reply">🔴 Руководитель отдела TUMIX: ${a.reply}</div>` : ''}
+            </div>
+          </div>`).join('') || '<p>Обращений нет</p>';
       }
 
       function renderClientView(view) {
@@ -794,160 +1012,62 @@
         if (view === 'delivery') { a.innerHTML = deliveryForm();
           initDeliveryMap(); } else if (view === 'appeals') a.innerHTML = clientAppeals();
         else if (view === 'orders') a.innerHTML = clientOrders();
-        else if (view === 'support') a.innerHTML = supportChat();
+        else if (view === 'support') a.innerHTML = `
+          <div class="card"><h3>💬 Поддержка</h3>
+            <div id="chatMsgs" style="max-height:300px;overflow-y:auto;">
+              <div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:14px;margin:8px 0;">Здравствуйте! Это поддержка TUMIX, какой у вас вопрос?</div>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:12px;">
+              <input id="chatInput" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px;color:white;" placeholder="Сообщение...">
+              <button class="btn btn-primary" id="sendChat" style="width:auto;">Отправить</button>
+            </div>
+          </div>`;
       }
 
+      // Навигация сотрудника
       document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(b => b.addEventListener('click', () => {
-        document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(x => x.classList.remove(
-          'active'));
+        document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(x => x.classList.remove('active'));
         b.classList.add('active');
         renderEmployeeView(b.dataset.view);
       }));
 
       function renderEmployeeView(view) {
         const a = document.getElementById('employeeContent');
-        if (view === 'empChat') a.innerHTML =
-          '<div class="card"><h3>💬 Чаты с клиентами</h3><p>Список чатов появится после подключения базы данных.</p></div>';
+        if (view === 'empChat') a.innerHTML = '<div class="card"><h3>💬 Чаты с клиентами</h3><p>Список чатов появится после подключения базы данных.</p></div>';
         else if (view === 'empAppeals') a.innerHTML = empAppealsPanel();
         else if (view === 'allOrders') a.innerHTML = '<h3>📦 Все заказы</h3>' + orders().map(o => `
-        <div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')"><b>#${o.id}</b><div class="details hidden" style="margin-top:10px;"><div class="detail-row"><span>Отправитель:</span><span>${o.sender}</span></div><div class="detail-row"><span>Получатель:</span><span>${o.recName}</span></div><div class="detail-row"><span>Статус:</span><span>${o.status}</span></div></div></div>`)
-          .join('');
+          <div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
+            <b>#${o.id}</b>
+            <div class="details hidden" style="margin-top:10px;">
+              ${orderDetails(o)}
+              <button class="btn btn-outline edit-order-btn" data-id="${o.id}" style="margin-top:8px;">✏️ Изменить статус</button>
+            </div>
+          </div>`).join('');
         else if (view === 'colleagueChat') a.innerHTML = colleagueChatPanel();
       }
 
       function empAppealsPanel() {
-        setTimeout(() => {
-          const tab = document.getElementById('tabClientAppeals');
-          if (tab) tab.click();
-        }, 60);
+        setTimeout(() => document.getElementById('tabClientAppeals')?.click(), 60);
         return `<div class="tabs-inner">
-        <button class="tab-inner active" id="tabClientAppeals">👥 Обращения клиентов</button>
-        <button class="tab-inner" id="tabEmpAppeals">👔 Обращения сотрудников</button>
-        <button class="tab-inner" id="tabCreateClient">➕ Создать клиенту</button>
-        <button class="tab-inner" id="tabCreateEmp">📝 Создать сотруднику</button>
-      </div><div id="appealsSubContent"></div>`;
+          <button class="tab-inner active" id="tabClientAppeals">👥 Обращения клиентов</button>
+          <button class="tab-inner" id="tabEmpAppeals">👔 Обращения сотрудников</button>
+          <button class="tab-inner" id="tabCreateClient">➕ Создать клиенту</button>
+          <button class="tab-inner" id="tabCreateEmp">📝 Создать сотруднику</button>
+        </div><div id="appealsSubContent"></div>`;
       }
 
       function colleagueChatPanel() {
         const msgs = colleagueChats();
         return `<div class="card"><h3>👥 Чат коллег</h3>
-        <div class="chat-messages" id="colleagueMessages">${msgs.map(m => {
-          const isMine = m.from === currentEmployee?.name;
-          return `<div class="chat-msg ${isMine ? 'mine' : 'other'}"><strong>${m.from}:</strong> ${m.text}</div>`;
-        }).join('')}</div>
-        <div style="display:flex;gap:10px;">
-          <input id="colleagueInput" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px;color:white;" placeholder="Сообщение коллегам...">
-          <button class="btn btn-primary" id="sendColleague" style="width:auto;">Отправить</button>
-        </div></div>`;
+          <div class="chat-messages" id="colleagueMessages">
+            ${msgs.map(m => `<div class="chat-msg ${m.from === currentEmployee?.name ? 'mine' : 'other'}"><strong>${m.from}:</strong> ${m.text}</div>`).join('')}
+          </div>
+          <div style="display:flex;gap:10px;">
+            <input id="colleagueInput" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px;color:white;" placeholder="Сообщение коллегам...">
+            <button class="btn btn-primary" id="sendColleague" style="width:auto;">Отправить</button>
+          </div>
+        </div>`;
       }
-
-      document.addEventListener('click', e => {
-        if (e.target.classList.contains('tab-inner')) {
-          document.querySelectorAll('.tab-inner').forEach(t => t.classList.remove('active'));
-          e.target.classList.add('active');
-          const sub = document.getElementById('appealsSubContent');
-          if (e.target.id === 'tabClientAppeals') sub.innerHTML = appeals().map(a => `
-          <div class="appeal-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
-            <b>#${a.id}</b>
-            <div class="details hidden" style="margin-top:10px;">
-              <div class="detail-row"><span>Сотрудник:</span><span>${a.empName}</span></div>
-              <div class="detail-row"><span>Клиент:</span><span>${a.clientName}</span></div>
-              <div class="detail-row"><span>Почта:</span><span>${a.clientEmail}</span></div>
-              <div class="detail-row"><span>Телефон:</span><span>${a.clientPhone}</span></div>
-              <div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>
-              <div class="detail-row"><span>Статус:</span><span>${a.status || 'Открыто'}</span></div>
-              ${a.reply ? `<div class="admin-reply">🔴 Руководитель отдела TUMIX: ${a.reply}</div>` : ''}
-              ${currentEmployee?.role === 'admin' ? `
-                <div style="margin-top:10px;">
-                  <textarea id="replyText_${a.id}" placeholder="Ответ руководителя..." style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px;color:white;"></textarea>
-                  <button class="btn btn-primary reply-btn" data-id="${a.id}" style="margin-top:5px;">Ответить</button>
-                  <button class="btn btn-danger delete-btn" data-id="${a.id}" style="margin-top:5px;">Удалить</button>
-                </div>` : ''}
-            </div>
-          </div>`).join('') || '<p>Нет обращений</p>';
-          if (e.target.id === 'tabEmpAppeals') sub.innerHTML = empAppeals().map(a => `
-          <div class="appeal-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
-            <b>${a.empName}</b> → Руководителю
-            <div class="details hidden" style="margin-top:10px;">
-              <div class="detail-row"><span>Текст:</span><span>${a.text}</span></div>
-            </div>
-          </div>`).join('') || '<p>Нет обращений</p>';
-          if (e.target.id === 'tabCreateClient') sub.innerHTML =
-            `<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName" placeholder="Иванов Иван"></div><div class="field-group"><label>Табельный номер</label><input id="eTab" placeholder="TUM-0001"></div><div class="field-group"><label>ФИО клиента</label><input id="cName"></div><div class="field-group"><label>Почта клиента</label><input id="cEmail"></div><div class="field-group"><label>Телефон клиента</label><input id="cPhone"></div><div class="field-group"><label>Суть проблемы</label><textarea id="cProblem"></textarea></div><button class="btn btn-primary" id="submitClientAppeal">Оформить обращение</button></div></div>`;
-          if (e.target.id === 'tabCreateEmp') sub.innerHTML =
-            `<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName2" placeholder="Иванов Иван"></div><div class="field-group"><label>Табельный номер</label><input id="eTab2" placeholder="TUM-0001"></div><div class="field-group"><label>Кому</label><input disabled value="Руководителю поддержки TUMIX"></div><div class="field-group"><label>Текст обращения</label><textarea id="eText">Руководителю отдела поддержки сотрудников TUMIX.</textarea></div><button class="btn btn-primary" id="submitEmpAppeal">Оформить</button></div></div>`;
-        }
-        if (e.target.id === 'submitClientAppeal') {
-          const empName = document.getElementById('eName').value.trim();
-          const empTab = document.getElementById('eTab').value.trim();
-          if (!/^[A-ZА-ЯЁ]+-[0-9]{4}$/.test(empTab)) return alert(
-            'Табельный номер должен быть в формате TUM-0001');
-          const app = {
-            id: String(appeals().length + 1).padStart(7, '0'),
-            empName,
-            empTab,
-            clientName: document.getElementById('cName').value,
-            clientEmail: document.getElementById('cEmail').value,
-            clientPhone: document.getElementById('cPhone').value,
-            problem: document.getElementById('cProblem').value,
-            status: 'Открыто'
-          };
-          store('tumix_appeals', [...appeals(), app]);
-          alert('Обращение создано');
-          renderEmployeeView('empAppeals');
-        }
-        if (e.target.id === 'submitEmpAppeal') {
-          const empName = document.getElementById('eName2').value.trim();
-          const empTab = document.getElementById('eTab2').value.trim();
-          if (!/^[A-ZА-ЯЁ]+-[0-9]{4}$/.test(empTab)) return alert(
-            'Табельный номер должен быть в формате TUM-0001');
-          store('tumix_emp_appeals', [...empAppeals(), { empName, empTab,
-            text: 'Руководителю отдела поддержки сотрудников TUMIX.' }]);
-          alert('Обращение сотрудника создано');
-          renderEmployeeView('empAppeals');
-        }
-        if (e.target.classList.contains('reply-btn')) {
-          const id = e.target.dataset.id;
-          const replyText = document.getElementById('replyText_' + id).value;
-          if (!replyText) return alert('Введите текст ответа');
-          const updated = appeals().map(a => a.id === id ? { ...a, reply: replyText, status: 'Отвечено' } :
-            a);
-          store('tumix_appeals', updated);
-          renderEmployeeView('empAppeals');
-        }
-        if (e.target.classList.contains('delete-btn')) {
-          const id = e.target.dataset.id;
-          if (confirm('Удалить обращение #' + id + '?')) {
-            store('tumix_appeals', appeals().filter(a => a.id !== id));
-            renderEmployeeView('empAppeals');
-          }
-        }
-        if (e.target.id === 'sendColleague') {
-          const inp = document.getElementById('colleagueInput');
-          if (!inp.value.trim()) return;
-          const msg = { from: currentEmployee?.name || 'Сотрудник', text: inp.value, time: new Date()
-              .toLocaleString() };
-          store('tumix_colleague_chats', [...colleagueChats(), msg]);
-          renderEmployeeView('colleagueChat');
-        }
-        if (e.target.id === 'sendChat') {
-          const inp = document.getElementById('chatInput');
-          if (!inp.value.trim()) return;
-          const d = document.createElement('div');
-          d.style.cssText =
-            'background:rgba(241,90,44,0.25);padding:10px;border-radius:12px;margin:6px 0;color:white;';
-          d.textContent = inp.value;
-          document.getElementById('chatMsgs').appendChild(d);
-          setTimeout(() => {
-            const r = document.createElement('div');
-            r.style.cssText =
-              'background:rgba(255,255,255,0.05);padding:10px;border-radius:12px;';
-            r.textContent = 'Оператор скоро ответит вам, пожалуйста подождите.';
-            document.getElementById('chatMsgs').appendChild(r);
-          }, 700);
-          inp.value = '';
-        }
-      });
 
       renderAuth();
     })();
