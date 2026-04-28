@@ -15,11 +15,11 @@
 
     body {
       font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-      background: #0b0b16;
+      background: #0a0a14;
       background-image:
-        radial-gradient(ellipse at 15% 40%, rgba(241, 90, 44, 0.06) 0%, transparent 55%),
-        radial-gradient(ellipse at 85% 70%, rgba(255, 160, 80, 0.05) 0%, transparent 55%),
-        radial-gradient(ellipse at 40% 90%, rgba(140, 100, 255, 0.04) 0%, transparent 55%);
+        radial-gradient(ellipse at 15% 40%, rgba(241, 90, 44, 0.08) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 70%, rgba(255, 160, 80, 0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 40% 90%, rgba(140, 100, 255, 0.05) 0%, transparent 55%);
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -28,53 +28,72 @@
       color: #e4e0ee;
     }
 
-    /* Основной контейнер */
+    /* Анимации */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(-16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(241, 90, 44, 0.4); }
+      50% { box-shadow: 0 0 0 12px rgba(241, 90, 44, 0); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
     .app-wrapper {
       width: 100%;
-      max-width: 1400px;
+      max-width: 1440px;
       min-height: 92vh;
-      background: rgba(16, 16, 30, 0.75);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
+      background: rgba(16, 16, 30, 0.78);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
       border-radius: 40px;
-      border: 1px solid rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow: 0 40px 70px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.04);
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      animation: fadeInUp 0.6s ease;
     }
 
-    /* Шапка с лого */
     .logo-header {
       padding: 22px 32px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
     .logo-icon {
-      width: 44px;
-      height: 44px;
+      width: 46px;
+      height: 46px;
       background: linear-gradient(135deg, #F15A2C, #ff7043);
       border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 900;
-      font-size: 22px;
+      font-size: 24px;
       color: #fff;
-      box-shadow: 0 10px 24px rgba(241, 90, 44, 0.45);
+      box-shadow: 0 10px 24px rgba(241, 90, 44, 0.5);
+      animation: pulse 2.5s infinite;
     }
     .logo-text {
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 800;
-      letter-spacing: -0.4px;
-      background: linear-gradient(to right, #f0e0d0, #c0b0a0);
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #f0d9c0, #c0a890, #f0d9c0);
+      background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      animation: shimmer 3s linear infinite;
     }
 
-    /* Экраны */
     .auth-screen {
       flex: 1;
       display: flex;
@@ -82,6 +101,7 @@
       align-items: center;
       justify-content: center;
       padding: 40px 20px;
+      animation: fadeInUp 0.5s ease;
     }
     .auth-tabs {
       display: flex;
@@ -100,24 +120,25 @@
       font-weight: 600;
       font-size: 14px;
       cursor: pointer;
-      transition: 0.25s;
+      transition: all 0.3s ease;
     }
     .auth-tab.active {
       background: #F15A2C;
       color: #fff;
       box-shadow: 0 8px 20px rgba(241, 90, 44, 0.5);
+      transform: scale(1.03);
     }
 
-    /* Карточки форм */
     .auth-card, .form-card {
       background: rgba(22, 22, 40, 0.7);
       backdrop-filter: blur(22px);
       border-radius: 32px;
       padding: 36px 32px;
       width: 100%;
-      max-width: 500px;
+      max-width: 520px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow: 0 30px 50px rgba(0, 0, 0, 0.55);
+      transition: all 0.3s ease;
     }
     .auth-card h2, .form-card h3 {
       font-size: 24px;
@@ -127,7 +148,6 @@
       color: #ede4d8;
     }
 
-    /* ПОЛЯ ВВОДА – красивые, с контуром, в столбик */
     .input-column {
       display: flex;
       flex-direction: column;
@@ -156,16 +176,16 @@
       font-size: 15px;
       color: #f0e6dc;
       outline: none;
-      transition: all 0.25s;
+      transition: all 0.3s ease;
       font-family: inherit;
       resize: vertical;
-      backdrop-filter: blur(4px);
     }
     .field-group input:focus,
     .field-group textarea:focus {
       border-color: #F15A2C;
-      box-shadow: 0 0 0 4px rgba(241, 90, 44, 0.15);
+      box-shadow: 0 0 0 4px rgba(241, 90, 44, 0.2);
       background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-1px);
     }
     .field-group textarea {
       min-height: 100px;
@@ -178,7 +198,7 @@
       font-weight: 700;
       font-size: 15px;
       cursor: pointer;
-      transition: 0.25s;
+      transition: all 0.3s ease;
       letter-spacing: 0.4px;
       width: 100%;
       margin-top: 10px;
@@ -189,13 +209,16 @@
       box-shadow: 0 12px 28px rgba(241, 90, 44, 0.45);
     }
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 16px 34px rgba(241, 90, 44, 0.6);
+      transform: translateY(-3px);
+      box-shadow: 0 18px 36px rgba(241, 90, 44, 0.6);
     }
     .btn-outline {
       background: transparent;
       border: 1.5px solid rgba(255,255,255,0.22);
       color: #d0c6d8;
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.04);
     }
     .link-text {
       text-align: center;
@@ -214,14 +237,9 @@
       text-align: center;
       font-weight: 600;
       margin-bottom: 24px;
-      animation: fadeSlide 0.4s;
-    }
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(-12px); }
-      to { opacity: 1; transform: translateY(0); }
+      animation: fadeSlide 0.5s ease;
     }
 
-    /* Дашборд */
     .dashboard {
       flex: 1;
       display: flex;
@@ -246,18 +264,25 @@
       font-weight: 600;
       text-align: left;
       cursor: pointer;
-      transition: 0.2s;
+      transition: all 0.3s ease;
       font-size: 14px;
     }
-    .sidebar-btn:hover, .sidebar-btn.active {
-      background: rgba(241,90,44,0.2);
+    .sidebar-btn:hover {
+      background: rgba(241,90,44,0.15);
+      color: #ff9f7c;
+      transform: translateX(4px);
+    }
+    .sidebar-btn.active {
+      background: rgba(241,90,44,0.25);
       color: #F15A2C;
+      box-shadow: 0 4px 15px rgba(241,90,44,0.2);
     }
     .content-area {
       flex: 1;
       padding: 30px;
       overflow-y: auto;
       background: rgba(8,8,18,0.3);
+      animation: fadeInUp 0.4s ease;
     }
     .card {
       background: rgba(20,20,36,0.55);
@@ -266,6 +291,11 @@
       padding: 28px;
       border: 1px solid rgba(255,255,255,0.06);
       margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      border-color: rgba(255,255,255,0.1);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
     }
     .grid-2col {
       display: grid;
@@ -286,12 +316,18 @@
       cursor: pointer;
       font-size: 13px;
       color: #c8bdd0;
-      transition: 0.2s;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+    .checkbox-pill:hover {
+      border-color: #F15A2C;
+      transform: translateY(-2px);
     }
     .checkbox-pill.checked {
-      background: rgba(241,90,44,0.2);
+      background: rgba(241,90,44,0.25);
       border-color: #F15A2C;
       color: #ffa07c;
+      box-shadow: 0 4px 15px rgba(241,90,44,0.2);
     }
     .order-item, .appeal-item {
       background: rgba(255,255,255,0.03);
@@ -299,24 +335,48 @@
       padding: 16px;
       margin: 8px 0;
       border-left: 3px solid #F15A2C;
+      transition: all 0.3s ease;
+    }
+    .order-item:hover, .appeal-item:hover {
+      background: rgba(255,255,255,0.06);
+      transform: translateX(4px);
     }
     .hidden { display: none !important; }
+
     .tabs-inner {
       display: flex;
       gap: 8px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
     }
     .tab-inner {
-      padding: 8px 20px;
-      border-radius: 20px;
+      padding: 10px 20px;
+      border-radius: 24px;
       background: rgba(255,255,255,0.04);
-      border: none;
+      border: 1.5px solid rgba(255,255,255,0.1);
       color: #aaa;
       cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .tab-inner:hover {
+      border-color: #F15A2C;
+      color: #ff9f7c;
     }
     .tab-inner.active {
       background: #F15A2C;
       color: white;
+      border-color: #F15A2C;
+      box-shadow: 0 6px 20px rgba(241,90,44,0.4);
+      transform: scale(1.03);
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
     }
   </style>
 </head>
@@ -379,7 +439,7 @@
 
     function showSuccess(msg) {
       globalSuccess.textContent = msg; globalSuccess.classList.remove('hidden');
-      setTimeout(() => globalSuccess.classList.add('hidden'), 3000);
+      setTimeout(() => globalSuccess.classList.add('hidden'), 3500);
     }
 
     function renderAuth() {
@@ -389,8 +449,8 @@
         authForms.innerHTML = `
           <h2>Вход в аккаунт</h2>
           <div class="input-column">
-            <div class="field-group"><label>Почта</label><input type="email" id="loginEmail" placeholder="your@email.com"></div>
-            <div class="field-group"><label>Пароль</label><input type="password" id="loginPass" placeholder="••••••••"></div>
+            <div class="field-group"><label>Почта</label><input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="off"></div>
+            <div class="field-group"><label>Пароль</label><input type="password" id="loginPass" placeholder="••••••••" autocomplete="off"></div>
           </div>
           <button class="btn btn-primary" id="loginClientBtn">Войти</button>
           <p class="link-text">Нет аккаунта? <a href="#" id="showRegister">Зарегистрироваться</a></p>`;
@@ -400,10 +460,10 @@
           authForms.innerHTML = `
             <h2>Регистрация</h2>
             <div class="input-column">
-              <div class="field-group"><label>Имя *</label><input id="regName"></div>
-              <div class="field-group"><label>Почта *</label><input type="email" id="regEmail"></div>
-              <div class="field-group"><label>Телефон *</label><input type="tel" id="regPhone"></div>
-              <div class="field-group"><label>Пароль *</label><input type="password" id="regPass"></div>
+              <div class="field-group"><label>Имя *</label><input id="regName" autocomplete="off"></div>
+              <div class="field-group"><label>Почта *</label><input type="email" id="regEmail" autocomplete="off"></div>
+              <div class="field-group"><label>Телефон *</label><input type="tel" id="regPhone" autocomplete="off"></div>
+              <div class="field-group"><label>Пароль *</label><input type="password" id="regPass" autocomplete="off"></div>
             </div>
             <button class="btn btn-primary" id="registerBtn">Зарегистрироваться</button>
             <p class="link-text"><a href="#" id="backToLogin">Назад ко входу</a></p>`;
@@ -420,8 +480,8 @@
         authForms.innerHTML = `
           <h2>Вход для сотрудников</h2>
           <div class="input-column">
-            <div class="field-group"><label>Табельный номер</label><input id="empTab" placeholder="TUM-0001"></div>
-            <div class="field-group"><label>Пароль</label><input type="password" id="empPass"></div>
+            <div class="field-group"><label>Табельный номер</label><input id="empTab" placeholder="TUM-0001" autocomplete="off"></div>
+            <div class="field-group"><label>Пароль</label><input type="password" id="empPass" autocomplete="off"></div>
           </div>
           <button class="btn btn-primary" id="loginEmpBtn">Войти</button>`;
         document.getElementById('loginEmpBtn').addEventListener('click', ()=>{
@@ -442,24 +502,28 @@
     document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(b=>b.addEventListener('click',()=>{
       document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderClientView(b.dataset.view);
     }));
-    function renderClientView(view){
-      const a=document.getElementById('clientContent');
-      if(view==='delivery') a.innerHTML=deliveryForm();
-      else if(view==='appeals') a.innerHTML=clientAppeals();
-      else if(view==='orders') a.innerHTML=clientOrders();
-      else if(view==='support') a.innerHTML=supportChat();
+
+    // Расчет расстояния (приблизительно по Москве)
+    function calculateDistance(addr1, addr2) {
+      const baseCoords = { lat: 55.7558, lng: 37.6173 };
+      const hash = (s) => s.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+      const lat2 = baseCoords.lat + (hash(addr1)%100-50)/500;
+      const lng2 = baseCoords.lng + (hash(addr2)%100-50)/500;
+      const dLat = (lat2-baseCoords.lat)*111.32;
+      const dLng = (lng2-baseCoords.lng)*111.32*Math.cos(baseCoords.lat*Math.PI/180);
+      return Math.max(1, Math.round(Math.sqrt(dLat*dLat+dLng*dLng)));
     }
 
     function deliveryForm(){
       return `<div class="card"><h3>📦 Новая доставка</h3><div class="input-column">
-        <div class="field-group"><label>ФИО отправителя *</label><input id="sName"></div>
-        <div class="field-group"><label>Телефон отправителя *</label><input id="sPhone"></div>
-        <div class="field-group"><label>Адрес отправки *</label><input id="sAddr"></div>
-        <div class="field-group"><label>ФИО получателя *</label><input id="rName"></div>
-        <div class="field-group"><label>Телефон получателя *</label><input id="rPhone"></div>
-        <div class="field-group"><label>Адрес получателя *</label><input id="rAddr"></div>
+        <div class="field-group"><label>ФИО отправителя *</label><input id="sName" autocomplete="off"></div>
+        <div class="field-group"><label>Телефон отправителя *</label><input id="sPhone" autocomplete="off"></div>
+        <div class="field-group"><label>Адрес отправки *</label><input id="sAddr" placeholder="ул. Примерная, 1" autocomplete="off"></div>
+        <div class="field-group"><label>ФИО получателя *</label><input id="rName" autocomplete="off"></div>
+        <div class="field-group"><label>Телефон получателя *</label><input id="rPhone" autocomplete="off"></div>
+        <div class="field-group"><label>Адрес получателя *</label><input id="rAddr" placeholder="ул. Другая, 5" autocomplete="off"></div>
         <div class="field-group"><label>Город</label><input value="Москва и МО" disabled></div>
-        <div class="field-group"><label>Содержимое *</label><input id="contentDesc"></div>
+        <div class="field-group"><label>Содержимое *</label><input id="contentDesc" autocomplete="off"></div>
         <div class="checkbox-group" id="packCheckboxes">
           <label class="checkbox-pill"><input type="checkbox" value="Пакет" hidden> Пакет (60₽)</label>
           <label class="checkbox-pill"><input type="checkbox" value="Конверт" hidden> Конверт (90₽)</label>
@@ -476,60 +540,126 @@
       if(e.target.id==='calcDelivery'){
         const packs=[...document.querySelectorAll('#packCheckboxes input:checked')].map(c=>c.value);
         if(!packs.length) return alert('Выберите упаковку');
+        const sAddr=document.getElementById('sAddr').value.trim();
+        const rAddr=document.getElementById('rAddr').value.trim();
+        if(!sAddr||!rAddr) return alert('Заполните адреса');
+        const dist=calculateDistance(sAddr, rAddr);
         const pr={Пакет:60,Конверт:90,'Коробка S':120,'Коробка M':220,'Коробка L':280,'Коробка XL':350};
-        let pc=packs.reduce((s,p)=>s+pr[p],0), dist=Math.floor(Math.random()*20)+5, km=dist*6, serv=29, w=Math.random()<0.35?1.3:1;
-        let total=Math.round((pc+km+serv)*w);
-        document.getElementById('priceDetails').innerHTML=`<p>📦 Упаковка: ${pc}₽ | 🛣️ ${dist}км ×6₽ = ${km}₽ | 🔧 Сервис: 29₽</p>${w>1?'<p style="color:#ff7b4a;">🌧️ Непогода +30%</p>':''}<h3>Итого: ${total}₽</h3><button class="btn btn-primary" id="confirmOrder">Оформить доставку</button>`;
+        let pc=packs.reduce((s,p)=>s+pr[p],0), km=dist*6, serv=29, total=pc+km+serv;
+        document.getElementById('priceDetails').innerHTML=`
+          <div class="card" style="margin-top:16px;">
+            <p>📦 Упаковка: ${pc}₽</p>
+            <p>🛣️ Расстояние: ${dist} км × 6₽ = ${km}₽</p>
+            <p>🔧 Сервисный сбор: 29₽</p>
+            <h3 style="margin-top:8px;">💰 Итого: ${total}₽</h3>
+            <button class="btn btn-primary" id="confirmOrder">Оформить доставку</button>
+          </div>`;
       }
       if(e.target.id==='confirmOrder'){
-        store('tumix_orders',[...orders(),{id:Date.now().toString(),clientId:currentClient.id,sender:document.getElementById('sName').value,recName:document.getElementById('rName').value,status:'Оформлен'}]);
-        alert('✅ Доставка оформлена!'); document.querySelector('#clientDashboard .sidebar-btn[data-view="orders"]').click();
+        const ords=orders();
+        const newId=String(ords.length+1).padStart(8,'0');
+        const order={
+          id:newId, clientId:currentClient.id,
+          sender:document.getElementById('sName').value,
+          sPhone:document.getElementById('sPhone').value,
+          sAddr:document.getElementById('sAddr').value,
+          recName:document.getElementById('rName').value,
+          rPhone:document.getElementById('rPhone').value,
+          rAddr:document.getElementById('rAddr').value,
+          content:document.getElementById('contentDesc').value,
+          packs:[...document.querySelectorAll('#packCheckboxes input:checked')].map(c=>c.value),
+          status:'Оформлен', date:new Date().toLocaleString()
+        };
+        store('tumix_orders',[...ords,order]);
+        alert('✅ Доставка оформлена! Номер заказа: '+newId);
+        document.querySelector('#clientDashboard .sidebar-btn[data-view="orders"]').click();
       }
       if(e.target.closest('.checkbox-pill')){
         const pill=e.target.closest('.checkbox-pill'), cb=pill.querySelector('input'); cb.checked=!cb.checked; pill.classList.toggle('checked',cb.checked);
       }
     });
 
-    function clientOrders(){ return `<h3>Мои заказы</h3>`+orders().filter(o=>o.clientId===currentClient?.id).map(o=>`<div class="order-item">${o.sender} → ${o.recName} | ${o.status}</div>`).join('')||'<p>Нет заказов</p>'; }
-    function clientAppeals(){ return `<h3>Мои обращения</h3>`+appeals().filter(a=>a.clientEmail===currentClient?.email).map(a=>`<div class="appeal-item">#${a.id} ${a.problem} | ${a.status||'Открыто'}</div>`).join('')||'<p>Обращений нет</p>'; }
-    function supportChat(){ return `<div class="card"><h3>Поддержка</h3><div id="chatMsgs" style="max-height:300px;overflow-y:auto;"><div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:14px;margin:8px 0;">Здравствуйте! Это поддержка TUMIX, какой у вас вопрос?</div></div><div style="display:flex;gap:10px;margin-top:12px;"><input id="chatInput" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px;color:white;"><button class="btn btn-primary" id="sendChat" style="width:auto;">Отправить</button></div></div>`; }
+    function clientOrders(){
+      const ords=orders().filter(o=>o.clientId===currentClient?.id);
+      return `<h3>📑 Мои заказы</h3>`+ords.map(o=>`
+        <div class="order-item" style="cursor:pointer;" onclick="this.querySelector('.details').classList.toggle('hidden')">
+          <b>#${o.id}</b> ${o.sender} → ${o.recName} | ${o.status} | ${o.date}
+          <div class="details hidden" style="margin-top:10px;">
+            <div class="detail-row"><span>Отправитель:</span><span>${o.sender} (${o.sPhone})</span></div>
+            <div class="detail-row"><span>Адрес отпр.:</span><span>${o.sAddr}</span></div>
+            <div class="detail-row"><span>Получатель:</span><span>${o.recName} (${o.rPhone})</span></div>
+            <div class="detail-row"><span>Адрес получ.:</span><span>${o.rAddr}</span></div>
+            <div class="detail-row"><span>Содержимое:</span><span>${o.content}</span></div>
+            <div class="detail-row"><span>Упаковка:</span><span>${o.packs?.join(', ')}</span></div>
+          </div>
+        </div>`).join('')||'<p>Нет заказов</p>';
+    }
+
+    function clientAppeals(){
+      const apps=appeals().filter(a=>a.clientEmail===currentClient?.email);
+      return `<h3>📋 Мои обращения</h3>`+apps.map(a=>`
+        <div class="appeal-item"><b>#${a.id}</b> ${a.problem} | Статус: ${a.status||'Открыто'}</div>
+      `).join('')||'<p>Обращений нет</p>';
+    }
+
+    function supportChat(){
+      return `<div class="card"><h3>💬 Поддержка</h3><div id="chatMsgs" style="max-height:300px;overflow-y:auto;"><div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:14px;margin:8px 0;">Здравствуйте! Это поддержка TUMIX, какой у вас вопрос?</div></div><div style="display:flex;gap:10px;margin-top:12px;"><input id="chatInput" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px;color:white;" placeholder="Сообщение..."><button class="btn btn-primary" id="sendChat" style="width:auto;">Отправить</button></div></div>`;
+    }
+
+    function renderClientView(view){
+      const a=document.getElementById('clientContent');
+      if(view==='delivery') a.innerHTML=deliveryForm();
+      else if(view==='appeals') a.innerHTML=clientAppeals();
+      else if(view==='orders') a.innerHTML=clientOrders();
+      else if(view==='support') a.innerHTML=supportChat();
+    }
 
     // Сотрудник
     document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(b=>b.addEventListener('click',()=>{
       document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderEmployeeView(b.dataset.view);
     }));
+
     function renderEmployeeView(view){
       const a=document.getElementById('employeeContent');
-      if(view==='empChat') a.innerHTML='<h3>Чаты клиентов</h3><p>Список чатов появится после подключения базы данных.</p>';
+      if(view==='empChat') a.innerHTML='<div class="card"><h3>💬 Чаты клиентов</h3><p>Список чатов появится после подключения базы данных.</p></div>';
       else if(view==='empAppeals') a.innerHTML=empAppealsPanel();
-      else if(view==='allOrders') a.innerHTML='<h3>Все заказы</h3>'+orders().map(o=>`<div class="order-item">${o.sender} → ${o.recName} | ${o.status}</div>`).join('');
+      else if(view==='allOrders') a.innerHTML='<h3>📦 Все заказы</h3>'+orders().map(o=>`<div class="order-item"><b>#${o.id}</b> ${o.sender} → ${o.recName} | ${o.status}</div>`).join('');
     }
 
     function empAppealsPanel(){
+      setTimeout(()=>{
+        document.getElementById('tabClientAppeals')?.click();
+      },50);
       return `<div class="tabs-inner">
-        <button class="tab-inner active" id="tabClientAppeals">Обращения клиентов</button>
-        <button class="tab-inner" id="tabEmpAppeals">Обращения сотрудников</button>
-        <button class="tab-inner" id="tabCreateClient">+ Создать клиенту</button>
-        <button class="tab-inner" id="tabCreateEmp">+ Создать сотруднику</button>
+        <button class="tab-inner active" id="tabClientAppeals">👥 Обращения клиентов</button>
+        <button class="tab-inner" id="tabEmpAppeals">👔 Обращения сотрудников</button>
+        <button class="tab-inner" id="tabCreateClient">➕ Создать клиенту</button>
+        <button class="tab-inner" id="tabCreateEmp">📝 Создать сотруднику</button>
       </div><div id="appealsSubContent"></div>`;
     }
 
     document.addEventListener('click', e=>{
-      if(e.target.id==='tabClientAppeals') document.getElementById('appealsSubContent').innerHTML=appeals().map(a=>`<div class="appeal-item">#${a.id} ${a.problem} | ${a.status||'Открыто'}</div>`).join('')||'Нет обращений';
-      if(e.target.id==='tabEmpAppeals') document.getElementById('appealsSubContent').innerHTML=empAppeals().map(a=>`<div class="appeal-item">${a.empName} → Руководителю | ${a.text}</div>`).join('')||'Нет обращений';
-      if(e.target.id==='tabCreateClient') document.getElementById('appealsSubContent').innerHTML=`<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName"></div><div class="field-group"><label>Табельный номер</label><input id="eTab"></div><div class="field-group"><label>ФИО клиента</label><input id="cName"></div><div class="field-group"><label>Почта клиента</label><input id="cEmail"></div><div class="field-group"><label>Телефон клиента</label><input id="cPhone"></div><div class="field-group"><label>Суть проблемы</label><textarea id="cProblem"></textarea></div><button class="btn btn-primary" id="submitClientAppeal">Оформить обращение</button></div></div>`;
+      // Вкладки обращений сотрудника
+      if(e.target.classList.contains('tab-inner')){
+        document.querySelectorAll('.tab-inner').forEach(t=>t.classList.remove('active'));
+        e.target.classList.add('active');
+        const sub=document.getElementById('appealsSubContent');
+        if(e.target.id==='tabClientAppeals') sub.innerHTML=appeals().map(a=>`<div class="appeal-item"><b>#${a.id}</b> ${a.empName} → клиент: ${a.clientName || ''} | ${a.problem} | ${a.status||'Открыто'}</div>`).join('')||'<p>Нет обращений</p>';
+        if(e.target.id==='tabEmpAppeals') sub.innerHTML=empAppeals().map(a=>`<div class="appeal-item"><b>${a.empName}</b> → Руководителю | ${a.text}</div>`).join('')||'<p>Нет обращений</p>';
+        if(e.target.id==='tabCreateClient') sub.innerHTML=`<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName"></div><div class="field-group"><label>Табельный номер</label><input id="eTab"></div><div class="field-group"><label>ФИО клиента</label><input id="cName"></div><div class="field-group"><label>Почта клиента</label><input id="cEmail"></div><div class="field-group"><label>Телефон клиента</label><input id="cPhone"></div><div class="field-group"><label>Суть проблемы</label><textarea id="cProblem"></textarea></div><button class="btn btn-primary" id="submitClientAppeal">Оформить обращение</button></div></div>`;
+        if(e.target.id==='tabCreateEmp') sub.innerHTML=`<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName2"></div><div class="field-group"><label>Табельный номер</label><input id="eTab2"></div><div class="field-group"><label>Кому</label><input disabled value="Руководителю поддержки TUMIX"></div><div class="field-group"><label>Текст обращения</label><textarea id="eText">Руководителю отдела поддержки сотрудников TUMIX.</textarea></div><button class="btn btn-primary" id="submitEmpAppeal">Оформить</button></div></div>`;
+      }
       if(e.target.id==='submitClientAppeal'){
-        const app={id:String(appeals().length+1).padStart(7,'0'),empName:document.getElementById('eName').value,problem:document.getElementById('cProblem').value,clientEmail:document.getElementById('cEmail').value,status:'Открыто'};
+        const app={id:String(appeals().length+1).padStart(7,'0'),empName:document.getElementById('eName').value,problem:document.getElementById('cProblem').value,clientEmail:document.getElementById('cEmail').value,clientName:document.getElementById('cName').value,status:'Открыто'};
         store('tumix_appeals',[...appeals(),app]); alert('Обращение создано'); renderEmployeeView('empAppeals');
       }
-      if(e.target.id==='tabCreateEmp') document.getElementById('appealsSubContent').innerHTML=`<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName2"></div><div class="field-group"><label>Табельный номер</label><input id="eTab2"></div><div class="field-group"><label>Кому: Руководителю поддержки TUMIX</label><input disabled value="Руководитель поддержки TUMIX"></div><div class="field-group"><label>Текст обращения</label><textarea id="eText">Руководителю отдела поддержки сотрудников TUMIX.</textarea></div><button class="btn btn-primary" id="submitEmpAppeal">Оформить</button></div></div>`;
       if(e.target.id==='submitEmpAppeal'){
         store('tumix_emp_appeals',[...empAppeals(),{empName:document.getElementById('eName2').value,text:document.getElementById('eText').value}]);
         alert('Обращение сотрудника создано'); renderEmployeeView('empAppeals');
       }
       if(e.target.id==='sendChat'){
         const inp=document.getElementById('chatInput'); if(!inp.value.trim()) return;
-        const d=document.createElement('div'); d.style.cssText='background:rgba(241,90,44,0.2);padding:10px;border-radius:12px;margin:6px 0;'; d.textContent=inp.value;
+        const d=document.createElement('div'); d.style.cssText='background:rgba(241,90,44,0.25);padding:10px;border-radius:12px;margin:6px 0;color:white;'; d.textContent=inp.value;
         document.getElementById('chatMsgs').appendChild(d);
         setTimeout(()=>{const r=document.createElement('div'); r.style.cssText='background:rgba(255,255,255,0.05);padding:10px;border-radius:12px;'; r.textContent='Оператор скоро ответит вам, пожалуйста подождите.'; document.getElementById('chatMsgs').appendChild(r);},700);
         inp.value='';
