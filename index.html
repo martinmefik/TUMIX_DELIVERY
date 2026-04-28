@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>TUMIX — Доставка с душой</title>
+  <title>TUMIX — Доставка с кайфом</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23F15A2C'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold' font-size='18'>T</text></svg>">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
@@ -15,457 +15,574 @@
       box-sizing: border-box;
     }
 
-    /* Кастомный скроллбар */
+    /* Кастомный скроллбар — произведение искусства */
     ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
     }
     ::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: 10px;
+      background: rgba(20, 20, 40, 0.6);
+      border-radius: 16px;
+      margin: 8px;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.4);
     }
     ::-webkit-scrollbar-thumb {
-      background: linear-gradient(180deg, #F15A2C, #ff7043);
-      border-radius: 10px;
-      box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+      background: linear-gradient(180deg, #F15A2C, #ff8a5c, #F15A2C);
+      border-radius: 16px;
+      border: 2px solid rgba(0,0,0,0.2);
+      box-shadow: 0 0 12px rgba(241,90,44,0.5);
+      transition: all 0.4s ease;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #ff8a5c;
+      background: linear-gradient(180deg, #ff7043, #ffaa80, #ff7043);
+      box-shadow: 0 0 20px rgba(241,90,44,0.8);
     }
 
     body {
-      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-      background: #0a0a14;
-      background-image: radial-gradient(ellipse at 15% 40%, rgba(241, 90, 44, 0.1) 0%, transparent 55%), 
-                      radial-gradient(ellipse at 85% 70%, rgba(255, 160, 80, 0.08) 0%, transparent 55%), 
-                      radial-gradient(ellipse at 40% 90%, rgba(140, 100, 255, 0.06) 0%, transparent 55%);
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #06060f;
+      background-image: 
+        radial-gradient(ellipse at 20% 30%, rgba(241, 90, 44, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 60%, rgba(255, 160, 80, 0.09) 0%, transparent 60%),
+        radial-gradient(ellipse at 40% 85%, rgba(140, 100, 255, 0.07) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 15%, rgba(255, 200, 150, 0.05) 0%, transparent 50%);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 16px;
-      color: #e4e0ee;
+      padding: 20px;
+      color: #e8e4f0;
+      animation: backgroundShift 20s ease infinite alternate;
+    }
+
+    @keyframes backgroundShift {
+      0% { background-position: 0% 0%, 100% 100%, 50% 50%, 0% 100%; }
+      100% { background-position: 100% 100%, 0% 0%, 50% 50%, 100% 0%; }
     }
 
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(24px); }
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(-20px); }
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-25px); }
       to { opacity: 1; transform: translateY(0); }
     }
     @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(241, 90, 44, 0.5); }
-      50% { box-shadow: 0 0 0 16px rgba(241, 90, 44, 0); }
+      0%, 100% { box-shadow: 0 0 0 0 rgba(241, 90, 44, 0.6); }
+      50% { box-shadow: 0 0 0 20px rgba(241, 90, 44, 0); }
     }
     @keyframes shimmer {
-      0% { background-position: -200% center; }
-      100% { background-position: 200% center; }
+      0% { background-position: -300% center; }
+      100% { background-position: 300% center; }
     }
     @keyframes borderGlow {
-      0%, 100% { border-color: rgba(241, 90, 44, 0.2); }
-      50% { border-color: rgba(241, 90, 44, 0.6); }
+      0%, 100% { border-color: rgba(241, 90, 44, 0.2); box-shadow: 0 0 15px rgba(241,90,44,0.05); }
+      50% { border-color: rgba(241, 90, 44, 0.7); box-shadow: 0 0 30px rgba(241,90,44,0.2); }
+    }
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
     }
 
     .app-wrapper {
       width: 100%;
-      max-width: 1440px;
-      min-height: 92vh;
-      background: rgba(16, 16, 30, 0.8);
-      backdrop-filter: blur(32px);
-      -webkit-backdrop-filter: blur(32px);
-      border-radius: 44px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 45px 80px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      max-width: 1460px;
+      min-height: 94vh;
+      background: rgba(14, 14, 28, 0.82);
+      backdrop-filter: blur(36px);
+      -webkit-backdrop-filter: blur(36px);
+      border-radius: 48px;
+      border: 1.5px solid rgba(255, 255, 255, 0.09);
+      box-shadow: 
+        0 50px 100px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1), borderGlow 6s infinite;
     }
 
+    /* Хедер */
     .logo-header {
-      padding: 22px 32px;
+      padding: 20px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(10, 10, 22, 0.3);
+    }
+    .logo-left {
       display: flex;
       align-items: center;
       gap: 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
-    .logo-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, #F15A2C, #ff7043);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 26px;
-      color: #fff;
-      box-shadow: 0 14px 28px rgba(241, 90, 44, 0.5);
-      animation: pulse 3s infinite;
+    .logo-img {
+      height: 44px;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 12px rgba(241,90,44,0.4));
+      transition: transform 0.3s ease;
+    }
+    .logo-img:hover {
+      transform: scale(1.08) rotate(-3deg);
     }
     .logo-text {
       font-size: 30px;
-      font-weight: 800;
-      letter-spacing: -0.6px;
-      background: linear-gradient(135deg, #f0d9c0, #c0a890, #f0d9c0);
-      background-size: 200% auto;
+      font-weight: 900;
+      letter-spacing: -0.8px;
+      background: linear-gradient(135deg, #f5dfc8, #c8b098, #f5dfc8, #e0c8a8);
+      background-size: 300% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: shimmer 3.5s linear infinite;
+      animation: shimmer 4s linear infinite;
+      text-shadow: 0 0 30px rgba(241,90,44,0.15);
+    }
+    .logout-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
+      color: #c8bca8;
+      padding: 12px 26px;
+      border-radius: 34px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.35s ease;
+      backdrop-filter: blur(10px);
+      letter-spacing: 0.4px;
+    }
+    .logout-btn:hover {
+      background: #c0392b;
+      color: white;
+      border-color: #e74c3c;
+      box-shadow: 0 10px 28px rgba(192, 57, 43, 0.5);
+      transform: translateY(-2px);
     }
 
+    /* Экран авторизации */
     .auth-screen {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 40px 20px;
+      padding: 50px 24px;
       animation: fadeInUp 0.6s ease;
     }
     .auth-tabs {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       background: rgba(255, 255, 255, 0.04);
-      padding: 6px;
-      border-radius: 24px;
-      margin-bottom: 36px;
+      padding: 7px;
+      border-radius: 28px;
+      margin-bottom: 38px;
+      backdrop-filter: blur(14px);
     }
     .auth-tab {
-      padding: 12px 32px;
-      border-radius: 20px;
+      padding: 13px 36px;
+      border-radius: 24px;
       border: none;
       background: transparent;
-      color: #9a90a8;
-      font-weight: 600;
+      color: #9c90ac;
+      font-weight: 700;
       font-size: 15px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.35s ease;
+      letter-spacing: 0.3px;
     }
     .auth-tab.active {
       background: #F15A2C;
       color: #fff;
-      box-shadow: 0 10px 24px rgba(241, 90, 44, 0.55);
-      transform: scale(1.04);
+      box-shadow: 0 12px 30px rgba(241, 90, 44, 0.6);
+      transform: scale(1.05);
+    }
+    .auth-tab:hover:not(.active) {
+      color: #d0c0b0;
+      background: rgba(255,255,255,0.03);
     }
 
     .auth-card, .form-card {
-      background: rgba(22, 22, 40, 0.75);
-      backdrop-filter: blur(24px);
-      border-radius: 36px;
-      padding: 38px 34px;
+      background: rgba(20, 20, 38, 0.78);
+      backdrop-filter: blur(28px);
+      border-radius: 40px;
+      padding: 42px 38px;
       width: 100%;
-      max-width: 540px;
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      box-shadow: 0 35px 60px rgba(0, 0, 0, 0.6);
-      transition: all 0.35s ease;
-      animation: borderGlow 4s infinite;
+      max-width: 560px;
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 40px 70px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255,255,255,0.04);
+      animation: cardFloat 6s ease-in-out infinite;
     }
     .auth-card h2, .form-card h3 {
-      font-size: 26px;
-      font-weight: 700;
-      margin-bottom: 28px;
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 30px;
       text-align: center;
-      color: #ede4d8;
+      color: #efe6da;
+      letter-spacing: -0.3px;
     }
 
     .input-column {
       display: flex;
       flex-direction: column;
-      gap: 22px;
+      gap: 24px;
     }
     .field-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 7px;
     }
     .field-group label {
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.9px;
-      color: #b0a0b8;
+      letter-spacing: 1.2px;
+      color: #b8a8c8;
     }
     .field-group input,
     .field-group textarea,
     .field-group select {
       width: 100%;
-      padding: 15px 20px;
+      padding: 16px 22px;
       background: rgba(255, 255, 255, 0.04);
-      border: 1.8px solid rgba(255, 255, 255, 0.14);
-      border-radius: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.13);
+      border-radius: 20px;
       font-size: 16px;
-      color: #f0e6dc;
+      color: #f2e8dc;
       outline: none;
-      transition: all 0.3s ease;
+      transition: all 0.35s ease;
       font-family: inherit;
       resize: vertical;
     }
     .field-group input:focus,
     .field-group textarea:focus {
       border-color: #F15A2C;
-      box-shadow: 0 0 0 5px rgba(241, 90, 44, 0.25);
-      background: rgba(255, 255, 255, 0.07);
+      box-shadow: 0 0 0 6px rgba(241, 90, 44, 0.3);
+      background: rgba(255, 255, 255, 0.08);
       transform: translateY(-2px);
     }
     .field-group textarea {
-      min-height: 110px;
+      min-height: 120px;
+      line-height: 1.5;
     }
 
     .btn {
-      padding: 16px 26px;
-      border-radius: 20px;
+      padding: 17px 28px;
+      border-radius: 22px;
       border: none;
       font-weight: 700;
       font-size: 16px;
       cursor: pointer;
-      transition: all 0.3s ease;
-      letter-spacing: 0.5px;
+      transition: all 0.35s ease;
+      letter-spacing: 0.6px;
       width: 100%;
-      margin-top: 12px;
+      margin-top: 14px;
       position: relative;
       overflow: hidden;
     }
-    .btn::after {
+    .btn::before {
       content: '';
       position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-      transition: left 0.5s;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      transition: left 0.6s ease;
     }
-    .btn:hover::after { left: 100%; }
+    .btn:hover::before {
+      left: 100%;
+    }
     .btn-primary {
-      background: linear-gradient(135deg, #F15A2C, #d9441c);
+      background: linear-gradient(135deg, #F15A2C, #e04820);
       color: white;
-      box-shadow: 0 14px 32px rgba(241, 90, 44, 0.5);
+      box-shadow: 0 16px 36px rgba(241, 90, 44, 0.55);
     }
     .btn-primary:hover {
       transform: translateY(-4px);
-      box-shadow: 0 22px 42px rgba(241, 90, 44, 0.65);
+      box-shadow: 0 24px 48px rgba(241, 90, 44, 0.7);
     }
     .btn-outline {
       background: transparent;
-      border: 1.8px solid rgba(255,255,255,0.24);
-      color: #d0c6d8;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      color: #d4cadc;
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: #F15A2C;
+      color: #F15A2C;
     }
     .btn-danger {
-      background: #c0392b;
+      background: linear-gradient(135deg, #c0392b, #a93226);
       color: white;
+      box-shadow: 0 10px 24px rgba(192,57,43,0.4);
+    }
+    .btn-danger:hover {
+      box-shadow: 0 16px 34px rgba(192,57,43,0.6);
+      transform: translateY(-2px);
     }
     .link-text {
       text-align: center;
-      margin-top: 18px;
+      margin-top: 20px;
       font-size: 15px;
-      color: #9088a0;
+      color: #988ea8;
     }
-    .link-text a { color: #F15A2C; text-decoration: none; font-weight: 600; }
+    .link-text a {
+      color: #F15A2C;
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.3s;
+    }
+    .link-text a:hover {
+      color: #ff9f7c;
+      text-decoration: underline;
+    }
 
-    /* Уведомление */
+    /* Уведомления */
     .toast-notification {
       position: fixed;
-      top: 24px;
-      right: 24px;
-      background: rgba(20, 20, 40, 0.9);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 20px;
-      padding: 18px 28px;
-      color: #f0e6dc;
-      font-weight: 600;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      top: 28px;
+      right: 28px;
+      background: rgba(18, 18, 36, 0.95);
+      backdrop-filter: blur(24px);
+      border: 1.5px solid #F15A2C;
+      border-radius: 22px;
+      padding: 20px 32px;
+      color: #f2e6d8;
+      font-weight: 700;
+      font-size: 15px;
+      box-shadow: 0 24px 50px rgba(0,0,0,0.7), 0 0 30px rgba(241,90,44,0.3);
       z-index: 9999;
-      animation: fadeSlide 0.4s ease;
+      animation: fadeSlideDown 0.5s ease;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
 
+    /* Дашборд */
     .dashboard {
       flex: 1;
       display: flex;
       min-height: 0;
     }
     .sidebar {
-      width: 260px;
-      background: rgba(14, 14, 28, 0.6);
-      backdrop-filter: blur(20px);
-      padding: 28px 14px;
+      width: 280px;
+      background: rgba(12, 12, 26, 0.65);
+      backdrop-filter: blur(22px);
+      padding: 30px 16px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      border-right: 1px solid rgba(255,255,255,0.06);
+      gap: 8px;
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
     }
     .sidebar-btn {
       background: transparent;
       border: none;
-      color: #b0a2b8;
-      padding: 14px 20px;
-      border-radius: 16px;
-      font-weight: 600;
+      color: #b2a4bc;
+      padding: 15px 22px;
+      border-radius: 18px;
+      font-weight: 700;
+      font-size: 15px;
       text-align: left;
       cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 15px;
+      transition: all 0.35s ease;
+      letter-spacing: 0.3px;
     }
     .sidebar-btn:hover {
-      background: rgba(241,90,44,0.18);
-      color: #ff9f7c;
-      transform: translateX(6px);
+      background: rgba(241, 90, 44, 0.2);
+      color: #ffb08c;
+      transform: translateX(8px);
+      box-shadow: 0 4px 16px rgba(241,90,44,0.15);
     }
     .sidebar-btn.active {
-      background: rgba(241,90,44,0.28);
+      background: rgba(241, 90, 44, 0.32);
       color: #F15A2C;
-      box-shadow: 0 6px 20px rgba(241,90,44,0.25);
+      box-shadow: 0 8px 24px rgba(241, 90, 44, 0.3);
+      border-left: 3px solid #F15A2C;
     }
     .content-area {
       flex: 1;
-      padding: 32px;
+      padding: 36px;
       overflow-y: auto;
-      background: rgba(8,8,18,0.35);
-      animation: fadeInUp 0.5s ease;
+      background: rgba(6, 6, 16, 0.4);
+      animation: fadeInUp 0.55s ease;
     }
     .card {
-      background: rgba(20,20,36,0.6);
-      backdrop-filter: blur(16px);
-      border-radius: 28px;
-      padding: 30px;
-      border: 1px solid rgba(255,255,255,0.07);
-      margin-bottom: 22px;
-      transition: all 0.35s ease;
+      background: rgba(18, 18, 34, 0.65);
+      backdrop-filter: blur(18px);
+      border-radius: 30px;
+      padding: 34px;
+      border: 1.5px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 24px;
+      transition: all 0.4s ease;
+      animation: cardFloat 8s ease-in-out infinite;
     }
     .card:hover {
-      border-color: rgba(255,255,255,0.12);
-      box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+      border-color: rgba(241, 90, 44, 0.3);
+      box-shadow: 0 16px 44px rgba(0,0,0,0.5), 0 0 25px rgba(241,90,44,0.1);
     }
     .grid-2col {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 22px;
     }
     .checkbox-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      margin: 16px 0;
+      gap: 14px;
+      margin: 18px 0;
     }
     .checkbox-pill {
-      background: rgba(255,255,255,0.04);
-      border: 1.8px solid rgba(255,255,255,0.15);
-      border-radius: 32px;
-      padding: 11px 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 2px solid rgba(255, 255, 255, 0.16);
+      border-radius: 36px;
+      padding: 12px 22px;
       cursor: pointer;
       font-size: 14px;
-      color: #c8bdd0;
-      transition: all 0.3s ease;
+      font-weight: 600;
+      color: #ccc0d4;
+      transition: all 0.35s ease;
       user-select: none;
     }
     .checkbox-pill:hover {
       border-color: #F15A2C;
       transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(241,90,44,0.2);
     }
     .checkbox-pill.checked {
-      background: rgba(241,90,44,0.3);
+      background: rgba(241, 90, 44, 0.35);
       border-color: #F15A2C;
-      color: #ffa07c;
-      box-shadow: 0 6px 18px rgba(241,90,44,0.3);
+      color: #ffb08c;
+      box-shadow: 0 8px 24px rgba(241, 90, 44, 0.35);
     }
-    .order-item, .appeal-item {
-      background: rgba(255,255,255,0.04);
-      border-radius: 18px;
-      padding: 18px;
-      margin: 10px 0;
-      border-left: 4px solid #F15A2C;
-      transition: all 0.3s ease;
+    .order-item,
+    .appeal-item {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 20px;
+      padding: 20px;
+      margin: 12px 0;
+      border-left: 5px solid #F15A2C;
+      transition: all 0.35s ease;
       cursor: pointer;
     }
-    .order-item:hover, .appeal-item:hover {
-      background: rgba(255,255,255,0.07);
-      transform: translateX(6px);
+    .order-item:hover,
+    .appeal-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateX(8px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
-    .hidden { display: none !important; }
+    .hidden {
+      display: none !important;
+    }
 
     .tabs-inner {
       display: flex;
-      gap: 10px;
-      margin-bottom: 24px;
+      gap: 12px;
+      margin-bottom: 26px;
       flex-wrap: wrap;
     }
     .tab-inner {
-      padding: 11px 22px;
-      border-radius: 26px;
-      background: rgba(255,255,255,0.05);
-      border: 1.8px solid rgba(255,255,255,0.12);
-      color: #aaa;
+      padding: 12px 26px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      color: #b0a0b8;
       cursor: pointer;
-      transition: all 0.3s ease;
-      font-weight: 600;
+      transition: all 0.35s ease;
+      font-weight: 700;
       font-size: 14px;
     }
     .tab-inner:hover {
       border-color: #F15A2C;
-      color: #ff9f7c;
+      color: #ffb08c;
+      background: rgba(241,90,44,0.15);
     }
     .tab-inner.active {
       background: #F15A2C;
       color: white;
       border-color: #F15A2C;
-      box-shadow: 0 8px 24px rgba(241,90,44,0.45);
-      transform: scale(1.04);
+      box-shadow: 0 10px 28px rgba(241, 90, 44, 0.5);
+      transform: scale(1.05);
     }
 
     .detail-row {
       display: flex;
       justify-content: space-between;
-      padding: 7px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       text-align: left;
       direction: ltr;
     }
-    .detail-row span:first-child { font-weight: 600; color: #b0a0b8; }
-    .detail-row span:last-child { color: #f0e6dc; text-align: left; }
-    
-    #map {
-      height: 260px;
-      border-radius: 18px;
-      margin: 18px 0;
-      border: 1px solid rgba(255,255,255,0.12);
+    .detail-row span:first-child {
+      font-weight: 700;
+      color: #b8a8c8;
+      min-width: 120px;
     }
+    .detail-row span:last-child {
+      color: #f2e8dc;
+      text-align: left;
+      flex: 1;
+    }
+
+    #map {
+      height: 320px;
+      border-radius: 20px;
+      margin: 20px 0;
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
     .admin-reply {
       color: #e74c3c;
       font-weight: 700;
-      margin-top: 10px;
-      padding: 10px;
-      background: rgba(231, 76, 60, 0.12);
-      border-radius: 10px;
+      margin-top: 12px;
+      padding: 14px;
+      background: rgba(231, 76, 60, 0.15);
+      border-radius: 14px;
+      border-left: 4px solid #e74c3c;
+      animation: fadeInUp 0.4s ease;
     }
+
     .chat-messages {
-      max-height: 420px;
+      max-height: 440px;
       overflow-y: auto;
-      background: rgba(0,0,0,0.25);
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 18px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 20px;
+      padding: 22px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.05);
     }
     .chat-msg {
-      padding: 11px 16px;
-      border-radius: 16px;
-      margin: 8px 0;
-      max-width: 70%;
+      padding: 13px 18px;
+      border-radius: 18px;
+      margin: 10px 0;
+      max-width: 72%;
       clear: both;
-      animation: fadeInUp 0.3s ease;
+      animation: fadeInUp 0.35s ease;
+      line-height: 1.4;
     }
-    .chat-msg.mine { background: #F15A2C; color: white; float: right; }
-    .chat-msg.other { background: rgba(255,255,255,0.09); color: #ddd; float: left; }
+    .chat-msg.mine {
+      background: linear-gradient(135deg, #F15A2C, #e04820);
+      color: white;
+      float: right;
+      box-shadow: 0 8px 20px rgba(241,90,44,0.3);
+    }
+    .chat-msg.other {
+      background: rgba(255, 255, 255, 0.1);
+      color: #e0d6cc;
+      float: left;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
   </style>
 </head>
 <body>
 <div class="app-wrapper" id="appWrapper">
-  <div class="logo-header">
-    <div class="logo-icon">T</div>
-    <span class="logo-text">TUMIX</span>
+  <div class="logo-header" id="logoHeader">
+    <div class="logo-left">
+      <img src="https://raw.githubusercontent.com/.../logotip.PNG" alt="TUMIX Client" class="logo-img" id="clientLogo">
+      <img src="https://raw.githubusercontent.com/.../logo.PNG" alt="TUMIX Employee" class="logo-img hidden" id="employeeLogo">
+      <span class="logo-text">TUMIX</span>
+    </div>
+    <button class="logout-btn hidden" id="logoutBtn">🚪 Выйти из системы</button>
   </div>
 
   <div id="authScreen" class="auth-screen">
@@ -474,13 +591,12 @@
       <button class="auth-tab" id="employeeTab">🛡️ Сотрудник</button>
     </div>
     <div id="authFormsContainer" class="auth-card"></div>
-    <div id="globalSuccess" class="success-popup hidden"></div>
   </div>
 
   <div id="clientDashboard" class="dashboard hidden">
     <div class="sidebar">
       <button class="sidebar-btn active" data-view="delivery">📦 Доставка</button>
-      <button class="sidebar-btn" data-view="appeals">📋 Обращения</button>
+      <button class="sidebar-btn" data-view="appeals">📋 Мои обращения</button>
       <button class="sidebar-btn" data-view="orders">📑 Мои заказы</button>
       <button class="sidebar-btn" data-view="support">💬 Поддержка</button>
     </div>
@@ -489,8 +605,8 @@
 
   <div id="employeeDashboard" class="dashboard hidden">
     <div class="sidebar">
-      <button class="sidebar-btn active" data-view="empChat">💬 Чат поддержки</button>
-      <button class="sidebar-btn" data-view="empAppeals">📋 Обращения</button>
+      <button class="sidebar-btn active" data-view="empChat">💬 Чат с клиентами</button>
+      <button class="sidebar-btn" data-view="empAppeals">📋 Все обращения</button>
       <button class="sidebar-btn" data-view="allOrders">📦 Все заказы</button>
       <button class="sidebar-btn" data-view="colleagueChat">👥 Чат коллег</button>
     </div>
@@ -507,226 +623,574 @@
     const empAppeals = () => store('tumix_emp_appeals') || [];
     const colleagueChats = () => store('tumix_colleague_chats') || [];
 
-    let currentClient = null, currentEmployee = null;
-    const TEST_EMP = { tab: 'TUM-0001', password: 'Password0001', name: 'Алексей Смирнов' };
+    let currentClient = null,
+      currentEmployee = null;
+    const TEST_EMP = { tab: 'TUM-0001', password: 'Password0001', name: 'Алексей Смирнов', role: 'support' };
     const ADMIN_EMP = { tab: 'OWNER_MARTIN_MEFIKOV0001', password: 'MARTIN_MEFIKOV0001', name: 'Мартин Мефиков', role: 'admin' };
 
     function showToast(msg) {
+      const existing = document.querySelector('.toast-notification');
+      if (existing) existing.remove();
       const toast = document.createElement('div');
       toast.className = 'toast-notification';
-      toast.innerHTML = '✅ ' + msg;
+      toast.innerHTML = '✨ ' + msg;
       document.body.appendChild(toast);
-      setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 3000);
+      setTimeout(() => { toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.4s ease';
+        setTimeout(() => toast.remove(), 400); }, 3200);
     }
 
     const authScreen = document.getElementById('authScreen');
     const clientDash = document.getElementById('clientDashboard');
     const empDash = document.getElementById('employeeDashboard');
     const authForms = document.getElementById('authFormsContainer');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const clientLogo = document.getElementById('clientLogo');
+    const employeeLogo = document.getElementById('employeeLogo');
+
+    function updateUI() {
+      if (currentClient) {
+        authScreen.classList.add('hidden');
+        clientDash.classList.remove('hidden');
+        empDash.classList.add('hidden');
+        logoutBtn.classList.remove('hidden');
+        clientLogo.classList.remove('hidden');
+        employeeLogo.classList.add('hidden');
+        localStorage.setItem('tumix_session', JSON.stringify({ type: 'client', id: currentClient.id }));
+      } else if (currentEmployee) {
+        authScreen.classList.add('hidden');
+        empDash.classList.remove('hidden');
+        clientDash.classList.add('hidden');
+        logoutBtn.classList.remove('hidden');
+        clientLogo.classList.add('hidden');
+        employeeLogo.classList.remove('hidden');
+        localStorage.setItem('tumix_session', JSON.stringify({ type: 'employee', tab: currentEmployee.tab }));
+      } else {
+        authScreen.classList.remove('hidden');
+        clientDash.classList.add('hidden');
+        empDash.classList.add('hidden');
+        logoutBtn.classList.add('hidden');
+        clientLogo.classList.add('hidden');
+        employeeLogo.classList.add('hidden');
+        localStorage.removeItem('tumix_session');
+      }
+    }
+
+    logoutBtn.addEventListener('click', () => {
+      currentClient = null;
+      currentEmployee = null;
+      updateUI();
+      renderAuth();
+      showToast('Вы вышли из системы');
+    });
+
+    const session = JSON.parse(localStorage.getItem('tumix_session') || 'null');
+    if (session) {
+      if (session.type === 'client') {
+        const u = users().find(x => x.id === session.id);
+        if (u) { currentClient = u;
+          updateUI();
+          renderClientView('delivery'); }
+      } else if (session.type === 'employee') {
+        if (session.tab === TEST_EMP.tab) currentEmployee = { ...TEST_EMP };
+        else if (session.tab === ADMIN_EMP.tab) currentEmployee = { ...ADMIN_EMP };
+        if (currentEmployee) { updateUI();
+          renderEmployeeView('empChat'); }
+      }
+    }
 
     let authMode = 'client';
-    document.getElementById('clientTab').addEventListener('click', () => { authMode = 'client'; renderAuth(); });
-    document.getElementById('employeeTab').addEventListener('click', () => { authMode = 'employee'; renderAuth(); });
+    document.getElementById('clientTab').addEventListener('click', () => { authMode = 'client';
+      renderAuth(); });
+    document.getElementById('employeeTab').addEventListener('click', () => { authMode = 'employee';
+      renderAuth(); });
 
     function renderAuth() {
-      document.getElementById('clientTab').classList.toggle('active', authMode==='client');
-      document.getElementById('employeeTab').classList.toggle('active', authMode==='employee');
+      document.getElementById('clientTab').classList.toggle('active', authMode === 'client');
+      document.getElementById('employeeTab').classList.toggle('active', authMode === 'employee');
       if (authMode === 'client') {
         authForms.innerHTML = `
-          <h2>Вход в аккаунт</h2>
+          <h2>Вход для клиентов</h2>
           <div class="input-column">
-            <div class="field-group"><label>Почта</label><input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="off"></div>
-            <div class="field-group"><label>Пароль</label><input type="password" id="loginPass" placeholder="••••••••" autocomplete="off"></div>
+            <div class="field-group"><label>📧 Электронная почта</label><input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="off"></div>
+            <div class="field-group"><label>🔒 Пароль</label><input type="password" id="loginPass" placeholder="••••••••" autocomplete="off"></div>
           </div>
-          <button class="btn btn-primary" id="loginClientBtn">Войти</button>
-          <p class="link-text">Нет аккаунта? <a href="#" id="showRegister">Зарегистрироваться</a></p>`;
-        document.getElementById('loginClientBtn').addEventListener('click', clientLogin);
+          <button class="btn btn-primary" id="loginClientBtn">🚀 Войти в систему</button>
+          <p class="link-text">Впервые у нас? <a href="#" id="showRegister">Создать аккаунт</a></p>`;
+        document.getElementById('loginClientBtn').addEventListener('click', () => {
+          const e = document.getElementById('loginEmail').value.trim(),
+            p = document.getElementById('loginPass').value.trim();
+          const u = users().find(x => x.email === e && x.password === p);
+          if (u) { currentClient = u;
+            updateUI();
+            renderClientView('delivery');
+            showToast('Добро пожаловать, ' + u.name + '!'); } else showToast('Неверная почта или пароль');
+        });
         document.getElementById('showRegister').addEventListener('click', (e) => {
           e.preventDefault();
           authForms.innerHTML = `
-            <h2>Регистрация</h2>
+            <h2>Регистрация клиента</h2>
             <div class="input-column">
-              <div class="field-group"><label>Имя *</label><input id="regName" autocomplete="off"></div>
-              <div class="field-group"><label>Почта *</label><input type="email" id="regEmail" autocomplete="off"></div>
-              <div class="field-group"><label>Телефон *</label><input type="tel" id="regPhone" value="+7" autocomplete="off"></div>
-              <div class="field-group"><label>Пароль *</label><input type="password" id="regPass" autocomplete="off"></div>
+              <div class="field-group"><label>👤 Имя и фамилия *</label><input id="regName" autocomplete="off" placeholder="Иван Иванов"></div>
+              <div class="field-group"><label>📧 Почта *</label><input type="email" id="regEmail" autocomplete="off" placeholder="ivan@example.com"></div>
+              <div class="field-group"><label>📱 Телефон *</label><input type="tel" id="regPhone" value="+7" autocomplete="off" placeholder="+79161234567"></div>
+              <div class="field-group"><label>🔒 Пароль *</label><input type="password" id="regPass" autocomplete="off" placeholder="Минимум 6 символов"></div>
             </div>
-            <button class="btn btn-primary" id="registerBtn">Зарегистрироваться</button>
-            <p class="link-text"><a href="#" id="backToLogin">Назад ко входу</a></p>`;
+            <button class="btn btn-primary" id="registerBtn">✅ Зарегистрироваться</button>
+            <p class="link-text"><a href="#" id="backToLogin">← Назад ко входу</a></p>`;
           document.getElementById('registerBtn').addEventListener('click', () => {
-            const n=document.getElementById('regName').value.trim(), e=document.getElementById('regEmail').value.trim(), p=document.getElementById('regPhone').value.trim(), pw=document.getElementById('regPass').value.trim();
-            if(!n||!e||!p||!pw) return showToast('Все поля обязательны');
-            if(!/^\+7\d{10}$/.test(p.replace(/[\s()-]/g,''))) return showToast('Телефон должен быть +7XXXXXXXXXX');
-            let u=users(); if(u.find(x=>x.email===e)) return showToast('Почта занята');
-            u.push({id:Date.now().toString(), name:n, email:e, phone:p, password:pw});
-            store('tumix_users',u); showToast('Успешная регистрация!'); renderAuth();
+            const n = document.getElementById('regName').value.trim(),
+              em = document.getElementById('regEmail').value.trim(),
+              ph = document.getElementById('regPhone').value.trim(),
+              pw = document.getElementById('regPass').value.trim();
+            if (!n || !em || !ph || !pw) return showToast('Заполните все обязательные поля');
+            if (!/^\+7\d{10}$/.test(ph.replace(/[\s()-]/g, ''))) return showToast(
+              'Телефон должен быть в формате +7XXXXXXXXXX');
+            if (pw.length < 6) return showToast('Пароль должен быть не менее 6 символов');
+            let u = users();
+            if (u.find(x => x.email === em)) return showToast('Почта уже зарегистрирована');
+            u.push({ id: Date.now().toString(), name: n, email: em, phone: ph, password: pw });
+            store('tumix_users', u);
+            showToast('Регистрация успешна! Теперь войдите.');
+            renderAuth();
           });
-          document.getElementById('backToLogin').addEventListener('click', (e)=>{e.preventDefault(); renderAuth();});
+          document.getElementById('backToLogin').addEventListener('click', (ev) => { ev.preventDefault();
+            renderAuth(); });
         });
       } else {
         authForms.innerHTML = `
           <h2>Вход для сотрудников</h2>
           <div class="input-column">
-            <div class="field-group"><label>Табельный номер</label><input id="empTab" placeholder="TUM-0001" autocomplete="off"></div>
-            <div class="field-group"><label>Пароль</label><input type="password" id="empPass" autocomplete="off"></div>
+            <div class="field-group"><label>🪪 Табельный номер</label><input id="empTab" placeholder="TUM-0001" autocomplete="off"></div>
+            <div class="field-group"><label>🔒 Пароль</label><input type="password" id="empPass" autocomplete="off" placeholder="••••••••"></div>
           </div>
-          <button class="btn btn-primary" id="loginEmpBtn">Войти</button>`;
-        document.getElementById('loginEmpBtn').addEventListener('click', ()=>{
-          const tab=document.getElementById('empTab').value.trim(), pass=document.getElementById('empPass').value.trim();
-          if(tab===TEST_EMP.tab&&pass===TEST_EMP.password) currentEmployee={...TEST_EMP};
-          else if(tab===ADMIN_EMP.tab&&pass===ADMIN_EMP.password) currentEmployee={...ADMIN_EMP};
-          else return showToast('Неверные данные');
-          authScreen.classList.add('hidden'); empDash.classList.remove('hidden'); clientDash.classList.add('hidden'); renderEmployeeView('empChat');
+          <button class="btn btn-primary" id="loginEmpBtn">🔐 Войти как сотрудник</button>`;
+        document.getElementById('loginEmpBtn').addEventListener('click', () => {
+          const tab = document.getElementById('empTab').value.trim(),
+            pass = document.getElementById('empPass').value.trim();
+          if (tab === TEST_EMP.tab && pass === TEST_EMP.password) currentEmployee = { ...TEST_EMP };
+          else if (tab === ADMIN_EMP.tab && pass === ADMIN_EMP.password) currentEmployee = { ...ADMIN_EMP };
+          else return showToast('Неверный табельный номер или пароль');
+          updateUI();
+          renderEmployeeView('empChat');
+          showToast('Добро пожаловать, ' + currentEmployee.name + '!');
         });
       }
     }
 
-    function clientLogin(){
-      const e=document.getElementById('loginEmail').value.trim(), p=document.getElementById('loginPass').value.trim();
-      const u=users().find(x=>x.email===e&&x.password===p);
-      if(u){currentClient=u; authScreen.classList.add('hidden'); clientDash.classList.remove('hidden'); empDash.classList.add('hidden'); renderClientView('delivery');}
-      else showToast('Неверная почта или пароль');
-    }
-
-    document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(b=>b.addEventListener('click',()=>{
-      document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderClientView(b.dataset.view);
+    document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(b => b.addEventListener('click', () => {
+      document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      renderClientView(b.dataset.view);
     }));
 
-    let deliveryMap=null, deliveryMarkers=[];
-    function initDeliveryMap(){ setTimeout(()=>{ const mapEl=document.getElementById('map'); if(!mapEl||deliveryMap) return; deliveryMap=L.map('map').setView([55.7558,37.6173],10); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap'}).addTo(deliveryMap); deliveryMap.invalidateSize(); },400); }
+    let deliveryMap = null,
+      deliveryRoute = null;
+
+    function initDeliveryMap() {
+      setTimeout(() => {
+        const mapEl = document.getElementById('map');
+        if (!mapEl || deliveryMap) return;
+        deliveryMap = L.map('map').setView([55.7558, 37.6173], 9);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(deliveryMap);
+        deliveryMap.invalidateSize();
+      }, 500);
+    }
 
     async function geocodeAddress(address) {
       try {
-        const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Москва')}&limit=1`);
+        const resp = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Москва')}&limit=1`
+          );
         const data = await resp.json();
-        if (data && data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0].display_name };
+        if (data && data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0]
+            .display_name };
         return null;
       } catch (e) { return null; }
     }
 
-    function calculateRealDistance(lat1,lng1,lat2,lng2){
-      const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLng=(lng2-lng1)*Math.PI/180;
-      const a=Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
-      return Math.max(1, Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)) * 1.4));
+    function calculateRealDistance(lat1, lng1, lat2, lng2) {
+      const R = 6371,
+        dLat = (lat2 - lat1) * Math.PI / 180,
+        dLng = (lng2 - lng1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng /
+        2) ** 2;
+      return Math.max(1, Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))));
     }
 
-    function deliveryForm(){
-      return `<div class="card"><h3>📦 Новая доставка</h3><div class="input-column">
-        <div class="field-group"><label>ФИО отправителя *</label><input id="sName" autocomplete="off"></div>
-        <div class="field-group"><label>Телефон отправителя *</label><input id="sPhone" value="+7" autocomplete="off"></div>
-        <div class="field-group"><label>Адрес отправки *</label><input id="sAddr" placeholder="ул. Тверская, 1" autocomplete="off"></div>
-        <div class="field-group"><label>ФИО получателя *</label><input id="rName" autocomplete="off"></div>
-        <div class="field-group"><label>Телефон получателя *</label><input id="rPhone" value="+7" autocomplete="off"></div>
-        <div class="field-group"><label>Адрес получателя *</label><input id="rAddr" placeholder="ул. Арбат, 10" autocomplete="off"></div>
-        <div class="field-group"><label>Город</label><input value="Москва и МО" disabled></div>
-        <div class="field-group"><label>Содержимое *</label><input id="contentDesc" autocomplete="off"></div>
+    function deliveryForm() {
+      return `<div class="card"><h3>📦 Оформление доставки</h3><div class="input-column">
+        <div class="field-group"><label>👤 ФИО отправителя *</label><input id="sName" autocomplete="off" placeholder="Иванов Иван Иванович"></div>
+        <div class="field-group"><label>📱 Телефон отправителя *</label><input id="sPhone" value="+7" autocomplete="off" placeholder="+79161234567"></div>
+        <div class="field-group"><label>📍 Адрес отправки *</label><input id="sAddr" placeholder="Москва, ул. Тверская, 1" autocomplete="off"></div>
+        <div class="field-group"><label>👤 ФИО получателя *</label><input id="rName" autocomplete="off" placeholder="Петров Петр Петрович"></div>
+        <div class="field-group"><label>📱 Телефон получателя *</label><input id="rPhone" value="+7" autocomplete="off" placeholder="+79169876543"></div>
+        <div class="field-group"><label>📍 Адрес получателя *</label><input id="rAddr" placeholder="Москва, ул. Арбат, 10" autocomplete="off"></div>
+        <div class="field-group"><label>📦 Содержимое отправления *</label><input id="contentDesc" autocomplete="off" placeholder="Документы, подарок и т.д."></div>
         <div class="checkbox-group" id="packCheckboxes">
-          <label class="checkbox-pill"><input type="checkbox" value="Пакет" hidden> Пакет (60₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Конверт" hidden> Конверт (90₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка S" hidden> Коробка S (120₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка M" hidden> Коробка M (220₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка L" hidden> Коробка L (280₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка XL" hidden> Коробка XL (350₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Пакет" hidden> 🛍️ Пакет (60₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Конверт" hidden> ✉️ Конверт (90₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка S" hidden> 📦 Коробка S (120₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка M" hidden> 📦 Коробка M (220₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка L" hidden> 📦 Коробка L (280₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка XL" hidden> 📦 Коробка XL (350₽)</label>
         </div>
         <div id="map"></div>
-        <button class="btn btn-primary" id="calcDelivery">Рассчитать и оформить</button>
+        <button class="btn btn-primary" id="calcDelivery">🧮 Рассчитать стоимость и маршрут</button>
         <div id="priceDetails"></div></div></div>`;
     }
 
-    document.addEventListener('click', e=>{
-      if(e.target.id==='calcDelivery'){
-        const packs=[...document.querySelectorAll('#packCheckboxes input:checked')].map(c=>c.value);
-        if(!packs.length) return showToast('Выберите упаковку');
-        const sAddr=document.getElementById('sAddr').value.trim(), rAddr=document.getElementById('rAddr').value.trim();
-        if(!sAddr||!rAddr) return showToast('Заполните адреса');
-        document.getElementById('priceDetails').innerHTML='<p>🔄 Рассчитываем расстояние по карте...</p>';
-        Promise.all([geocodeAddress(sAddr), geocodeAddress(rAddr)]).then(([from, to])=>{
-          if(!from||!to){ document.getElementById('priceDetails').innerHTML='<p style="color:#ff7043;">❌ Адрес не найден. Уточните написание.</p>'; return; }
-          const dist=calculateRealDistance(from.lat,from.lng,to.lat,to.lng);
-          if(deliveryMap){ deliveryMarkers.forEach(m=>deliveryMap.removeLayer(m)); deliveryMarkers=[L.marker([from.lat,from.lng]).addTo(deliveryMap).bindPopup('Отправитель'), L.marker([to.lat,to.lng]).addTo(deliveryMap).bindPopup('Получатель')]; deliveryMap.fitBounds(L.featureGroup(deliveryMarkers).getBounds().pad(0.2)); }
-          const pr={Пакет:60,Конверт:90,'Коробка S':120,'Коробка M':220,'Коробка L':280,'Коробка XL':350};
-          let pc=packs.reduce((s,p)=>s+pr[p],0), km=dist*22, serv=29, total=pc+km+serv;
-          document.getElementById('priceDetails').innerHTML=`<div class="card"><p>📍 Адреса найдены</p><p>📦 Упаковка: ${pc}₽</p><p>🛣️ Расстояние: ${dist} км × 22₽ = ${km}₽</p><p>🔧 Сервис: 29₽</p><h3>💰 Итого: ${total}₽</h3><button class="btn btn-primary" id="confirmOrder">Оформить</button></div>`;
+    document.addEventListener('click', e => {
+      if (e.target.id === 'calcDelivery') {
+        const packs = [...document.querySelectorAll('#packCheckboxes input:checked')].map(c => c.value);
+        if (!packs.length) return showToast('Выберите хотя бы один тип упаковки');
+        const sAddr = document.getElementById('sAddr').value.trim(),
+          rAddr = document.getElementById('rAddr').value.trim();
+        if (!sAddr || !rAddr) return showToast('Заполните адреса отправки и получения');
+        document.getElementById('priceDetails').innerHTML =
+          '<p style="text-align:center;padding:20px;">🔄 Прокладываем маршрут и рассчитываем расстояние...</p>';
+        Promise.all([geocodeAddress(sAddr), geocodeAddress(rAddr)]).then(([from, to]) => {
+          if (!from || !to) {
+            document.getElementById('priceDetails').innerHTML =
+              '<p style="color:#ff7043;text-align:center;">❌ Адрес не найден. Попробуйте: Москва, улица, дом</p>';
+            return;
+          }
+          const dist = calculateRealDistance(from.lat, from.lng, to.lat, to.lng);
+          if (deliveryMap) {
+            if (deliveryRoute) deliveryMap.removeLayer(deliveryRoute);
+            deliveryMap.eachLayer(l => { if (l instanceof L.Marker) deliveryMap.removeLayer(l); });
+            L.marker([from.lat, from.lng]).addTo(deliveryMap).bindPopup('📍 Отправитель');
+            L.marker([to.lat, to.lng]).addTo(deliveryMap).bindPopup('📍 Получатель');
+            const line = L.polyline([
+              [from.lat, from.lng],
+              [to.lat, to.lng]
+            ], { color: '#F15A2C', weight: 6, opacity: 0.8, dashArray: '10, 10' }).addTo(deliveryMap);
+            deliveryMap.fitBounds(line.getBounds().pad(0.4));
+            deliveryRoute = line;
+          }
+          const pr = { Пакет: 60, Конверт: 90, 'Коробка S': 120, 'Коробка M': 220, 'Коробка L': 280,
+            'Коробка XL': 350 };
+          let pc = packs.reduce((s, p) => s + pr[p], 0),
+            km = dist * 22,
+            serv = 29,
+            total = pc + km + serv;
+          document.getElementById('priceDetails').innerHTML = `
+            <div class="card" style="margin-top:20px; animation: fadeInUp 0.5s ease;">
+              <div class="detail-row"><span>📦 Упаковка:</span><span>${pc} ₽</span></div>
+              <div class="detail-row"><span>🛣️ Расстояние:</span><span>${dist} км × 22 ₽ = ${km} ₽</span></div>
+              <div class="detail-row"><span>🔧 Сервисный сбор:</span><span>29 ₽</span></div>
+              <div class="detail-row" style="font-size:1.2em;font-weight:700;margin-top:10px;"><span>💰 Итого к оплате:</span><span>${total} ₽</span></div>
+              <button class="btn btn-primary" id="confirmOrder" style="margin-top:16px;">✅ Оформить доставку</button>
+            </div>`;
         });
       }
-      if(e.target.id==='confirmOrder'){
-        const ords=orders(); const newId=String(ords.length+1).padStart(8,'0');
-        store('tumix_orders',[...ords,{id:newId,clientId:currentClient.id,sender:document.getElementById('sName').value,sPhone:document.getElementById('sPhone').value,sAddr:document.getElementById('sAddr').value,recName:document.getElementById('rName').value,rPhone:document.getElementById('rPhone').value,rAddr:document.getElementById('rAddr').value,content:document.getElementById('contentDesc').value,packs:[...document.querySelectorAll('#packCheckboxes input:checked')].map(c=>c.value),status:'Оформлен',date:new Date().toLocaleString()}]);
-        showToast('Доставка оформлена! Номер: '+newId); document.querySelector('#clientDashboard .sidebar-btn[data-view="orders"]').click();
+      if (e.target.id === 'confirmOrder') {
+        const ords = orders();
+        const newId = String(ords.length + 1).padStart(8, '0');
+        const order = {
+          id: newId,
+          clientId: currentClient.id,
+          sender: document.getElementById('sName').value,
+          sPhone: document.getElementById('sPhone').value,
+          sAddr: document.getElementById('sAddr').value,
+          recName: document.getElementById('rName').value,
+          rPhone: document.getElementById('rPhone').value,
+          rAddr: document.getElementById('rAddr').value,
+          content: document.getElementById('contentDesc').value,
+          packs: [...document.querySelectorAll('#packCheckboxes input:checked')].map(c => c.value),
+          status: 'Оформлен',
+          date: new Date().toLocaleString('ru-RU')
+        };
+        store('tumix_orders', [...ords, order]);
+        showToast('Доставка оформлена! Номер заказа: ' + newId);
+        document.querySelector('#clientDashboard .sidebar-btn[data-view="orders"]').click();
       }
-      if(e.target.closest('.checkbox-pill')){ const pill=e.target.closest('.checkbox-pill'), cb=pill.querySelector('input'); cb.checked=!cb.checked; pill.classList.toggle('checked',cb.checked); }
+      if (e.target.closest('.checkbox-pill')) {
+        const pill = e.target.closest('.checkbox-pill'),
+          cb = pill.querySelector('input');
+        cb.checked = !cb.checked;
+        pill.classList.toggle('checked', cb.checked);
+      }
     });
 
-    function clientOrders(){
-      return `<h3>📑 Мои заказы</h3>`+orders().filter(o=>o.clientId===currentClient?.id).map(o=>`<div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')"><b>#${o.id}</b><div class="details hidden">${['sender','sPhone','sAddr','recName','rPhone','rAddr','content'].map(k=>`<div class="detail-row"><span>${k}:</span><span>${o[k]}</span></div>`).join('')}<div class="detail-row"><span>Статус:</span><span>${o.status}</span></div></div></div>`).join('')||'<p>Нет заказов</p>';
+    function clientOrders() {
+      const ords = orders().filter(o => o.clientId === currentClient?.id);
+      return `<h3>📑 Мои заказы (${ords.length})</h3>` + ords.map(o => `
+        <div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
+          <b>🚚 Заказ #${o.id}</b> — ${o.status}
+          <div class="details hidden" style="margin-top:14px;">
+            <div class="detail-row"><span>👤 Отправитель:</span><span>${o.sender}</span></div>
+            <div class="detail-row"><span>📱 Телефон отпр.:</span><span>${o.sPhone}</span></div>
+            <div class="detail-row"><span>📍 Адрес отпр.:</span><span>${o.sAddr}</span></div>
+            <div class="detail-row"><span>👤 Получатель:</span><span>${o.recName}</span></div>
+            <div class="detail-row"><span>📱 Телефон получ.:</span><span>${o.rPhone}</span></div>
+            <div class="detail-row"><span>📍 Адрес получ.:</span><span>${o.rAddr}</span></div>
+            <div class="detail-row"><span>📦 Содержимое:</span><span>${o.content}</span></div>
+            <div class="detail-row"><span>📋 Упаковка:</span><span>${o.packs?.join(', ')}</span></div>
+            <div class="detail-row"><span>📅 Дата:</span><span>${o.date}</span></div>
+          </div>
+        </div>`).join('') || '<p style="text-align:center;padding:40px;">У вас пока нет заказов</p>';
     }
 
-    function clientAppeals(){
-      return `<h3>📋 Мои обращения</h3>`+appeals().filter(a=>a.clientEmail===currentClient?.email).map(a=>`<div class="appeal-item" onclick="event.stopPropagation(); this.querySelector('.details').classList.toggle('hidden')"><b>#${a.id}</b><div class="details hidden"><div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>${a.reply?`<div class="admin-reply">🔴 Руководитель: ${a.reply}</div>`:''}</div></div>`).join('')||'<p>Нет обращений</p>';
+    function clientAppeals() {
+      const apps = appeals().filter(a => a.clientEmail === currentClient?.email);
+      return `<h3>📋 Мои обращения (${apps.length})</h3>` + apps.map(a => `
+        <div class="appeal-item" onclick="event.stopPropagation(); this.querySelector('.details').classList.toggle('hidden')">
+          <b>🎫 Обращение #${a.id}</b> — ${a.status || 'Открыто'}
+          <div class="details hidden" style="margin-top:14px;">
+            <div class="detail-row"><span>👤 Сотрудник:</span><span>${a.empName}</span></div>
+            <div class="detail-row"><span>📝 Проблема:</span><span>${a.problem}</span></div>
+            ${a.reply ? `<div class="admin-reply">🔴 <b>Руководитель отдела TUMIX:</b><br>${a.reply}</div>` : ''}
+          </div>
+        </div>`).join('') || '<p style="text-align:center;padding:40px;">Обращений нет</p>';
     }
 
-    function supportChat(){ return `<div class="card"><h3>💬 Поддержка</h3><div id="chatMsgs" style="max-height:300px;overflow-y:auto;"><div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:14px;">Здравствуйте! Это поддержка TUMIX.</div></div><div style="display:flex;gap:10px;margin-top:12px;"><input id="chatInput" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px;color:white;"><button class="btn btn-primary" id="sendChat" style="width:auto;">Отправить</button></div></div>`; }
+    let supportSessionAnswered = false;
 
-    function renderClientView(view){
-      const a=document.getElementById('clientContent');
-      if(view==='delivery'){ a.innerHTML=deliveryForm(); initDeliveryMap(); }
-      else if(view==='appeals') a.innerHTML=clientAppeals();
-      else if(view==='orders') a.innerHTML=clientOrders();
-      else if(view==='support') a.innerHTML=supportChat();
+    function supportChat() {
+      supportSessionAnswered = false;
+      return `<div class="card"><h3>💬 Чат с поддержкой TUMIX</h3>
+        <div id="chatMsgs" class="chat-messages">
+          <div style="background:rgba(255,255,255,0.06);padding:14px;border-radius:16px;margin:8px 0;">
+            👋 Здравствуйте! Это поддержка TUMIX. Какой у вас вопрос?
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <input id="chatInput" style="flex:1;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.12);border-radius:16px;padding:14px;color:white;font-size:15px;" placeholder="Введите ваше сообщение...">
+          <button class="btn btn-primary" id="sendChat" style="width:auto;margin-top:0;">📤 Отправить</button>
+        </div></div>`;
     }
 
-    document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(b=>b.addEventListener('click',()=>{
-      document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderEmployeeView(b.dataset.view);
+    function renderClientView(view) {
+      const a = document.getElementById('clientContent');
+      if (view === 'delivery') { a.innerHTML = deliveryForm();
+        initDeliveryMap(); } else if (view === 'appeals') a.innerHTML = clientAppeals();
+      else if (view === 'orders') a.innerHTML = clientOrders();
+      else if (view === 'support') a.innerHTML = supportChat();
+    }
+
+    document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(b => b.addEventListener('click', () => {
+      document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      renderEmployeeView(b.dataset.view);
     }));
 
-    function renderEmployeeView(view){
-      const a=document.getElementById('employeeContent');
-      if(view==='empChat') a.innerHTML='<div class="card"><h3>💬 Чаты с клиентами</h3><p>Скоро здесь будут чаты.</p></div>';
-      else if(view==='empAppeals') a.innerHTML=empAppealsPanel();
-      else if(view==='allOrders') a.innerHTML=allOrdersView();
-      else if(view==='colleagueChat') a.innerHTML=colleagueChatPanel();
+    function renderEmployeeView(view) {
+      const a = document.getElementById('employeeContent');
+      if (view === 'empChat') a.innerHTML =
+        '<div class="card"><h3>💬 Чаты с клиентами</h3><p style="text-align:center;padding:40px;">Список активных чатов появится после подключения базы данных.</p></div>';
+      else if (view === 'empAppeals') a.innerHTML = empAppealsPanel();
+      else if (view === 'allOrders') a.innerHTML = allOrdersView();
+      else if (view === 'colleagueChat') a.innerHTML = colleagueChatPanel();
     }
 
-    function allOrdersView(){
-      return `<h3>📦 Все заказы</h3>`+orders().map(o=>`<div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')"><b>#${o.id}</b><div class="details hidden">${['sender','recName','status'].map(k=>`<div class="detail-row"><span>${k}:</span><span>${o[k]}</span></div>`).join('')}<button class="btn btn-outline edit-order-btn" data-id="${o.id}" style="margin-top:8px;">✏️ Изменить статус</button><button class="btn btn-danger cancel-order-btn" data-id="${o.id}" style="margin-top:8px;">🚫 Отменить</button></div></div>`).join('');
+    function allOrdersView() {
+      const allOrds = orders();
+      return `<h3>📦 Все заказы (${allOrds.length})</h3>` + allOrds.map(o => `
+        <div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
+          <b>🚚 Заказ #${o.id}</b> — ${o.status}
+          <div class="details hidden" style="margin-top:14px;">
+            <div class="detail-row"><span>👤 Отправитель:</span><span>${o.sender} (${o.sPhone})</span></div>
+            <div class="detail-row"><span>📍 Адрес отпр.:</span><span>${o.sAddr}</span></div>
+            <div class="detail-row"><span>👤 Получатель:</span><span>${o.recName} (${o.rPhone})</span></div>
+            <div class="detail-row"><span>📍 Адрес получ.:</span><span>${o.rAddr}</span></div>
+            <div class="detail-row"><span>📦 Содержимое:</span><span>${o.content}</span></div>
+            <div class="detail-row"><span>📋 Упаковка:</span><span>${o.packs?.join(', ')}</span></div>
+            <div class="detail-row"><span>📅 Дата:</span><span>${o.date}</span></div>
+            <button class="btn btn-outline edit-order-btn" data-id="${o.id}" style="margin-top:10px;">✏️ Изменить статус</button>
+            <button class="btn btn-danger cancel-order-btn" data-id="${o.id}" style="margin-top:8px;">🚫 Отменить заказ</button>
+          </div>
+        </div>`).join('') || '<p style="text-align:center;padding:40px;">Заказов пока нет</p>';
     }
 
-    function empAppealsPanel(){
-      setTimeout(()=>{ const tab=document.getElementById('tabClientAppeals'); if(tab) tab.click(); },60);
+    function empAppealsPanel() {
+      setTimeout(() => { const tab = document.getElementById('tabClientAppeals'); if (tab) tab.click(); }, 60);
       return `<div class="tabs-inner">
-        <button class="tab-inner active" id="tabClientAppeals">👥 Клиенты</button>
-        <button class="tab-inner" id="tabEmpAppeals">👔 Сотрудники</button>
-        <button class="tab-inner" id="tabCreateClient">➕ Создать клиенту</button>
-        <button class="tab-inner" id="tabCreateEmp">📝 Создать сотруднику</button>
+        <button class="tab-inner active" id="tabClientAppeals">👥 Обращения клиентов</button>
+        <button class="tab-inner" id="tabEmpAppeals">👔 Обращения сотрудников</button>
+        <button class="tab-inner" id="tabCreateClient">➕ Создать обращение клиента</button>
+        <button class="tab-inner" id="tabCreateEmp">📝 Создать обращение сотрудника</button>
       </div><div id="appealsSubContent"></div>`;
     }
 
-    function colleagueChatPanel(){
-      const msgs=colleagueChats();
-      return `<div class="card"><h3>👥 Чат коллег</h3><div class="chat-messages" id="colleagueMessages">${msgs.map(m=>`<div class="chat-msg ${m.from===currentEmployee?.name?'mine':'other'}"><strong>${m.from}:</strong> ${m.text}</div>`).join('')}</div><div style="display:flex;gap:10px;"><input id="colleagueInput" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px;color:white;" placeholder="Сообщение..."><button class="btn btn-primary" id="sendColleague" style="width:auto;">Отправить</button></div></div>`;
+    function colleagueChatPanel() {
+      const msgs = colleagueChats();
+      return `<div class="card"><h3>👥 Чат коллег TUMIX</h3>
+        <div class="chat-messages" id="colleagueMessages">${msgs.map(m => `
+          <div class="chat-msg ${m.from === currentEmployee?.name ? 'mine' : 'other'}">
+            <strong>${m.from}:</strong> ${m.text}
+            <div style="font-size:10px;opacity:0.6;margin-top:4px;">${m.time || ''}</div>
+          </div>`).join('')}</div>
+        <div style="display:flex;gap:12px;">
+          <input id="colleagueInput" style="flex:1;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.12);border-radius:16px;padding:14px;color:white;" placeholder="Введите сообщение для коллег...">
+          <button class="btn btn-primary" id="sendColleague" style="width:auto;margin-top:0;">📤 Отправить</button>
+        </div></div>`;
     }
 
-    document.addEventListener('click', e=>{
-      if(e.target.classList.contains('tab-inner')){
-        document.querySelectorAll('.tab-inner').forEach(t=>t.classList.remove('active')); e.target.classList.add('active');
-        const sub=document.getElementById('appealsSubContent');
-        if(e.target.id==='tabClientAppeals') sub.innerHTML=appeals().map(a=>`<div class="appeal-item" onclick="event.stopPropagation(); this.querySelector('.details').classList.toggle('hidden')"><b>#${a.id}</b><div class="details hidden"><div class="detail-row"><span>Сотрудник:</span><span>${a.empName}</span></div><div class="detail-row"><span>Клиент:</span><span>${a.clientName}</span></div><div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>${a.reply?`<div class="admin-reply">🔴 Руководитель: ${a.reply}</div>`:''}${currentEmployee?.role==='admin'?`<textarea id="replyText_${a.id}" placeholder="Ответ..." style="width:100%;margin-top:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:8px;color:white;"></textarea><button class="btn btn-primary reply-btn" data-id="${a.id}">Ответить</button><button class="btn btn-danger delete-btn" data-id="${a.id}">Удалить</button>`:''}</div></div>`).join('')||'<p>Нет обращений</p>';
-        if(e.target.id==='tabEmpAppeals') sub.innerHTML=empAppeals().map(a=>`<div class="appeal-item" onclick="event.stopPropagation(); this.querySelector('.details').classList.toggle('hidden')"><b>${a.empName}</b> → Руководитель<div class="details hidden"><div class="detail-row"><span>Текст:</span><span style="text-align:left;">${a.text}</span></div>${currentEmployee?.role==='admin'?`<textarea id="empReplyText_${a.empName}" placeholder="Ответ..." style="width:100%;margin-top:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:8px;color:white;"></textarea><button class="btn btn-primary emp-reply-btn" data-emp="${a.empName}">Ответить</button>`:''}</div></div>`).join('')||'<p>Нет обращений</p>';
-        if(e.target.id==='tabCreateClient') sub.innerHTML=`<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName"></div><div class="field-group"><label>Табельный номер</label><input id="eTab" placeholder="TUM-0001"></div><div class="field-group"><label>ФИО клиента</label><input id="cName"></div><div class="field-group"><label>Почта</label><input id="cEmail"></div><div class="field-group"><label>Телефон</label><input id="cPhone" value="+7"></div><div class="field-group"><label>Проблема</label><textarea id="cProblem"></textarea></div><button class="btn btn-primary" id="submitClientAppeal">Оформить</button></div></div>`;
-        if(e.target.id==='tabCreateEmp') sub.innerHTML=`<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName2"></div><div class="field-group"><label>Табельный номер</label><input id="eTab2" placeholder="TUM-0001"></div><div class="field-group"><label>Кому</label><input disabled value="Руководителю поддержки TUMIX"></div><div class="field-group"><label>Текст</label><textarea id="eText">Руководителю отдела поддержки сотрудников TUMIX.</textarea></div><button class="btn btn-primary" id="submitEmpAppeal">Оформить</button></div></div>`;
+    document.addEventListener('click', e => {
+      if (e.target.classList.contains('tab-inner')) {
+        document.querySelectorAll('.tab-inner').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        const sub = document.getElementById('appealsSubContent');
+        if (e.target.id === 'tabClientAppeals') sub.innerHTML = appeals().map(a => `
+          <div class="appeal-item">
+            <b>🎫 Обращение #${a.id}</b> — ${a.status || 'Открыто'}
+            <div class="details" style="margin-top:14px;">
+              <div class="detail-row"><span>👤 Сотрудник:</span><span>${a.empName} (${a.empTab})</span></div>
+              <div class="detail-row"><span>👤 Клиент:</span><span>${a.clientName}</span></div>
+              <div class="detail-row"><span>📧 Почта:</span><span>${a.clientEmail}</span></div>
+              <div class="detail-row"><span>📱 Телефон:</span><span>${a.clientPhone}</span></div>
+              <div class="detail-row"><span>📝 Проблема:</span><span>${a.problem}</span></div>
+              ${a.reply ? `<div class="admin-reply">🔴 <b>Руководитель отдела TUMIX:</b><br>${a.reply}</div>` : ''}
+              ${currentEmployee?.role === 'admin' ? `
+                <textarea id="replyText_${a.id}" placeholder="Введите ответ руководителя..." style="width:100%;margin-top:12px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.15);border-radius:14px;padding:12px;color:white;min-height:80px;"></textarea>
+                <button class="btn btn-primary reply-btn" data-id="${a.id}" style="margin-top:8px;">📩 Ответить как руководитель</button>
+                <button class="btn btn-danger delete-btn" data-id="${a.id}" style="margin-top:6px;">🗑️ Удалить обращение</button>
+              ` : ''}
+            </div>
+          </div>`).join('') || '<p style="text-align:center;padding:40px;">Обращений клиентов нет</p>';
+        if (e.target.id === 'tabEmpAppeals') sub.innerHTML = empAppeals().map(a => `
+          <div class="appeal-item">
+            <b>👔 ${a.empName}</b> → Руководителю поддержки TUMIX
+            <div class="details" style="margin-top:14px;">
+              <div class="detail-row"><span>🪪 Табельный:</span><span>${a.empTab}</span></div>
+              <div class="detail-row"><span>📝 Текст:</span><span style="text-align:left;">${a.text}</span></div>
+              ${currentEmployee?.role === 'admin' ? `
+                <textarea id="empReplyText_${a.empName}" placeholder="Ответ руководителя..." style="width:100%;margin-top:12px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.15);border-radius:14px;padding:12px;color:white;min-height:80px;"></textarea>
+                <button class="btn btn-primary emp-reply-btn" data-emp="${a.empName}" style="margin-top:8px;">📩 Ответить сотруднику</button>
+              ` : ''}
+            </div>
+          </div>`).join('') || '<p style="text-align:center;padding:40px;">Обращений сотрудников нет</p>';
+        if (e.target.id === 'tabCreateClient') sub.innerHTML = `
+          <div class="form-card">
+            <h3>➕ Новое обращение клиента</h3>
+            <div class="input-column">
+              <div class="field-group"><label>👤 ФИО сотрудника *</label><input id="eName" placeholder="Иванов Иван"></div>
+              <div class="field-group"><label>🪪 Табельный номер *</label><input id="eTab" placeholder="TUM-0001"></div>
+              <div class="field-group"><label>👤 ФИО клиента *</label><input id="cName" placeholder="Петров Петр"></div>
+              <div class="field-group"><label>📧 Почта клиента *</label><input id="cEmail" placeholder="client@mail.ru"></div>
+              <div class="field-group"><label>📱 Телефон клиента *</label><input id="cPhone" value="+7" placeholder="+79161234567"></div>
+              <div class="field-group"><label>📝 Суть проблемы *</label><textarea id="cProblem" placeholder="Опишите проблему..."></textarea></div>
+              <button class="btn btn-primary" id="submitClientAppeal">✅ Оформить обращение</button>
+            </div></div>`;
+        if (e.target.id === 'tabCreateEmp') sub.innerHTML = `
+          <div class="form-card">
+            <h3>📝 Обращение сотрудника</h3>
+            <div class="input-column">
+              <div class="field-group"><label>👤 ФИО сотрудника *</label><input id="eName2" placeholder="Смирнов Алексей"></div>
+              <div class="field-group"><label>🪪 Табельный номер *</label><input id="eTab2" placeholder="TUM-0001"></div>
+              <div class="field-group"><label>📌 Кому</label><input disabled value="Руководителю поддержки TUMIX"></div>
+              <div class="field-group"><label>📝 Текст обращения</label><textarea id="eText">Руководителю отдела поддержки сотрудников TUMIX.</textarea></div>
+              <button class="btn btn-primary" id="submitEmpAppeal">✅ Оформить обращение</button>
+            </div></div>`;
       }
-      if(e.target.classList.contains('reply-btn')){ e.stopPropagation(); const id=e.target.dataset.id; const text=document.getElementById('replyText_'+id).value; if(!text) return showToast('Введите ответ'); const upd=appeals().map(a=>a.id===id?{...a,reply:text,status:'Отвечено'}:a); store('tumix_appeals',upd); renderEmployeeView('empAppeals'); }
-      if(e.target.classList.contains('emp-reply-btn')){ e.stopPropagation(); const emp=e.target.dataset.emp; const text=document.getElementById('empReplyText_'+emp).value; showToast('Ответ для '+emp+': '+text); }
-      if(e.target.classList.contains('delete-btn')){ e.stopPropagation(); const id=e.target.dataset.id; if(confirm('Удалить #'+id+'?')){ store('tumix_appeals',appeals().filter(a=>a.id!==id)); renderEmployeeView('empAppeals'); } }
-      if(e.target.classList.contains('edit-order-btn')){ const id=e.target.dataset.id; const status=prompt('Новый статус (Оформлен/В пути/Доставлен/Отменён)'); if(status){ const upd=orders().map(o=>o.id===id?{...o,status}:o); store('tumix_orders',upd); renderEmployeeView('allOrders'); } }
-      if(e.target.classList.contains('cancel-order-btn')){ const id=e.target.dataset.id; if(confirm('Отменить заказ #'+id+'?')){ const upd=orders().map(o=>o.id===id?{...o,status:'Отменён'}:o); store('tumix_orders',upd); renderEmployeeView('allOrders'); } }
-      if(e.target.id==='submitClientAppeal'){ const app={id:String(appeals().length+1).padStart(7,'0'),empName:document.getElementById('eName').value,empTab:document.getElementById('eTab').value,clientName:document.getElementById('cName').value,clientEmail:document.getElementById('cEmail').value,clientPhone:document.getElementById('cPhone').value,problem:document.getElementById('cProblem').value,status:'Открыто'}; store('tumix_appeals',[...appeals(),app]); showToast('Обращение создано'); renderEmployeeView('empAppeals'); }
-      if(e.target.id==='submitEmpAppeal'){ store('tumix_emp_appeals',[...empAppeals(),{empName:document.getElementById('eName2').value,empTab:document.getElementById('eTab2').value,text:'Руководителю отдела поддержки сотрудников TUMIX.'}]); showToast('Создано'); renderEmployeeView('empAppeals'); }
-      if(e.target.id==='sendColleague'){ const inp=document.getElementById('colleagueInput'); if(!inp.value.trim()) return; store('tumix_colleague_chats',[...colleagueChats(),{from:currentEmployee?.name,text:inp.value}]); renderEmployeeView('colleagueChat'); }
-      if(e.target.id==='sendChat'){ const inp=document.getElementById('chatInput'); if(!inp.value.trim()) return; const d=document.createElement('div'); d.style.cssText='background:rgba(241,90,44,0.25);padding:10px;border-radius:12px;margin:6px 0;'; d.textContent=inp.value; document.getElementById('chatMsgs').appendChild(d); setTimeout(()=>{const r=document.createElement('div'); r.style.cssText='background:rgba(255,255,255,0.05);padding:10px;border-radius:12px;'; r.textContent='Оператор скоро ответит.'; document.getElementById('chatMsgs').appendChild(r);},700); inp.value=''; }
+      if (e.target.classList.contains('reply-btn')) {
+        e.stopPropagation();
+        const id = e.target.dataset.id;
+        const text = document.getElementById('replyText_' + id).value.trim();
+        if (!text) return showToast('Введите текст ответа');
+        const upd = appeals().map(a => a.id === id ? { ...a, reply: text, status: 'Отвечено' } : a);
+        store('tumix_appeals', upd);
+        showToast('Ответ руководителя добавлен');
+        renderEmployeeView('empAppeals');
+      }
+      if (e.target.classList.contains('emp-reply-btn')) {
+        e.stopPropagation();
+        const emp = e.target.dataset.emp;
+        const text = document.getElementById('empReplyText_' + emp).value.trim();
+        if (!text) return showToast('Введите текст ответа');
+        showToast('Ответ для ' + emp + ' отправлен');
+      }
+      if (e.target.classList.contains('delete-btn')) {
+        e.stopPropagation();
+        const id = e.target.dataset.id;
+        if (confirm('Удалить обращение #' + id + '?')) {
+          store('tumix_appeals', appeals().filter(a => a.id !== id));
+          showToast('Обращение удалено');
+          renderEmployeeView('empAppeals');
+        }
+      }
+      if (e.target.classList.contains('edit-order-btn')) {
+        e.stopPropagation();
+        const id = e.target.dataset.id;
+        const status = prompt('Введите новый статус (Оформлен / В пути / Доставлен / Отменён)');
+        if (status) {
+          store('tumix_orders', orders().map(o => o.id === id ? { ...o, status } : o));
+          showToast('Статус заказа #' + id + ' обновлён');
+          renderEmployeeView('allOrders');
+        }
+      }
+      if (e.target.classList.contains('cancel-order-btn')) {
+        e.stopPropagation();
+        const id = e.target.dataset.id;
+        if (confirm('Отменить заказ #' + id + '?')) {
+          store('tumix_orders', orders().map(o => o.id === id ? { ...o, status: 'Отменён' } : o));
+          showToast('Заказ #' + id + ' отменён');
+          renderEmployeeView('allOrders');
+        }
+      }
+      if (e.target.id === 'submitClientAppeal') {
+        const empName = document.getElementById('eName').value.trim();
+        const empTab = document.getElementById('eTab').value.trim();
+        if (!empName || !empTab) return showToast('Заполните данные сотрудника');
+        if (!/^[A-ZА-ЯЁ]+-\d{4}$/i.test(empTab)) return showToast('Табельный номер: TUM-0001');
+        const app = {
+          id: String(appeals().length + 1).padStart(7, '0'),
+          empName,
+          empTab,
+          clientName: document.getElementById('cName').value,
+          clientEmail: document.getElementById('cEmail').value,
+          clientPhone: document.getElementById('cPhone').value,
+          problem: document.getElementById('cProblem').value,
+          status: 'Открыто'
+        };
+        store('tumix_appeals', [...appeals(), app]);
+        showToast('Обращение клиента создано');
+        renderEmployeeView('empAppeals');
+      }
+      if (e.target.id === 'submitEmpAppeal') {
+        const empName = document.getElementById('eName2').value.trim();
+        const empTab = document.getElementById('eTab2').value.trim();
+        if (!empName || !empTab) return showToast('Заполните данные сотрудника');
+        if (!/^[A-ZА-ЯЁ]+-\d{4}$/i.test(empTab)) return showToast('Табельный номер: TUM-0001');
+        store('tumix_emp_appeals', [...empAppeals(), { empName, empTab,
+          text: 'Руководителю отдела поддержки сотрудников TUMIX.' }]);
+        showToast('Обращение сотрудника создано');
+        renderEmployeeView('empAppeals');
+      }
+      if (e.target.id === 'sendColleague') {
+        const inp = document.getElementById('colleagueInput');
+        if (!inp.value.trim()) return;
+        store('tumix_colleague_chats', [...colleagueChats(), { from: currentEmployee?.name || 'Сотрудник',
+          text: inp.value, time: new Date().toLocaleTimeString('ru-RU') }]);
+        renderEmployeeView('colleagueChat');
+      }
+      if (e.target.id === 'sendChat') {
+        const inp = document.getElementById('chatInput');
+        if (!inp.value.trim()) return;
+        const d = document.createElement('div');
+        d.style.cssText =
+          'background:rgba(241,90,44,0.3);padding:12px 16px;border-radius:16px;margin:8px 0;color:white;text-align:right;';
+        d.textContent = inp.value;
+        document.getElementById('chatMsgs').appendChild(d);
+        if (!supportSessionAnswered) {
+          setTimeout(() => {
+            const r = document.createElement('div');
+            r.style.cssText =
+              'background:rgba(255,255,255,0.06);padding:12px 16px;border-radius:16px;margin:8px 0;';
+            r.textContent = '👩‍💼 Оператор скоро ответит вам, пожалуйста подождите.';
+            document.getElementById('chatMsgs').appendChild(r);
+            supportSessionAnswered = true;
+          }, 800);
+        }
+        inp.value = '';
+        document.getElementById('chatMsgs').scrollTop = document.getElementById('chatMsgs').scrollHeight;
+      }
     });
 
-    renderAuth();
+    if (!currentClient && !currentEmployee) renderAuth();
   })();
 </script>
 </body>
