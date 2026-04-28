@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>TUMIX — Доставка с душой</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23F15A2C'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold' font-size='18'>T</text></svg>">
-
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     * {
       margin: 0;
@@ -28,7 +29,6 @@
       color: #e4e0ee;
     }
 
-    /* Анимации */
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -217,9 +217,6 @@
       border: 1.5px solid rgba(255,255,255,0.22);
       color: #d0c6d8;
     }
-    .btn-outline:hover {
-      background: rgba(255,255,255,0.04);
-    }
     .link-text {
       text-align: center;
       margin-top: 16px;
@@ -336,6 +333,7 @@
       margin: 8px 0;
       border-left: 3px solid #F15A2C;
       transition: all 0.3s ease;
+      cursor: pointer;
     }
     .order-item:hover, .appeal-item:hover {
       background: rgba(255,255,255,0.06);
@@ -377,6 +375,12 @@
       justify-content: space-between;
       padding: 6px 0;
       border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    #map {
+      height: 250px;
+      border-radius: 16px;
+      margin: 16px 0;
+      border: 1px solid rgba(255,255,255,0.1);
     }
   </style>
 </head>
@@ -503,25 +507,51 @@
       document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderClientView(b.dataset.view);
     }));
 
-    // Расчет расстояния (приблизительно по Москве)
-    function calculateDistance(addr1, addr2) {
-      const baseCoords = { lat: 55.7558, lng: 37.6173 };
-      const hash = (s) => s.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
-      const lat2 = baseCoords.lat + (hash(addr1)%100-50)/500;
-      const lng2 = baseCoords.lng + (hash(addr2)%100-50)/500;
-      const dLat = (lat2-baseCoords.lat)*111.32;
-      const dLng = (lng2-baseCoords.lng)*111.32*Math.cos(baseCoords.lat*Math.PI/180);
-      return Math.max(1, Math.round(Math.sqrt(dLat*dLat+dLng*dLng)));
+    let deliveryMap = null;
+    let deliveryMarkers = [];
+
+    function initDeliveryMap() {
+      setTimeout(() => {
+        const mapEl = document.getElementById('map');
+        if (!mapEl || deliveryMap) return;
+        deliveryMap = L.map('map').setView([55.7558, 37.6173], 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(deliveryMap);
+        mapEl.style.height = '250px';
+        deliveryMap.invalidateSize();
+      }, 300);
+    }
+
+    function geocodeAddress(address) {
+      return fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Москва')}&limit=1`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.length > 0) {
+            return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0].display_name };
+          }
+          return null;
+        })
+        .catch(() => null);
+    }
+
+    function calculateRealDistance(lat1, lng1, lat2, lng2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLng = (lng2 - lng1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) * Math.sin(dLng/2) * Math.sin(dLng/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return Math.round(R * c * 1.3);
     }
 
     function deliveryForm(){
       return `<div class="card"><h3>📦 Новая доставка</h3><div class="input-column">
         <div class="field-group"><label>ФИО отправителя *</label><input id="sName" autocomplete="off"></div>
         <div class="field-group"><label>Телефон отправителя *</label><input id="sPhone" autocomplete="off"></div>
-        <div class="field-group"><label>Адрес отправки *</label><input id="sAddr" placeholder="ул. Примерная, 1" autocomplete="off"></div>
+        <div class="field-group"><label>Адрес отправки *</label><input id="sAddr" placeholder="ул. Тверская, 1" autocomplete="off"></div>
         <div class="field-group"><label>ФИО получателя *</label><input id="rName" autocomplete="off"></div>
         <div class="field-group"><label>Телефон получателя *</label><input id="rPhone" autocomplete="off"></div>
-        <div class="field-group"><label>Адрес получателя *</label><input id="rAddr" placeholder="ул. Другая, 5" autocomplete="off"></div>
+        <div class="field-group"><label>Адрес получателя *</label><input id="rAddr" placeholder="ул. Арбат, 10" autocomplete="off"></div>
         <div class="field-group"><label>Город</label><input value="Москва и МО" disabled></div>
         <div class="field-group"><label>Содержимое *</label><input id="contentDesc" autocomplete="off"></div>
         <div class="checkbox-group" id="packCheckboxes">
@@ -532,6 +562,7 @@
           <label class="checkbox-pill"><input type="checkbox" value="Коробка L" hidden> Коробка L (280₽)</label>
           <label class="checkbox-pill"><input type="checkbox" value="Коробка XL" hidden> Коробка XL (350₽)</label>
         </div>
+        <div id="map"></div>
         <button class="btn btn-primary" id="calcDelivery">Рассчитать и оформить</button>
         <div id="priceDetails"></div></div></div>`;
     }
@@ -543,17 +574,35 @@
         const sAddr=document.getElementById('sAddr').value.trim();
         const rAddr=document.getElementById('rAddr').value.trim();
         if(!sAddr||!rAddr) return alert('Заполните адреса');
-        const dist=calculateDistance(sAddr, rAddr);
-        const pr={Пакет:60,Конверт:90,'Коробка S':120,'Коробка M':220,'Коробка L':280,'Коробка XL':350};
-        let pc=packs.reduce((s,p)=>s+pr[p],0), km=dist*6, serv=29, total=pc+km+serv;
-        document.getElementById('priceDetails').innerHTML=`
-          <div class="card" style="margin-top:16px;">
-            <p>📦 Упаковка: ${pc}₽</p>
-            <p>🛣️ Расстояние: ${dist} км × 6₽ = ${km}₽</p>
-            <p>🔧 Сервисный сбор: 29₽</p>
-            <h3 style="margin-top:8px;">💰 Итого: ${total}₽</h3>
-            <button class="btn btn-primary" id="confirmOrder">Оформить доставку</button>
-          </div>`;
+        document.getElementById('priceDetails').innerHTML='<p>🔄 Рассчитываем расстояние по карте...</p>';
+        Promise.all([geocodeAddress(sAddr), geocodeAddress(rAddr)]).then(([from, to]) => {
+          if(!from || !to) {
+            document.getElementById('priceDetails').innerHTML='<p style="color:#ff7043;">❌ Не удалось найти адреса на карте. Проверьте написание.</p>';
+            return;
+          }
+          const dist = calculateRealDistance(from.lat, from.lng, to.lat, to.lng);
+          if (deliveryMap) {
+            deliveryMarkers.forEach(m => deliveryMap.removeLayer(m));
+            deliveryMarkers = [];
+            const m1 = L.marker([from.lat, from.lng]).addTo(deliveryMap).bindPopup('Отправитель');
+            const m2 = L.marker([to.lat, to.lng]).addTo(deliveryMap).bindPopup('Получатель');
+            deliveryMarkers.push(m1, m2);
+            const group = L.featureGroup([m1, m2]);
+            deliveryMap.fitBounds(group.getBounds().pad(0.2));
+          }
+          const pr={Пакет:60,Конверт:90,'Коробка S':120,'Коробка M':220,'Коробка L':280,'Коробка XL':350};
+          let pc=packs.reduce((s,p)=>s+pr[p],0), km=dist*22, serv=29, total=pc+km+serv;
+          document.getElementById('priceDetails').innerHTML=`
+            <div class="card" style="margin-top:16px;">
+              <p>📍 Адрес отправителя: ${from.display}</p>
+              <p>📍 Адрес получателя: ${to.display}</p>
+              <p>📦 Упаковка: ${pc}₽</p>
+              <p>🛣️ Расстояние: ${dist} км × 22₽ = ${km}₽</p>
+              <p>🔧 Сервисный сбор: 29₽</p>
+              <h3 style="margin-top:8px;">💰 Итого: ${total}₽</h3>
+              <button class="btn btn-primary" id="confirmOrder">Оформить доставку</button>
+            </div>`;
+        });
       }
       if(e.target.id==='confirmOrder'){
         const ords=orders();
@@ -582,8 +631,8 @@
     function clientOrders(){
       const ords=orders().filter(o=>o.clientId===currentClient?.id);
       return `<h3>📑 Мои заказы</h3>`+ords.map(o=>`
-        <div class="order-item" style="cursor:pointer;" onclick="this.querySelector('.details').classList.toggle('hidden')">
-          <b>#${o.id}</b> ${o.sender} → ${o.recName} | ${o.status} | ${o.date}
+        <div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
+          <b>#${o.id}</b>
           <div class="details hidden" style="margin-top:10px;">
             <div class="detail-row"><span>Отправитель:</span><span>${o.sender} (${o.sPhone})</span></div>
             <div class="detail-row"><span>Адрес отпр.:</span><span>${o.sAddr}</span></div>
@@ -591,6 +640,8 @@
             <div class="detail-row"><span>Адрес получ.:</span><span>${o.rAddr}</span></div>
             <div class="detail-row"><span>Содержимое:</span><span>${o.content}</span></div>
             <div class="detail-row"><span>Упаковка:</span><span>${o.packs?.join(', ')}</span></div>
+            <div class="detail-row"><span>Статус:</span><span>${o.status}</span></div>
+            <div class="detail-row"><span>Дата:</span><span>${o.date}</span></div>
           </div>
         </div>`).join('')||'<p>Нет заказов</p>';
     }
@@ -598,8 +649,17 @@
     function clientAppeals(){
       const apps=appeals().filter(a=>a.clientEmail===currentClient?.email);
       return `<h3>📋 Мои обращения</h3>`+apps.map(a=>`
-        <div class="appeal-item"><b>#${a.id}</b> ${a.problem} | Статус: ${a.status||'Открыто'}</div>
-      `).join('')||'<p>Обращений нет</p>';
+        <div class="appeal-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
+          <b>#${a.id}</b>
+          <div class="details hidden" style="margin-top:10px;">
+            <div class="detail-row"><span>Сотрудник:</span><span>${a.empName}</span></div>
+            <div class="detail-row"><span>Клиент:</span><span>${a.clientName}</span></div>
+            <div class="detail-row"><span>Почта:</span><span>${a.clientEmail}</span></div>
+            <div class="detail-row"><span>Телефон:</span><span>${a.clientPhone}</span></div>
+            <div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>
+            <div class="detail-row"><span>Статус:</span><span>${a.status||'Открыто'}</span></div>
+          </div>
+        </div>`).join('')||'<p>Обращений нет</p>';
     }
 
     function supportChat(){
@@ -608,13 +668,12 @@
 
     function renderClientView(view){
       const a=document.getElementById('clientContent');
-      if(view==='delivery') a.innerHTML=deliveryForm();
+      if(view==='delivery') { a.innerHTML=deliveryForm(); initDeliveryMap(); }
       else if(view==='appeals') a.innerHTML=clientAppeals();
       else if(view==='orders') a.innerHTML=clientOrders();
       else if(view==='support') a.innerHTML=supportChat();
     }
 
-    // Сотрудник
     document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(b=>b.addEventListener('click',()=>{
       document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderEmployeeView(b.dataset.view);
     }));
@@ -623,13 +682,14 @@
       const a=document.getElementById('employeeContent');
       if(view==='empChat') a.innerHTML='<div class="card"><h3>💬 Чаты клиентов</h3><p>Список чатов появится после подключения базы данных.</p></div>';
       else if(view==='empAppeals') a.innerHTML=empAppealsPanel();
-      else if(view==='allOrders') a.innerHTML='<h3>📦 Все заказы</h3>'+orders().map(o=>`<div class="order-item"><b>#${o.id}</b> ${o.sender} → ${o.recName} | ${o.status}</div>`).join('');
+      else if(view==='allOrders') a.innerHTML='<h3>📦 Все заказы</h3>'+orders().map(o=>`<div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')"><b>#${o.id}</b><div class="details hidden" style="margin-top:10px;"><div class="detail-row"><span>Отправитель:</span><span>${o.sender}</span></div><div class="detail-row"><span>Получатель:</span><span>${o.recName}</span></div><div class="detail-row"><span>Статус:</span><span>${o.status}</span></div></div></div>`).join('');
     }
 
     function empAppealsPanel(){
       setTimeout(()=>{
-        document.getElementById('tabClientAppeals')?.click();
-      },50);
+        const tab = document.getElementById('tabClientAppeals');
+        if(tab) tab.click();
+      },60);
       return `<div class="tabs-inner">
         <button class="tab-inner active" id="tabClientAppeals">👥 Обращения клиентов</button>
         <button class="tab-inner" id="tabEmpAppeals">👔 Обращения сотрудников</button>
@@ -639,22 +699,38 @@
     }
 
     document.addEventListener('click', e=>{
-      // Вкладки обращений сотрудника
       if(e.target.classList.contains('tab-inner')){
         document.querySelectorAll('.tab-inner').forEach(t=>t.classList.remove('active'));
         e.target.classList.add('active');
         const sub=document.getElementById('appealsSubContent');
-        if(e.target.id==='tabClientAppeals') sub.innerHTML=appeals().map(a=>`<div class="appeal-item"><b>#${a.id}</b> ${a.empName} → клиент: ${a.clientName || ''} | ${a.problem} | ${a.status||'Открыто'}</div>`).join('')||'<p>Нет обращений</p>';
-        if(e.target.id==='tabEmpAppeals') sub.innerHTML=empAppeals().map(a=>`<div class="appeal-item"><b>${a.empName}</b> → Руководителю | ${a.text}</div>`).join('')||'<p>Нет обращений</p>';
+        if(e.target.id==='tabClientAppeals') sub.innerHTML=appeals().map(a=>`
+          <div class="appeal-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
+            <b>#${a.id}</b>
+            <div class="details hidden" style="margin-top:10px;">
+              <div class="detail-row"><span>Сотрудник:</span><span>${a.empName}</span></div>
+              <div class="detail-row"><span>Клиент:</span><span>${a.clientName}</span></div>
+              <div class="detail-row"><span>Почта:</span><span>${a.clientEmail}</span></div>
+              <div class="detail-row"><span>Телефон:</span><span>${a.clientPhone}</span></div>
+              <div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>
+              <div class="detail-row"><span>Статус:</span><span>${a.status||'Открыто'}</span></div>
+            </div>
+          </div>`).join('')||'<p>Нет обращений</p>';
+        if(e.target.id==='tabEmpAppeals') sub.innerHTML=empAppeals().map(a=>`
+          <div class="appeal-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
+            <b>${a.empName}</b> → Руководителю
+            <div class="details hidden" style="margin-top:10px;">
+              <div class="detail-row"><span>Текст:</span><span>${a.text}</span></div>
+            </div>
+          </div>`).join('')||'<p>Нет обращений</p>';
         if(e.target.id==='tabCreateClient') sub.innerHTML=`<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName"></div><div class="field-group"><label>Табельный номер</label><input id="eTab"></div><div class="field-group"><label>ФИО клиента</label><input id="cName"></div><div class="field-group"><label>Почта клиента</label><input id="cEmail"></div><div class="field-group"><label>Телефон клиента</label><input id="cPhone"></div><div class="field-group"><label>Суть проблемы</label><textarea id="cProblem"></textarea></div><button class="btn btn-primary" id="submitClientAppeal">Оформить обращение</button></div></div>`;
-        if(e.target.id==='tabCreateEmp') sub.innerHTML=`<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName2"></div><div class="field-group"><label>Табельный номер</label><input id="eTab2"></div><div class="field-group"><label>Кому</label><input disabled value="Руководителю поддержки TUMIX"></div><div class="field-group"><label>Текст обращения</label><textarea id="eText">Руководителю отдела поддержки сотрудников TUMIX.</textarea></div><button class="btn btn-primary" id="submitEmpAppeal">Оформить</button></div></div>`;
+        if(e.target.id==='tabCreateEmp') sub.innerHTML=`<div class="form-card"><div class="input-column"><div class="field-group"><label>ФИО сотрудника</label><input id="eName2"></div><div class="field-group"><label>Табельный номер</label><input id="eTab2"></div><div class="field-group"><label>Кому</label><input disabled value="Руководителю поддержки TUMIX"></div><div class="field-group"><label>Текст обращения</label><textarea id="eText" readonly style="background:rgba(255,255,255,0.05); cursor:default;">Руководителю отдела поддержки сотрудников TUMIX.</textarea></div><button class="btn btn-primary" id="submitEmpAppeal">Оформить</button></div></div>`;
       }
       if(e.target.id==='submitClientAppeal'){
-        const app={id:String(appeals().length+1).padStart(7,'0'),empName:document.getElementById('eName').value,problem:document.getElementById('cProblem').value,clientEmail:document.getElementById('cEmail').value,clientName:document.getElementById('cName').value,status:'Открыто'};
+        const app={id:String(appeals().length+1).padStart(7,'0'),empName:document.getElementById('eName').value,empTab:document.getElementById('eTab').value,clientName:document.getElementById('cName').value,clientEmail:document.getElementById('cEmail').value,clientPhone:document.getElementById('cPhone').value,problem:document.getElementById('cProblem').value,status:'Открыто'};
         store('tumix_appeals',[...appeals(),app]); alert('Обращение создано'); renderEmployeeView('empAppeals');
       }
       if(e.target.id==='submitEmpAppeal'){
-        store('tumix_emp_appeals',[...empAppeals(),{empName:document.getElementById('eName2').value,text:document.getElementById('eText').value}]);
+        store('tumix_emp_appeals',[...empAppeals(),{empName:document.getElementById('eName2').value,empTab:document.getElementById('eTab2').value,text:'Руководителю отдела поддержки сотрудников TUMIX.'}]);
         alert('Обращение сотрудника создано'); renderEmployeeView('empAppeals');
       }
       if(e.target.id==='sendChat'){
