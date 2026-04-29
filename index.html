@@ -48,7 +48,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      padding: 16px;
       color: #e8e4f0;
       animation: backgroundShift 30s ease infinite alternate;
     }
@@ -136,30 +136,23 @@
     }
 
     .logo-header {
-      padding: 24px 44px;
+      padding: 18px 30px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid rgba(255, 255, 255, 0.07);
       background: rgba(8, 8, 22, 0.45);
       backdrop-filter: blur(20px);
+      flex-wrap: wrap;
+      gap: 10px;
     }
     .logo-left {
       display: flex;
       align-items: center;
-      gap: 16px;
-    }
-    .logo-img {
-      height: 48px;
-      object-fit: contain;
-      filter: drop-shadow(0 8px 16px rgba(241, 90, 44, 0.5));
-      transition: transform 0.4s ease;
-    }
-    .logo-img:hover {
-      transform: scale(1.1) rotate(-4deg);
+      gap: 10px;
     }
     .logo-text {
-      font-size: 34px;
+      font-size: clamp(24px, 5vw, 34px);
       font-weight: 900;
       letter-spacing: -1.2px;
       background: linear-gradient(135deg, #f5dfc8, #c8b098, #f5dfc8, #e0c8a8);
@@ -167,20 +160,33 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: shimmer 5s linear infinite;
-      text-shadow: 0 0 40px rgba(241, 90, 44, 0.2);
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .support-email {
+      color: #F15A2C;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      background: rgba(241,90,44,0.1);
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: 0.3s;
     }
     .logout-btn {
       background: rgba(255, 255, 255, 0.06);
       border: 2px solid rgba(255, 255, 255, 0.2);
       color: #c8bca8;
-      padding: 14px 32px;
-      border-radius: 40px;
+      padding: 10px 24px;
+      border-radius: 30px;
       cursor: pointer;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 14px;
       transition: all 0.4s ease;
-      backdrop-filter: blur(12px);
-      letter-spacing: 0.5px;
     }
     .logout-btn:hover {
       background: #c0392b;
@@ -196,89 +202,80 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 60px 28px;
+      padding: 40px 20px;
       animation: fadeInUp 0.7s ease;
     }
     .auth-tabs {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       background: rgba(255, 255, 255, 0.05);
-      padding: 8px;
-      border-radius: 34px;
-      margin-bottom: 44px;
-      backdrop-filter: blur(16px);
+      padding: 6px;
+      border-radius: 30px;
+      margin-bottom: 30px;
     }
     .auth-tab {
-      padding: 15px 42px;
-      border-radius: 30px;
+      padding: 12px 30px;
+      border-radius: 24px;
       border: none;
       background: transparent;
       color: #9c90ac;
       font-weight: 700;
-      font-size: 16px;
+      font-size: 14px;
       cursor: pointer;
       transition: all 0.4s ease;
-      letter-spacing: 0.4px;
     }
     .auth-tab.active {
       background: #F15A2C;
       color: #fff;
-      box-shadow: 0 16px 38px rgba(241, 90, 44, 0.7);
-      transform: scale(1.06);
-    }
-    .auth-tab:hover:not(.active) {
-      color: #d0c0b0;
-      background: rgba(255, 255, 255, 0.04);
+      box-shadow: 0 12px 28px rgba(241, 90, 44, 0.7);
     }
 
     .auth-card,
     .form-card {
       background: rgba(18, 18, 36, 0.82);
       backdrop-filter: blur(32px);
-      border-radius: 44px;
-      padding: 48px 44px;
+      border-radius: 36px;
+      padding: 32px;
       width: 100%;
-      max-width: 600px;
+      max-width: 500px;
       border: 2px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 45px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      box-shadow: 0 35px 60px rgba(0, 0, 0, 0.8);
       animation: cardFloat 7s ease-in-out infinite;
     }
     .auth-card h2,
     .form-card h3 {
-      font-size: 30px;
+      font-size: 26px;
       font-weight: 800;
-      margin-bottom: 34px;
+      margin-bottom: 24px;
       text-align: center;
       color: #efe6da;
-      letter-spacing: -0.4px;
     }
 
     .input-column {
       display: flex;
       flex-direction: column;
-      gap: 28px;
+      gap: 20px;
     }
     .field-group {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
     .field-group label {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 1.4px;
+      letter-spacing: 1.2px;
       color: #b8a8c8;
     }
     .field-group input,
-    .field-group textarea,
-    .field-group select {
+    .field-group textarea {
       width: 100%;
-      padding: 17px 24px;
+      padding: 14px 18px;
       background: rgba(255, 255, 255, 0.05);
       border: 2px solid rgba(255, 255, 255, 0.15);
-      border-radius: 24px;
-      font-size: 17px;
+      border-radius: 20px;
+      font-size: 15px;
       color: #f2e8dc;
       outline: none;
       transition: all 0.4s ease;
@@ -288,105 +285,64 @@
     .field-group input:focus,
     .field-group textarea:focus {
       border-color: #F15A2C;
-      box-shadow: 0 0 0 8px rgba(241, 90, 44, 0.3);
+      box-shadow: 0 0 0 6px rgba(241, 90, 44, 0.3);
       background: rgba(255, 255, 255, 0.09);
-      transform: translateY(-3px);
-    }
-    .field-group textarea {
-      min-height: 130px;
-      line-height: 1.6;
     }
 
     .btn {
-      padding: 18px 30px;
-      border-radius: 26px;
+      padding: 15px 24px;
+      border-radius: 22px;
       border: none;
       font-weight: 700;
-      font-size: 17px;
+      font-size: 15px;
       cursor: pointer;
       transition: all 0.4s ease;
-      letter-spacing: 0.7px;
       width: 100%;
-      margin-top: 18px;
-      position: relative;
-      overflow: hidden;
-    }
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 0.7s ease;
-    }
-    .btn:hover::before {
-      left: 100%;
+      margin-top: 14px;
     }
     .btn-primary {
       background: linear-gradient(135deg, #F15A2C, #e04820);
       color: white;
-      box-shadow: 0 18px 40px rgba(241, 90, 44, 0.6);
+      box-shadow: 0 14px 30px rgba(241, 90, 44, 0.6);
     }
     .btn-primary:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 26px 52px rgba(241, 90, 44, 0.8);
+      transform: translateY(-3px);
+      box-shadow: 0 20px 40px rgba(241, 90, 44, 0.8);
     }
     .btn-outline {
       background: transparent;
       border: 2px solid rgba(255, 255, 255, 0.28);
       color: #d4cadc;
     }
-    .btn-outline:hover {
-      background: rgba(255, 255, 255, 0.06);
-      border-color: #F15A2C;
-      color: #F15A2C;
-    }
     .btn-danger {
       background: linear-gradient(135deg, #c0392b, #a93226);
       color: white;
-      box-shadow: 0 12px 28px rgba(192, 57, 43, 0.5);
-    }
-    .btn-danger:hover {
-      box-shadow: 0 18px 38px rgba(192, 57, 43, 0.7);
-      transform: translateY(-3px);
     }
     .link-text {
       text-align: center;
-      margin-top: 24px;
-      font-size: 16px;
+      margin-top: 18px;
+      font-size: 14px;
       color: #988ea8;
     }
     .link-text a {
       color: #F15A2C;
       text-decoration: none;
       font-weight: 700;
-      transition: color 0.3s;
-    }
-    .link-text a:hover {
-      color: #ff9f7c;
-      text-decoration: underline;
     }
 
     .toast-notification {
       position: fixed;
-      top: 32px;
-      right: 32px;
+      top: 24px;
+      right: 24px;
       background: rgba(16, 16, 34, 0.96);
       backdrop-filter: blur(28px);
       border: 2px solid #F15A2C;
-      border-radius: 26px;
-      padding: 24px 36px;
+      border-radius: 22px;
+      padding: 18px 28px;
       color: #f2e6d8;
       font-weight: 700;
-      font-size: 16px;
-      box-shadow: 0 28px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(241, 90, 44, 0.4);
+      font-size: 14px;
       z-index: 9999;
-      animation: fadeSlideDown 0.6s ease;
-      display: flex;
-      align-items: center;
-      gap: 16px;
     }
 
     .modal-overlay {
@@ -401,152 +357,133 @@
       align-items: center;
       justify-content: center;
       z-index: 10000;
-      animation: fadeInUp 0.35s ease;
+      padding: 20px;
     }
     .modal-window {
       background: rgba(22, 22, 44, 0.96);
       border: 2px solid rgba(241, 90, 44, 0.5);
-      border-radius: 34px;
-      padding: 38px;
-      min-width: 440px;
-      box-shadow: 0 35px 70px rgba(0, 0, 0, 0.9);
+      border-radius: 28px;
+      padding: 28px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9);
     }
     .modal-window h3 {
-      margin-bottom: 22px;
+      margin-bottom: 18px;
       color: #efe6da;
-      font-size: 24px;
     }
     .modal-window select {
       width: 100%;
-      padding: 16px 20px;
+      padding: 12px;
       background: rgba(255, 255, 255, 0.06);
       border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 18px;
+      border-radius: 14px;
       color: white;
-      font-size: 17px;
-      margin-bottom: 24px;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23F15A2C' stroke-width='3'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 18px center;
-      cursor: pointer;
+      font-size: 15px;
+      margin-bottom: 18px;
     }
     .modal-buttons {
       display: flex;
-      gap: 14px;
+      gap: 10px;
       justify-content: flex-end;
     }
 
     .dashboard {
       flex: 1;
       display: flex;
+      flex-direction: column;
       min-height: 0;
     }
+    @media (min-width: 768px) {
+      .dashboard {
+        flex-direction: row;
+      }
+    }
     .sidebar {
-      width: 300px;
+      width: 100%;
       background: rgba(10, 10, 26, 0.7);
       backdrop-filter: blur(26px);
-      padding: 34px 18px;
+      padding: 20px;
       display: flex;
-      flex-direction: column;
-      gap: 10px;
-      border-right: 1px solid rgba(255, 255, 255, 0.07);
+      flex-wrap: wrap;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    @media (min-width: 768px) {
+      .sidebar {
+        width: 260px;
+        flex-direction: column;
+        padding: 28px 16px;
+        border-right: 1px solid rgba(255, 255, 255, 0.07);
+        border-bottom: none;
+      }
     }
     .sidebar-btn {
       background: transparent;
       border: none;
       color: #b2a4bc;
-      padding: 16px 24px;
-      border-radius: 20px;
+      padding: 12px 18px;
+      border-radius: 16px;
       font-weight: 700;
-      font-size: 16px;
+      font-size: 14px;
       text-align: left;
       cursor: pointer;
       transition: all 0.4s ease;
-      letter-spacing: 0.4px;
-    }
-    .sidebar-btn:hover {
-      background: rgba(241, 90, 44, 0.22);
-      color: #ffb08c;
-      transform: translateX(10px);
-      box-shadow: 0 6px 20px rgba(241, 90, 44, 0.2);
+      flex: 1 1 auto;
     }
     .sidebar-btn.active {
       background: rgba(241, 90, 44, 0.38);
       color: #F15A2C;
-      box-shadow: 0 10px 28px rgba(241, 90, 44, 0.35);
-      border-left: 4px solid #F15A2C;
+      border-left: 3px solid #F15A2C;
     }
     .content-area {
       flex: 1;
-      padding: 40px;
+      padding: 24px;
       overflow-y: auto;
       background: rgba(6, 6, 18, 0.45);
-      animation: fadeInUp 0.6s ease;
     }
     .card {
       background: rgba(20, 20, 40, 0.7);
       backdrop-filter: blur(22px);
-      border-radius: 36px;
-      padding: 38px;
+      border-radius: 28px;
+      padding: 28px;
       border: 2px solid rgba(255, 255, 255, 0.09);
-      margin-bottom: 28px;
-      transition: all 0.5s ease;
-      animation: cardFloat 9s ease-in-out infinite;
-    }
-    .card:hover {
-      border-color: rgba(241, 90, 44, 0.4);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(241, 90, 44, 0.15);
-    }
-    .grid-2col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
+      margin-bottom: 20px;
     }
     .checkbox-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 16px;
-      margin: 22px 0;
+      gap: 10px;
+      margin: 16px 0;
     }
     .checkbox-pill {
       background: rgba(255, 255, 255, 0.05);
       border: 2px solid rgba(255, 255, 255, 0.18);
-      border-radius: 40px;
-      padding: 13px 26px;
+      border-radius: 30px;
+      padding: 10px 18px;
       cursor: pointer;
-      font-size: 15px;
+      font-size: 13px;
       font-weight: 600;
-      color: #ccc0d4;
-      transition: all 0.4s ease;
-      user-select: none;
-    }
-    .checkbox-pill:hover {
-      border-color: #F15A2C;
-      transform: translateY(-4px);
-      box-shadow: 0 8px 22px rgba(241, 90, 44, 0.25);
+      transition: 0.4s;
     }
     .checkbox-pill.checked {
       background: rgba(241, 90, 44, 0.4);
       border-color: #F15A2C;
       color: #ffb08c;
-      box-shadow: 0 10px 28px rgba(241, 90, 44, 0.4);
     }
     .order-item,
     .appeal-item {
       background: rgba(255, 255, 255, 0.05);
-      border-radius: 24px;
-      padding: 24px;
-      margin: 16px 0;
-      border-left: 6px solid #F15A2C;
-      transition: all 0.4s ease;
+      border-radius: 20px;
+      padding: 18px;
+      margin: 12px 0;
+      border-left: 5px solid #F15A2C;
       cursor: pointer;
-    }
-    .order-item:hover,
-    .appeal-item:hover {
-      background: rgba(255, 255, 255, 0.09);
-      transform: translateX(10px);
-      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.4);
+      transition: 0.4s;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
     .hidden {
       display: none !important;
@@ -554,109 +491,96 @@
 
     .tabs-inner {
       display: flex;
-      gap: 14px;
-      margin-bottom: 30px;
       flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
     }
     .tab-inner {
-      padding: 13px 30px;
-      border-radius: 34px;
+      padding: 10px 18px;
+      border-radius: 24px;
       background: rgba(255, 255, 255, 0.06);
       border: 2px solid rgba(255, 255, 255, 0.14);
       color: #b0a0b8;
       cursor: pointer;
-      transition: all 0.4s ease;
+      transition: 0.4s;
       font-weight: 700;
-      font-size: 15px;
-    }
-    .tab-inner:hover {
-      border-color: #F15A2C;
-      color: #ffb08c;
-      background: rgba(241, 90, 44, 0.18);
+      font-size: 13px;
     }
     .tab-inner.active {
       background: #F15A2C;
       color: white;
       border-color: #F15A2C;
-      box-shadow: 0 12px 32px rgba(241, 90, 44, 0.55);
-      transform: scale(1.06);
     }
 
     .detail-row {
       display: flex;
       justify-content: space-between;
-      padding: 9px 0;
+      padding: 6px 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      text-align: left;
-      direction: ltr;
+      flex-wrap: wrap;
+      gap: 4px;
     }
     .detail-row span:first-child {
       font-weight: 700;
       color: #b8a8c8;
-      min-width: 140px;
+      min-width: 100px;
     }
     .detail-row span:last-child {
       color: #f2e8dc;
       text-align: left;
       flex: 1;
-      white-space: pre-wrap;
+      word-break: break-word;
     }
 
     #map {
-      height: 360px;
-      border-radius: 24px;
-      margin: 24px 0;
+      height: 280px;
+      border-radius: 20px;
+      margin: 16px 0;
       border: 2px solid rgba(255, 255, 255, 0.14);
-      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.4);
     }
 
     .admin-reply {
       color: #e74c3c;
-      font-weight: 700;
-      margin-top: 14px;
-      padding: 16px;
+      margin-top: 10px;
+      padding: 12px;
       background: rgba(231, 76, 60, 0.18);
-      border-radius: 16px;
-      border-left: 5px solid #e74c3c;
-      animation: fadeInUp 0.5s ease;
+      border-radius: 14px;
+      border-left: 4px solid #e74c3c;
     }
     .reply-block {
-      margin-top: 14px;
-      padding: 14px;
+      margin-top: 10px;
+      padding: 10px;
       background: rgba(255, 255, 255, 0.04);
-      border-radius: 14px;
-      border-left: 4px solid #F15A2C;
+      border-radius: 12px;
+      border-left: 3px solid #F15A2C;
+      word-break: break-word;
     }
 
     .chat-messages {
-      max-height: 480px;
+      max-height: 380px;
       overflow-y: auto;
       background: rgba(0, 0, 0, 0.35);
-      border-radius: 24px;
-      padding: 26px;
-      margin-bottom: 24px;
-      border: 2px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 18px;
     }
     .chat-msg {
-      padding: 15px 22px;
-      border-radius: 22px;
-      margin: 12px 0;
-      max-width: 74%;
+      padding: 12px 18px;
+      border-radius: 18px;
+      margin: 8px 0;
+      max-width: 80%;
       clear: both;
-      animation: fadeInUp 0.4s ease;
-      line-height: 1.5;
+      word-break: break-word;
     }
     .chat-msg.mine {
-      background: linear-gradient(135deg, #F15A2C, #e04820);
+      background: #F15A2C;
       color: white;
       float: right;
-      box-shadow: 0 10px 24px rgba(241, 90, 44, 0.35);
     }
     .chat-msg.other {
       background: rgba(255, 255, 255, 0.12);
       color: #e0d6cc;
       float: left;
-      border: 1px solid rgba(255, 255, 255, 0.1);
     }
   </style>
 </head>
@@ -664,11 +588,12 @@
   <div class="app-wrapper" id="appWrapper">
     <div class="logo-header" id="logoHeader">
       <div class="logo-left">
-        <img src="https://raw.githubusercontent.com/.../logotip.PNG" alt="TUMIX Client" class="logo-img" id="clientLogo">
-        <img src="https://raw.githubusercontent.com/.../logo.PNG" alt="TUMIX Employee" class="logo-img hidden" id="employeeLogo">
         <span class="logo-text" id="dynamicLogo">TUMIX CLIENT</span>
       </div>
-      <button class="logout-btn hidden" id="logoutBtn">🚪 Выйти из системы</button>
+      <div class="header-right">
+        <a href="mailto:tumix.support@gmail.com" class="support-email">📧 tumix.support@gmail.com</a>
+        <button class="logout-btn hidden" id="logoutBtn">🚪 Выйти</button>
+      </div>
     </div>
 
     <div id="authScreen" class="auth-screen">
@@ -685,6 +610,7 @@
         <button class="sidebar-btn" data-view="appeals">📋 Мои обращения</button>
         <button class="sidebar-btn" data-view="orders">📑 Мои заказы</button>
         <button class="sidebar-btn" data-view="support">💬 Поддержка</button>
+        <button class="sidebar-btn" data-view="rules">📜 Правила</button>
       </div>
       <div class="content-area" id="clientContent"></div>
     </div>
@@ -695,6 +621,7 @@
         <button class="sidebar-btn" data-view="empAppeals">📋 Все обращения</button>
         <button class="sidebar-btn" data-view="allOrders">📦 Все заказы</button>
         <button class="sidebar-btn" data-view="colleagueChat">👥 Чат коллег</button>
+        <button class="sidebar-btn" data-view="empRules">📜 Правила</button>
       </div>
       <div class="content-area" id="employeeContent"></div>
     </div>
@@ -717,24 +644,26 @@
         return filtered;
       };
       const supportChats = () => store('tumix_support_chats') || [];
+      const agreementAccepted = () => localStorage.getItem('tumix_agreement_accepted') === 'true';
 
       let currentClient = null,
         currentEmployee = null;
       const TEST_EMP = { tab: 'TUM-0001', password: 'Password0001', name: 'Алексей Смирнов', role: 'support' };
-      const ADMIN_EMP = { tab: 'OWNER_MARTIN_MEFIKOV0001', password: 'MARTIN_MEFIKOV0001', name: 'Мартин Мефиков', role: 'admin' };
+      const ADMIN_EMP = { tab: 'OWNER_MARTIN_MEFIKOV0001', password: 'MARTIN_MEFIKOV0001', name: 'Мартин Мефиков',
+        role: 'admin' };
 
       const dynamicLogo = document.getElementById('dynamicLogo');
-      const clientLogo = document.getElementById('clientLogo');
-      const employeeLogo = document.getElementById('employeeLogo');
 
       function showToast(msg) {
-        const existing = document.querySelector('.toast-notification');
-        if (existing) existing.remove();
-        const toast = document.createElement('div');
-        toast.className = 'toast-notification';
-        toast.innerHTML = '✨ ' + msg;
-        document.body.appendChild(toast);
-        setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.5s ease'; setTimeout(() => toast.remove(), 500); }, 3500);
+        const old = document.querySelector('.toast-notification');
+        if (old) old.remove();
+        const t = document.createElement('div');
+        t.className = 'toast-notification';
+        t.textContent = '✨ ' + msg;
+        document.body.appendChild(t);
+        setTimeout(() => { t.style.opacity = '0';
+          t.style.transition = '0.5s';
+          setTimeout(() => t.remove(), 500); }, 3000);
       }
 
       function showModal(title, content, onConfirm) {
@@ -759,6 +688,55 @@
         });
       }
 
+      function showRulesModal() {
+        const rules = `
+        <div style="max-height:60vh;overflow-y:auto;padding-right:10px;">
+          <p><b style="color:#e74c3c;">1. При использовании услуг компании TUMIX пользователь соглашается на обработку и хранение персональных данных. Данные хранятся в соответствии с Федеральным законом от 27 июля 2006 года №152-ФЗ «О персональных данных».</b></p>
+          <p><b style="color:#e74c3c;">2. Клиент подтверждает, что в грузе нет ничего запрещённого. Список запрещённого к перевозке:</b> <span style="color:#e74c3c;font-weight:700;">Оружие (любое), Животные, Легковоспламеняющиеся вещества, Взрывчатые вещества, Лекарственные препараты, Наркотические и психотропные препараты, Денежные средства любой валюты, Вещества кислотного происхождения, Перекись водорода, Скоропортящиеся продукты (СПП), Дорогое ювелирное украшение, Хрупкие предметы без специальной упаковки.</span></p>
+          <p>3. Компания TUMIX несёт полную ответственность за состояние груза при транспортировке. В случае его повреждения или утраты, пожалуйста, обратитесь в поддержку по вкладке «Поддержка».</p>
+          <p>4. Если груз был повреждён во время транспортировки не по причине курьера, а из-за плохой упаковки товара (летает в коробке, сильно упакован и повреждён из-за давления и т. п.), то ответственность перекладывается на заказчика.</p>
+          <p>5. Заказчик обязан предоставить достоверную информацию и подлинные данные. В случае если данные неверны, а курьер уже забрал заказ, заказ будет отменён, посылка возвращена и удержана комиссия.</p>
+          <p>6. В случае кражи содержимого груза обратитесь на почту <b>tumix.support@gmail.com</b>. Необходимы будут фото доказательства при сборке.</p>
+          <p>7. Курьер имеет право проверить, что находится в перевозке и не попадает ли ничего в список запрещённого.</p>
+          <p style="background:rgba(255,215,0,0.15);padding:10px;border-radius:10px;"><b style="color:#ffd700;">8. Если приехал другой автомобиль или пришёл другой человек за заказом, не отдавайте заказ! Напишите в поддержку о случившемся, и мы подберём вам нового курьера. Передача груза курьеру, который не соответствует описанному в заказе, ОПАСНА – это могут быть мошенники, которые могут украсть ваш товар!</b></p>
+          <p>9. Если курьер или работник вам нагрубили, необходимо обратиться в поддержку. После регистрации заявления работник будет наказан.</p>
+          <p>10. Компания TUMIX оставляет за собой право изменять условия пользования и тарифы с уведомлением на сайте.</p>
+          <p>11. Клиент имеет право на возврат средств в соответствии с условиями договора-оферты.</p>
+        </div>`;
+        const overlay = document.createElement('div');
+        overlay.className = 'modal-overlay';
+        overlay.innerHTML = `<div class="modal-window"><h3>📜 Правила пользования</h3>${rules}<div class="modal-buttons"><button class="btn btn-primary cancel-modal" style="width:auto;">Закрыть</button></div></div>`;
+        document.body.appendChild(overlay);
+        overlay.querySelector('.cancel-modal').addEventListener('click', () => overlay.remove());
+      }
+
+      function showAgreementModal(callback) {
+        const overlay = document.createElement('div');
+        overlay.className = 'modal-overlay';
+        overlay.innerHTML = `
+        <div class="modal-window">
+          <h3>📜 Пользовательское соглашение</h3>
+          <div style="max-height:50vh;overflow-y:auto;padding-right:10px;margin-bottom:20px;">
+            <p>Настоящее соглашение регулирует обработку и хранение персональных данных пользователей сервиса TUMIX в соответствии с Федеральным законом от 27 июля 2006 года №152-ФЗ «О персональных данных». Продолжая регистрацию, вы даёте согласие на сбор, обработку и хранение ваших персональных данных (имя, телефон, адрес электронной почты) в целях оказания услуг доставки.</p>
+            <p>Вы также подтверждаете, что ознакомлены с <b>Правилами пользования</b> сервисом TUMIX.</p>
+          </div>
+          <div class="modal-buttons">
+            <button class="btn btn-danger decline-agreement" style="width:auto;">Отклонить</button>
+            <button class="btn btn-primary accept-agreement" style="width:auto;">Принять</button>
+          </div>
+        </div>`;
+        document.body.appendChild(overlay);
+        overlay.querySelector('.accept-agreement').addEventListener('click', () => {
+          localStorage.setItem('tumix_agreement_accepted', 'true');
+          overlay.remove();
+          if (callback) callback(true);
+        });
+        overlay.querySelector('.decline-agreement').addEventListener('click', () => {
+          overlay.remove();
+          if (callback) callback(false);
+        });
+      }
+
       const authScreen = document.getElementById('authScreen');
       const clientDash = document.getElementById('clientDashboard');
       const empDash = document.getElementById('employeeDashboard');
@@ -771,8 +749,6 @@
           clientDash.classList.remove('hidden');
           empDash.classList.add('hidden');
           logoutBtn.classList.remove('hidden');
-          clientLogo.classList.remove('hidden');
-          employeeLogo.classList.add('hidden');
           dynamicLogo.textContent = 'TUMIX CLIENT';
           localStorage.setItem('tumix_session', JSON.stringify({ type: 'client', id: currentClient.id }));
         } else if (currentEmployee) {
@@ -780,8 +756,6 @@
           empDash.classList.remove('hidden');
           clientDash.classList.add('hidden');
           logoutBtn.classList.remove('hidden');
-          clientLogo.classList.add('hidden');
-          employeeLogo.classList.remove('hidden');
           dynamicLogo.textContent = 'TUMIX SUPPORT';
           localStorage.setItem('tumix_session', JSON.stringify({ type: 'employee', tab: currentEmployee.tab }));
         } else {
@@ -789,36 +763,32 @@
           clientDash.classList.add('hidden');
           empDash.classList.add('hidden');
           logoutBtn.classList.add('hidden');
-          clientLogo.classList.add('hidden');
-          employeeLogo.classList.add('hidden');
           dynamicLogo.textContent = 'TUMIX';
           localStorage.removeItem('tumix_session');
         }
       }
 
-      logoutBtn.addEventListener('click', () => {
-        currentClient = null;
+      logoutBtn.addEventListener('click', () => { currentClient = null;
         currentEmployee = null;
         updateUI();
-        renderAuth();
-        showToast('Вы вышли из системы');
-      });
+        renderAuth(); });
 
       const session = JSON.parse(localStorage.getItem('tumix_session') || 'null');
       if (session) {
-        if (session.type === 'client') {
-          const u = users().find(x => x.id === session.id);
-          if (u) { currentClient = u; updateUI(); renderClientView('delivery'); }
-        } else if (session.type === 'employee') {
-          if (session.tab === TEST_EMP.tab) currentEmployee = { ...TEST_EMP };
-          else if (session.tab === ADMIN_EMP.tab) currentEmployee = { ...ADMIN_EMP };
-          if (currentEmployee) { updateUI(); renderEmployeeView('empChat'); }
-        }
+        if (session.type === 'client') { const u = users().find(x => x.id === session.id); if (u) { currentClient =
+            u;
+            updateUI();
+            renderClientView('delivery'); } } else if (session.type === 'employee') { if (session.tab === TEST_EMP
+            .tab) currentEmployee = { ...TEST_EMP }; else if (session.tab === ADMIN_EMP.tab) currentEmployee = { ...
+            ADMIN_EMP }; if (currentEmployee) { updateUI();
+            renderEmployeeView('empChat'); } }
       }
 
       let authMode = 'client';
-      document.getElementById('clientTab').addEventListener('click', () => { authMode = 'client'; renderAuth(); });
-      document.getElementById('employeeTab').addEventListener('click', () => { authMode = 'employee'; renderAuth(); });
+      document.getElementById('clientTab').addEventListener('click', () => { authMode = 'client';
+        renderAuth(); });
+      document.getElementById('employeeTab').addEventListener('click', () => { authMode = 'employee';
+        renderAuth(); });
 
       function renderAuth() {
         document.getElementById('clientTab').classList.toggle('active', authMode === 'client');
@@ -827,100 +797,136 @@
           authForms.innerHTML = `
           <h2>Вход для клиентов</h2>
           <div class="input-column">
-            <div class="field-group"><label>📧 Электронная почта</label><input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="off"></div>
-            <div class="field-group"><label>🔒 Пароль</label><input type="password" id="loginPass" placeholder="••••••••" autocomplete="off"></div>
+            <div class="field-group"><label>📧 Почта</label><input type="email" id="loginEmail" autocomplete="off"></div>
+            <div class="field-group"><label>🔒 Пароль</label><input type="password" id="loginPass" autocomplete="off"></div>
           </div>
-          <button class="btn btn-primary" id="loginClientBtn">🚀 Войти в систему</button>
-          <p class="link-text">Впервые у нас? <a href="#" id="showRegister">Создать аккаунт</a></p>`;
+          <button class="btn btn-primary" id="loginClientBtn">Войти</button>
+          <p class="link-text"><a href="#" id="showRegister">Регистрация</a></p>`;
           document.getElementById('loginClientBtn').addEventListener('click', () => {
-            const e = document.getElementById('loginEmail').value.trim(), p = document.getElementById('loginPass').value.trim();
+            const e = document.getElementById('loginEmail').value.trim(),
+              p = document.getElementById('loginPass').value.trim();
             const u = users().find(x => x.email === e && x.password === p);
-            if (u) { currentClient = u; updateUI(); renderClientView('delivery'); showToast('Добро пожаловать, ' + u.name + '!'); }
-            else showToast('Неверная почта или пароль');
+            if (u) { currentClient = u;
+              updateUI();
+              renderClientView('delivery'); } else showToast('Неверные данные');
           });
           document.getElementById('showRegister').addEventListener('click', (e) => {
             e.preventDefault();
+            if (!agreementAccepted()) {
+              showAgreementModal((accepted) => {
+                if (accepted) {
+                  showToast('Соглашение принято! Теперь вы можете зарегистрироваться.');
+                  document.getElementById('showRegister').click();
+                } else {
+                  showToast('Регистрация невозможна без принятия соглашения.');
+                }
+              });
+              return;
+            }
             authForms.innerHTML = `
-            <h2>Регистрация клиента</h2>
+            <h2>Регистрация</h2>
             <div class="input-column">
-              <div class="field-group"><label>👤 Имя и фамилия *</label><input id="regName" autocomplete="off" placeholder="Иван Иванов"></div>
-              <div class="field-group"><label>📧 Почта *</label><input type="email" id="regEmail" autocomplete="off" placeholder="ivan@example.com"></div>
-              <div class="field-group"><label>📱 Телефон *</label><input type="tel" id="regPhone" value="+7" autocomplete="off" placeholder="+79161234567"></div>
-              <div class="field-group"><label>🔒 Пароль *</label><input type="password" id="regPass" autocomplete="off" placeholder="Минимум 6 символов"></div>
+              <div class="field-group"><label>Имя *</label><input id="regName"></div>
+              <div class="field-group"><label>Почта *</label><input type="email" id="regEmail"></div>
+              <div class="field-group"><label>Телефон *</label><input type="tel" id="regPhone" value="+7"></div>
+              <div class="field-group"><label>Пароль *</label><input type="password" id="regPass"></div>
             </div>
-            <button class="btn btn-primary" id="registerBtn">✅ Зарегистрироваться</button>
-            <p class="link-text"><a href="#" id="backToLogin">← Назад ко входу</a></p>`;
+            <button class="btn btn-primary" id="registerBtn">Зарегистрироваться</button>
+            <p class="link-text"><a href="#" id="backToLogin">Назад</a></p>`;
             document.getElementById('registerBtn').addEventListener('click', () => {
-              const n = document.getElementById('regName').value.trim(), em = document.getElementById('regEmail').value.trim(), ph = document.getElementById('regPhone').value.trim(), pw = document.getElementById('regPass').value.trim();
-              if (!n || !em || !ph || !pw) return showToast('Заполните все обязательные поля');
-              if (!/^\+7\d{10}$/.test(ph.replace(/[\s()-]/g, ''))) return showToast('Телефон должен быть в формате +7XXXXXXXXXX');
-              if (pw.length < 6) return showToast('Пароль должен быть не менее 6 символов');
-              let u = users(); if (u.find(x => x.email === em)) return showToast('Почта уже зарегистрирована');
+              const n = document.getElementById('regName').value.trim(),
+                em = document.getElementById('regEmail').value.trim(),
+                ph = document.getElementById('regPhone').value.trim(),
+                pw = document.getElementById('regPass').value.trim();
+              if (!n || !em || !ph || !pw) return showToast('Заполните все поля');
+              let u = users();
+              if (u.find(x => x.email === em)) return showToast('Почта занята');
               u.push({ id: Date.now().toString(), name: n, email: em, phone: ph, password: pw });
-              store('tumix_users', u); showToast('Регистрация успешна! Теперь войдите.'); renderAuth();
+              store('tumix_users', u);
+              showToast('Регистрация успешна!');
+              renderAuth();
             });
-            document.getElementById('backToLogin').addEventListener('click', (ev) => { ev.preventDefault(); renderAuth(); });
+            document.getElementById('backToLogin').addEventListener('click', (ev) => { ev.preventDefault();
+              renderAuth(); });
           });
         } else {
           authForms.innerHTML = `
           <h2>Вход для сотрудников</h2>
           <div class="input-column">
-            <div class="field-group"><label>🪪 Табельный номер</label><input id="empTab" placeholder="TUM-0001" autocomplete="off"></div>
-            <div class="field-group"><label>🔒 Пароль</label><input type="password" id="empPass" autocomplete="off" placeholder="••••••••"></div>
+            <div class="field-group"><label>Табельный номер</label><input id="empTab" placeholder="TUM-0001"></div>
+            <div class="field-group"><label>Пароль</label><input type="password" id="empPass"></div>
           </div>
-          <button class="btn btn-primary" id="loginEmpBtn">🔐 Войти как сотрудник</button>`;
+          <button class="btn btn-primary" id="loginEmpBtn">Войти</button>`;
           document.getElementById('loginEmpBtn').addEventListener('click', () => {
-            const tab = document.getElementById('empTab').value.trim(), pass = document.getElementById('empPass').value.trim();
+            const tab = document.getElementById('empTab').value.trim(),
+              pass = document.getElementById('empPass').value.trim();
             if (tab === TEST_EMP.tab && pass === TEST_EMP.password) currentEmployee = { ...TEST_EMP };
             else if (tab === ADMIN_EMP.tab && pass === ADMIN_EMP.password) currentEmployee = { ...ADMIN_EMP };
-            else return showToast('Неверный табельный номер или пароль');
-            updateUI(); renderEmployeeView('empChat'); showToast('Добро пожаловать, ' + currentEmployee.name + '!');
+            else return showToast('Неверные данные');
+            updateUI();
+            renderEmployeeView('empChat');
           });
         }
       }
 
       document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(b => b.addEventListener('click', () => {
-        document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(x => x.classList.remove('active'));
-        b.classList.add('active'); renderClientView(b.dataset.view);
+        document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(x => x.classList.remove(
+          'active'));
+        b.classList.add('active');
+        if (b.dataset.view === 'rules') showRulesModal();
+        else renderClientView(b.dataset.view);
       }));
 
-      let deliveryMap = null, routingControl = null;
+      document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(b => b.addEventListener('click', () => {
+        document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(x => x.classList.remove(
+          'active'));
+        b.classList.add('active');
+        if (b.dataset.view === 'empRules') showRulesModal();
+        else renderEmployeeView(b.dataset.view);
+      }));
+
+      let deliveryMap = null,
+        routingControl = null;
 
       function initDeliveryMap() {
         setTimeout(() => {
           const mapEl = document.getElementById('map');
           if (!mapEl || deliveryMap) return;
           deliveryMap = L.map('map').setView([55.7558, 37.6173], 10);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(deliveryMap);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' })
+            .addTo(deliveryMap);
           deliveryMap.invalidateSize();
-        }, 700);
+        }, 600);
       }
 
       async function geocodeAddress(address) {
         try {
-          const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1&accept-language=ru`);
+          const resp = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1&accept-language=ru`
+            );
           const data = await resp.json();
-          if (data && data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0].display_name };
+          if (data && data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon),
+            display: data[0].display_name };
           return null;
         } catch (e) { return null; }
       }
 
       function deliveryForm() {
         return `<div class="card"><h3>📦 Оформление доставки</h3><div class="input-column">
-        <div class="field-group"><label>👤 ФИО отправителя *</label><input id="sName" autocomplete="off" placeholder="Иванов Иван Иванович"></div>
-        <div class="field-group"><label>📱 Телефон отправителя *</label><input id="sPhone" value="+7" autocomplete="off" placeholder="+79161234567"></div>
-        <div class="field-group"><label>📍 Адрес отправки *</label><input id="sAddr" placeholder="Москва, ул. Тверская, 1 или Балашиха, ул. Ленина, 5" autocomplete="off"></div>
-        <div class="field-group"><label>👤 ФИО получателя *</label><input id="rName" autocomplete="off" placeholder="Петров Петр Петрович"></div>
-        <div class="field-group"><label>📱 Телефон получателя *</label><input id="rPhone" value="+7" autocomplete="off" placeholder="+79169876543"></div>
-        <div class="field-group"><label>📍 Адрес получателя *</label><input id="rAddr" placeholder="Москва, ул. Арбат, 10 или Химки, ул. Победы, 3" autocomplete="off"></div>
-        <div class="field-group"><label>📦 Содержимое отправления *</label><input id="contentDesc" autocomplete="off" placeholder="Документы, подарок и т.д."></div>
+        <div class="field-group"><label>👤 ФИО отправителя *</label><input id="sName" autocomplete="off"></div>
+        <div class="field-group"><label>📱 Телефон отправителя *</label><input id="sPhone" value="+7" autocomplete="off"></div>
+        <div class="field-group"><label>📍 Адрес отправки *</label><input id="sAddr" placeholder="Москва, ул. Тверская, 1" autocomplete="off"></div>
+        <div class="field-group"><label>👤 ФИО получателя *</label><input id="rName" autocomplete="off"></div>
+        <div class="field-group"><label>📱 Телефон получателя *</label><input id="rPhone" value="+7" autocomplete="off"></div>
+        <div class="field-group"><label>📍 Адрес получателя *</label><input id="rAddr" placeholder="Москва, ул. Арбат, 10" autocomplete="off"></div>
+        <div class="field-group"><label>📦 Содержимое *</label><input id="contentDesc" autocomplete="off"></div>
         <div class="checkbox-group" id="packCheckboxes">
-          <label class="checkbox-pill"><input type="checkbox" value="Пакет" hidden> 🛍️ Пакет (60₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Конверт" hidden> ✉️ Конверт (90₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка S" hidden> 📦 Коробка S (120₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка M" hidden> 📦 Коробка M (220₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка L" hidden> 📦 Коробка L (280₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка XL" hidden> 📦 Коробка XL (350₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Пакет" hidden> Пакет (60₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Конверт" hidden> Конверт (90₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка S" hidden> Коробка S (120₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка M" hidden> Коробка M (220₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка L" hidden> Коробка L (280₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка XL" hidden> Коробка XL (350₽)</label>
         </div>
         <div id="map"></div>
         <button class="btn btn-primary" id="calcDelivery">🧮 Рассчитать маршрут и стоимость</button>
@@ -930,150 +936,98 @@
       document.addEventListener('click', e => {
         if (e.target.id === 'calcDelivery') {
           const packs = [...document.querySelectorAll('#packCheckboxes input:checked')].map(c => c.value);
-          if (!packs.length) return showToast('Выберите хотя бы один тип упаковки');
-          const sAddr = document.getElementById('sAddr').value.trim(), rAddr = document.getElementById('rAddr').value.trim();
-          if (!sAddr || !rAddr) return showToast('Заполните адреса отправки и получения');
-          document.getElementById('priceDetails').innerHTML = '<p style="text-align:center;padding:24px;">🔄 Строим автомобильный маршрут и рассчитываем расстояние...</p>';
+          if (!packs.length) return showToast('Выберите упаковку');
+          const sAddr = document.getElementById('sAddr').value.trim(),
+            rAddr = document.getElementById('rAddr').value.trim();
+          if (!sAddr || !rAddr) return showToast('Заполните адреса');
+          document.getElementById('priceDetails').innerHTML =
+            '<p>🔄 Строим автомобильный маршрут...</p>';
           Promise.all([geocodeAddress(sAddr), geocodeAddress(rAddr)]).then(([from, to]) => {
-            if (!from || !to) {
-              document.getElementById('priceDetails').innerHTML = '<p style="color:#ff7043;text-align:center;">❌ Адрес не найден. Попробуйте: Город, улица, дом (например: Москва, Тверская, 1)</p>';
-              return;
-            }
+            if (!from || !to) { document.getElementById('priceDetails').innerHTML =
+                '<p style="color:#ff7043;">❌ Адрес не найден</p>'; return; }
             if (deliveryMap) {
               if (routingControl) deliveryMap.removeControl(routingControl);
               routingControl = L.Routing.control({
                 waypoints: [L.latLng(from.lat, from.lng), L.latLng(to.lat, to.lng)],
-                routeWhileDragging: false, showAlternatives: false,
-                lineOptions: { styles: [{ color: '#F15A2C', weight: 7, opacity: 0.9 }] },
-                createMarker: function(i, wp) { return L.marker(wp.latLng).bindPopup(i === 0 ? '📍 Отправитель' : '📍 Получатель'); }
+                routeWhileDragging: false,
+                showAlternatives: false,
+                lineOptions: { styles: [{ color: '#F15A2C', weight: 6 }] }
               }).addTo(deliveryMap);
               routingControl.on('routesfound', function(ev) {
-                const route = ev.routes[0];
-                const dist = Math.round(route.summary.totalDistance / 1000);
-                const pr = { Пакет: 60, Конверт: 90, 'Коробка S': 120, 'Коробка M': 220, 'Коробка L': 280, 'Коробка XL': 350 };
-                let pc = packs.reduce((s, p) => s + pr[p], 0), km = dist * 22, serv = 29, total = pc + km + serv;
-                document.getElementById('priceDetails').innerHTML = `
-            <div class="card" style="margin-top:24px; animation: fadeInUp 0.6s ease;">
-              <div class="detail-row"><span>📦 Упаковка:</span><span>${pc} ₽</span></div>
-              <div class="detail-row"><span>🛣️ Расстояние (по дороге):</span><span>${dist} км × 22 ₽ = ${km} ₽</span></div>
-              <div class="detail-row"><span>🔧 Сервисный сбор:</span><span>29 ₽</span></div>
-              <div class="detail-row" style="font-size:1.3em;font-weight:700;margin-top:12px;"><span>💰 Итого к оплате:</span><span>${total} ₽</span></div>
-              <button class="btn btn-primary" id="confirmOrder" style="margin-top:18px;">✅ Оформить доставку</button>
-            </div>`;
+                const dist = Math.round(ev.routes[0].summary.totalDistance / 1000);
+                const pr = { Пакет: 60, Конверт: 90, 'Коробка S': 120, 'Коробка M': 220, 'Коробка L': 280,
+                  'Коробка XL': 350 };
+                let pc = packs.reduce((s, p) => s + pr[p], 0),
+                  km = dist * 22,
+                  serv = 29,
+                  total = pc + km + serv;
+                document.getElementById('priceDetails').innerHTML =
+                  `<div class="card"><div class="detail-row"><span>📦 Упаковка:</span><span>${pc} ₽</span></div><div class="detail-row"><span>🛣️ По дороге:</span><span>${dist} км × 22₽ = ${km} ₽</span></div><div class="detail-row"><span>🔧 Сервис:</span><span>29 ₽</span></div><h3>💰 Итого: ${total} ₽</h3><button class="btn btn-primary" id="confirmOrder">Оформить</button></div>`;
               });
             }
           });
         }
         if (e.target.id === 'confirmOrder') {
-          const ords = orders(); const newId = String(ords.length + 1).padStart(8, '0');
-          const order = {
-            id: newId, clientId: currentClient.id,
-            sender: document.getElementById('sName').value, sPhone: document.getElementById('sPhone').value,
-            sAddr: document.getElementById('sAddr').value, recName: document.getElementById('rName').value,
-            rPhone: document.getElementById('rPhone').value, rAddr: document.getElementById('rAddr').value,
-            content: document.getElementById('contentDesc').value,
-            packs: [...document.querySelectorAll('#packCheckboxes input:checked')].map(c => c.value),
-            status: 'Оформлен', date: new Date().toLocaleString('ru-RU')
-          };
-          store('tumix_orders', [...ords, order]);
-          showToast('Доставка оформлена! Номер заказа: ' + newId);
+          const ords = orders();
+          const newId = String(ords.length + 1).padStart(8, '0');
+          store('tumix_orders', [...ords, { id: newId, clientId: currentClient.id, sender: document.getElementById(
+              'sName').value, sPhone: document.getElementById('sPhone').value, sAddr: document.getElementById(
+              'sAddr').value, recName: document.getElementById('rName').value, rPhone: document.getElementById(
+              'rPhone').value, rAddr: document.getElementById('rAddr').value, content: document.getElementById(
+              'contentDesc').value, packs: [...document.querySelectorAll('#packCheckboxes input:checked')].map(c =>
+              c.value), status: 'Оформлен', date: new Date().toLocaleString('ru-RU') }]);
+          showToast('Заказ #' + newId + ' оформлен!');
           document.querySelector('#clientDashboard .sidebar-btn[data-view="orders"]').click();
         }
-        if (e.target.closest('.checkbox-pill')) {
-          const pill = e.target.closest('.checkbox-pill'), cb = pill.querySelector('input');
-          cb.checked = !cb.checked; pill.classList.toggle('checked', cb.checked);
-        }
+        if (e.target.closest('.checkbox-pill')) { const pill = e.target.closest('.checkbox-pill'),
+            cb = pill.querySelector('input');
+          cb.checked = !cb.checked;
+          pill.classList.toggle('checked', cb.checked); }
       });
 
       function clientOrders() {
-        const ords = orders().filter(o => o.clientId === currentClient?.id);
-        return `<h3>📑 Мои заказы (${ords.length})</h3>` + ords.map(o => `
-        <div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
-          <b>🚚 Заказ #${o.id}</b> — ${o.status}
-          <div class="details hidden" style="margin-top:16px;">
-            <div class="detail-row"><span>👤 Отправитель:</span><span>${o.sender}</span></div>
-            <div class="detail-row"><span>📱 Телефон отпр.:</span><span>${o.sPhone}</span></div>
-            <div class="detail-row"><span>📍 Адрес отпр.:</span><span>${o.sAddr}</span></div>
-            <div class="detail-row"><span>👤 Получатель:</span><span>${o.recName}</span></div>
-            <div class="detail-row"><span>📱 Телефон получ.:</span><span>${o.rPhone}</span></div>
-            <div class="detail-row"><span>📍 Адрес получ.:</span><span>${o.rAddr}</span></div>
-            <div class="detail-row"><span>📦 Содержимое:</span><span>${o.content}</span></div>
-            <div class="detail-row"><span>📋 Упаковка:</span><span>${o.packs?.join(', ')}</span></div>
-            <div class="detail-row"><span>📅 Дата:</span><span>${o.date}</span></div>
-          </div>
-        </div>`).join('') || '<p style="text-align:center;padding:40px;">У вас пока нет заказов</p>';
+        return `<h3>📑 Мои заказы</h3>` + orders().filter(o => o.clientId === currentClient?.id).map(o =>
+          `<div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')"><b>#${o.id}</b> — ${o.status}<div class="details hidden">${['sender','sPhone','sAddr','recName','rPhone','rAddr','content'].map(k=>`<div class="detail-row"><span>${k}:</span><span>${o[k]}</span></div>`).join('')}</div></div>`
+          ).join('') || '<p>Нет заказов</p>';
       }
 
       function clientAppeals() {
-        const apps = appeals().filter(a => a.clientEmail === currentClient?.email);
-        return `<h3>📋 Мои обращения (${apps.length})</h3>` + apps.map(a => `
-        <div class="appeal-item" onclick="event.stopPropagation(); this.querySelector('.details').classList.toggle('hidden')">
-          <b>🎫 Обращение #${a.id}</b> — ${a.status || 'Открыто'}
-          <div class="details hidden" style="margin-top:16px;">
-            <div class="detail-row"><span>👤 Сотрудник:</span><span>${a.empName}</span></div>
-            <div class="detail-row"><span>📝 Проблема:</span><span>${a.problem}</span></div>
-            ${a.replies ? a.replies.map(r => `<div class="admin-reply">🔴 <b>Ответ руководителя поддержки TUMIX:</b><br>${r}</div>`).join('') : ''}
-          </div>
-        </div>`).join('') || '<p style="text-align:center;padding:40px;">Обращений нет</p>';
+        return `<h3>📋 Мои обращения</h3>` + appeals().filter(a => a.clientEmail === currentClient?.email).map(a =>
+          `<div class="appeal-item" onclick="event.stopPropagation(); this.querySelector('.details').classList.toggle('hidden')"><b>#${a.id}</b> — ${a.status||'Открыто'}<div class="details hidden"><div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>${a.replies ? a.replies.map(r => `<div class="admin-reply">🔴 Ответ руководителя поддержки TUMIX:<br>${r}</div>`).join('') : ''}</div></div>`
+          ).join('') || '<p>Нет обращений</p>';
       }
-
-      let supportSessionAnswered = false;
 
       function supportChat() {
         const msgs = supportChats();
-        return `<div class="card"><h3>💬 Чат с поддержкой TUMIX</h3>
-        <div class="chat-messages" id="chatMsgs">${msgs.length ? msgs.map(m => `<div class="chat-msg ${m.from === 'client' ? 'mine' : 'other'}">${m.text}</div>`).join('') : '<div class="chat-msg other">👋 Здравствуйте! Это поддержка TUMIX. Какой у вас вопрос?</div>'}</div>
-        <div style="display:flex;gap:14px;">
-          <input id="chatInput" style="flex:1;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.14);border-radius:18px;padding:16px;color:white;font-size:16px;" placeholder="Введите ваше сообщение...">
-          <button class="btn btn-primary" id="sendChat" style="width:auto;margin-top:0;">📤 Отправить</button>
-        </div></div>`;
+        return `<div class="card"><h3>💬 Поддержка</h3><div class="chat-messages" id="chatMsgs">${msgs.length ? msgs.map(m => `<div class="chat-msg ${m.from === 'client' ? 'mine' : 'other'}">${m.text}</div>`).join('') : '<div class="chat-msg other">Здравствуйте! Это поддержка TUMIX.</div>'}</div><div style="display:flex;gap:10px;"><input id="chatInput" style="flex:1;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.14);border-radius:14px;padding:12px;color:white;"><button class="btn btn-primary" id="sendChat" style="width:auto;">📤</button></div></div>`;
       }
 
       function renderClientView(view) {
         const a = document.getElementById('clientContent');
-        if (view === 'delivery') { a.innerHTML = deliveryForm(); initDeliveryMap(); }
-        else if (view === 'appeals') a.innerHTML = clientAppeals();
+        if (view === 'delivery') { a.innerHTML = deliveryForm();
+          initDeliveryMap(); } else if (view === 'appeals') a.innerHTML = clientAppeals();
         else if (view === 'orders') a.innerHTML = clientOrders();
         else if (view === 'support') a.innerHTML = supportChat();
       }
 
-      document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(b => b.addEventListener('click', () => {
-        document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(x => x.classList.remove('active'));
-        b.classList.add('active'); renderEmployeeView(b.dataset.view);
-      }));
-
       function renderEmployeeView(view) {
         const a = document.getElementById('employeeContent');
-        if (view === 'empChat') a.innerHTML = '<div class="card"><h3>💬 Чаты с клиентами</h3><p style="text-align:center;padding:40px;">Список активных чатов появится после подключения базы данных.</p></div>';
+        if (view === 'empChat') a.innerHTML =
+          '<div class="card"><h3>💬 Чаты с клиентами</h3><p>Список чатов появится после подключения базы данных.</p></div>';
         else if (view === 'empAppeals') a.innerHTML = empAppealsPanel();
         else if (view === 'allOrders') a.innerHTML = allOrdersView();
         else if (view === 'colleagueChat') a.innerHTML = colleagueChatPanel();
       }
 
       function allOrdersView() {
-        const allOrds = orders();
-        return `<h3>📦 Все заказы (${allOrds.length})</h3>` + allOrds.map(o => `
-        <div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
-          <b>🚚 Заказ #${o.id}</b> — ${o.status}
-          <div class="details hidden" style="margin-top:16px;">
-            <div class="detail-row"><span>👤 Отправитель:</span><span>${o.sender} (${o.sPhone})</span></div>
-            <div class="detail-row"><span>📍 Адрес отпр.:</span><span>${o.sAddr}</span></div>
-            <div class="detail-row"><span>👤 Получатель:</span><span>${o.recName} (${o.rPhone})</span></div>
-            <div class="detail-row"><span>📍 Адрес получ.:</span><span>${o.rAddr}</span></div>
-            <div class="detail-row"><span>📦 Содержимое:</span><span>${o.content}</span></div>
-            <div class="detail-row"><span>📋 Упаковка:</span><span>${o.packs?.join(', ')}</span></div>
-            <div class="detail-row"><span>📅 Дата:</span><span>${o.date}</span></div>
-            <button class="btn btn-outline edit-order-btn" data-id="${o.id}" style="margin-top:12px;">✏️ Изменить статус</button>
-            <button class="btn btn-danger cancel-order-btn" data-id="${o.id}" style="margin-top:8px;">🚫 Отменить заказ</button>
-          </div>
-        </div>`).join('') || '<p style="text-align:center;padding:40px;">Заказов пока нет</p>';
+        return `<h3>📦 Все заказы</h3>` + orders().map(o => `<div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')"><b>#${o.id}</b> — ${o.status}<div class="details hidden">${['sender','recName','status'].map(k=>`<div class="detail-row"><span>${k}:</span><span>${o[k]}</span></div>`).join('')}<button class="btn btn-outline edit-order-btn" data-id="${o.id}">✏️ Статус</button><button class="btn btn-danger cancel-order-btn" data-id="${o.id}">🚫 Отменить</button></div></div>`).join('');
       }
 
       function empAppealsPanel() {
         setTimeout(() => { const tab = document.getElementById('tabClientAppeals'); if (tab) tab.click(); }, 60);
         return `<div class="tabs-inner">
-        <button class="tab-inner active" id="tabClientAppeals">👥 Обращения клиентов</button>
-        <button class="tab-inner" id="tabEmpAppeals">👔 Обращения сотрудников</button>
+        <button class="tab-inner active" id="tabClientAppeals">👥 Клиенты</button>
+        <button class="tab-inner" id="tabEmpAppeals">👔 Сотрудники</button>
         <button class="tab-inner" id="tabResolvedClient">✅ Решенные клиентские</button>
         <button class="tab-inner" id="tabResolvedEmp">✅ Решенные сотрудников</button>
         <button class="tab-inner" id="tabCreateClient">➕ Создать клиенту</button>
@@ -1083,12 +1037,7 @@
 
       function colleagueChatPanel() {
         const msgs = colleagueChats();
-        return `<div class="card"><h3>👥 Чат коллег TUMIX</h3>
-        <div class="chat-messages" id="colleagueMessages">${msgs.map(m => `<div class="chat-msg ${m.from === currentEmployee?.name ? 'mine' : 'other'}"><strong>${m.from}:</strong> ${m.text}<div style="font-size:10px;opacity:0.6;margin-top:4px;">${m.time || ''}</div></div>`).join('')}</div>
-        <div style="display:flex;gap:14px;">
-          <input id="colleagueInput" style="flex:1;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.14);border-radius:18px;padding:16px;color:white;" placeholder="Введите сообщение для коллег...">
-          <button class="btn btn-primary" id="sendColleague" style="width:auto;margin-top:0;">📤 Отправить</button>
-        </div></div>`;
+        return `<div class="card"><h3>👥 Чат коллег</h3><div class="chat-messages" id="colleagueMessages">${msgs.map(m => `<div class="chat-msg ${m.from === currentEmployee?.name ? 'mine' : 'other'}"><b>${m.from}:</b> ${m.text}</div>`).join('')}</div><div style="display:flex;gap:10px;"><input id="colleagueInput" style="flex:1;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.14);border-radius:14px;padding:12px;color:white;"><button class="btn btn-primary" id="sendColleague" style="width:auto;">📤</button></div></div>`;
       }
 
       document.addEventListener('click', e => {
@@ -1097,163 +1046,53 @@
           e.target.classList.add('active');
           const sub = document.getElementById('appealsSubContent');
           if (e.target.id === 'tabClientAppeals') sub.innerHTML = appeals().map(a => `
-          <div class="appeal-item"><b>🎫 #${a.id}</b> — ${a.status||'Открыто'}<div class="details" style="margin-top:16px;">
-            <div class="detail-row"><span>👤 Сотрудник:</span><span>${a.empName} (${a.empTab})</span></div>
-            <div class="detail-row"><span>👤 Клиент:</span><span>${a.clientName}</span></div>
-            <div class="detail-row"><span>📝 Проблема:</span><span>${a.problem}</span></div>
-            ${a.replies ? a.replies.map(r => `<div class="reply-block">🔴 <b>Ответ руководителя поддержки TUMIX:</b><br>${r}</div>`).join('') : ''}
-            ${currentEmployee?.role==='admin' ? `<textarea id="replyText_${a.id}" placeholder="Ответ руководителя..." style="width:100%;margin-top:12px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.18);border-radius:16px;padding:14px;color:white;min-height:80px;"></textarea>
-            <button class="btn btn-primary reply-btn" data-id="${a.id}" style="margin-top:8px;">📩 Ответить</button>
-            <button class="btn btn-outline close-btn" data-id="${a.id}" style="margin-top:6px;">✅ Закрыть</button>
-            <button class="btn btn-danger delete-btn" data-id="${a.id}" style="margin-top:6px;">🗑️ Удалить</button>` : ''}
-          </div></div>`).join('')||'<p style="text-align:center;padding:40px;">Обращений клиентов нет</p>';
+          <div class="appeal-item"><b>#${a.id}</b> — ${a.status||'Открыто'}<div class="details" style="margin-top:12px;">
+          <div class="detail-row"><span>Сотрудник:</span><span>${a.empName}</span></div>
+          <div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>
+          ${a.replies ? a.replies.map(r => `<div class="reply-block">🔴 Ответ руководителя поддержки TUMIX:<br>${r}</div>`).join('') : ''}
+          ${currentEmployee?.role==='admin' ? `<textarea id="replyText_${a.id}" placeholder="Ответ..." style="width:100%;margin-top:8px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.18);border-radius:14px;padding:10px;color:white;"></textarea>
+          <button class="btn btn-primary reply-btn" data-id="${a.id}">📩 Ответить</button>
+          <button class="btn btn-outline close-btn" data-id="${a.id}">✅ Закрыть</button>
+          <button class="btn btn-danger delete-btn" data-id="${a.id}">🗑️ Удалить</button>
+          <select id="statusSelect_${a.id}" style="width:100%;margin-top:6px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.18);border-radius:14px;padding:8px;color:white;">
+            <option>Открыт</option><option>В работе</option><option>На проверке информации</option>
+          </select>
+          <button class="btn btn-outline change-status-btn" data-id="${a.id}" style="margin-top:4px;">🔄 Сменить статус</button>` : ''}
+          </div></div>`).join('')||'<p>Нет обращений</p>';
           if (e.target.id === 'tabEmpAppeals') sub.innerHTML = empAppeals().filter(a=>a.empTab===currentEmployee?.tab||currentEmployee?.role==='admin').map(a=>`
-          <div class="appeal-item"><b>👔 ${a.empName}</b> → Руководителю поддержки TUMIX<div class="details" style="margin-top:16px;">
-            <div class="detail-row"><span>🪪 Табельный:</span><span>${a.empTab}</span></div>
-            <div class="detail-row"><span>📝 Текст:</span><span style="white-space:pre-wrap;">${a.text}</span></div>
-            ${a.replies ? a.replies.map(r => `<div class="reply-block">🔴 <b>Ответ руководителя поддержки TUMIX:</b><br>${r}</div>`).join('') : ''}
-            ${currentEmployee?.role==='admin' ? `<textarea id="empReplyText_${a.empName}" placeholder="Ответ..." style="width:100%;margin-top:12px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.18);border-radius:16px;padding:14px;color:white;min-height:80px;"></textarea>
-            <button class="btn btn-primary emp-reply-btn" data-emp="${a.empName}" style="margin-top:8px;">📩 Ответить</button>
-            <button class="btn btn-outline close-emp-btn" data-emp="${a.empName}" style="margin-top:6px;">✅ Закрыть</button>` : ''}
-          </div></div>`).join('')||'<p style="text-align:center;padding:40px;">Обращений сотрудников нет</p>';
-          if (e.target.id === 'tabCreateClient') sub.innerHTML = `<div class="form-card"><h3>➕ Новое обращение клиента</h3><div class="input-column"><div class="field-group"><label>👤 ФИО сотрудника *</label><input id="eName"></div><div class="field-group"><label>🪪 Табельный номер *</label><input id="eTab" placeholder="TUM-0001"></div><div class="field-group"><label>👤 ФИО клиента *</label><input id="cName"></div><div class="field-group"><label>📧 Почта *</label><input id="cEmail"></div><div class="field-group"><label>📱 Телефон *</label><input id="cPhone" value="+7"></div><div class="field-group"><label>📝 Проблема *</label><textarea id="cProblem"></textarea></div><button class="btn btn-primary" id="submitClientAppeal">Оформить</button></div></div>`;
-          if (e.target.id === 'tabCreateEmp') sub.innerHTML = `<div class="form-card"><h3>📝 Обращение сотрудника</h3><div class="input-column"><div class="field-group"><label>👤 ФИО сотрудника *</label><input id="eName2"></div><div class="field-group"><label>🪪 Табельный номер *</label><input id="eTab2" placeholder="TUM-0001"></div><div class="field-group"><label>📌 Кому</label><input disabled value="Руководителю поддержки TUMIX"></div><div class="field-group"><label>📝 Текст обращения</label><textarea id="eText" placeholder="Введите текст обращения..."></textarea></div><button class="btn btn-primary" id="submitEmpAppeal">✅ Оформить обращение</button></div></div>`;
-          if (e.target.id === 'tabResolvedClient') sub.innerHTML = resolvedAppeals().map(a=>`<div class="appeal-item"><b>✅ #${a.id}</b><div class="details" style="margin-top:16px;">${a.replies? a.replies.map(r=>`<div class="reply-block">🔴 ${r}</div>`).join('') : ''}${currentEmployee?.role==='admin'? `<button class="btn btn-danger delete-resolved-btn" data-id="${a.id}" style="margin-top:8px;">🗑️ Удалить</button>` : ''}</div></div>`).join('')||'<p>Нет решенных</p>';
-          if (e.target.id === 'tabResolvedEmp') sub.innerHTML = resolvedEmpAppeals().map(a=>`<div class="appeal-item"><b>✅ ${a.empName}</b><div class="details" style="margin-top:16px;">${a.replies? a.replies.map(r=>`<div class="reply-block">🔴 ${r}</div>`).join('') : ''}${currentEmployee?.role==='admin'? `<button class="btn btn-danger delete-resolved-emp-btn" data-emp="${a.empName}" style="margin-top:8px;">🗑️ Удалить</button>` : ''}</div></div>`).join('')||'<p>Нет решенных</p>';
+          <div class="appeal-item"><b>👔 ${a.empName}</b> → Руководителю поддержки TUMIX<div class="details" style="margin-top:12px;">
+          <div class="detail-row"><span>Табельный:</span><span>${a.empTab}</span></div>
+          <div class="detail-row"><span>Текст:</span><span>${a.text}</span></div>
+          ${a.replies ? a.replies.map(r => `<div class="reply-block">🔴 Ответ руководителя поддержки TUMIX:<br>${r}</div>`).join('') : ''}
+          ${currentEmployee?.role==='admin' ? `<textarea id="empReplyText_${a.empName}" placeholder="Ответ..." style="width:100%;margin-top:8px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.18);border-radius:14px;padding:10px;color:white;"></textarea>
+          <button class="btn btn-primary emp-reply-btn" data-emp="${a.empName}">📩 Ответить</button>
+          <button class="btn btn-outline close-emp-btn" data-emp="${a.empName}">✅ Закрыть</button>
+          <select id="empStatusSelect_${a.empName}" style="width:100%;margin-top:6px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.18);border-radius:14px;padding:8px;color:white;">
+            <option>Открыт</option><option>В работе</option><option>На проверке информации</option>
+          </select>
+          <button class="btn btn-outline emp-change-status-btn" data-emp="${a.empName}" style="margin-top:4px;">🔄 Сменить статус</button>` : ''}
+          </div></div>`).join('')||'<p>Нет обращений</p>';
         }
-        if (e.target.classList.contains('reply-btn')) {
-          e.stopPropagation();
+        if (e.target.classList.contains('change-status-btn')) {
           const id = e.target.dataset.id;
-          const text = document.getElementById('replyText_' + id).value.trim();
-          if (!text) return showToast('Введите текст ответа');
-          const upd = appeals().map(a => a.id === id ? { ...a, replies: [...(a.replies||[]), text] } : a);
+          const newStatus = document.getElementById('statusSelect_' + id).value;
+          const upd = appeals().map(a => a.id === id ? { ...a, status: newStatus } : a);
           store('tumix_appeals', upd);
-          showToast('Ответ руководителя добавлен');
+          showToast('Статус изменён на ' + newStatus);
           document.getElementById('tabClientAppeals').click();
         }
-        if (e.target.classList.contains('emp-reply-btn')) {
-          e.stopPropagation();
+        if (e.target.classList.contains('emp-change-status-btn')) {
           const emp = e.target.dataset.emp;
-          const text = document.getElementById('empReplyText_' + emp).value.trim();
-          if (!text) return showToast('Введите текст ответа');
-          const upd = empAppeals().map(a => a.empName === emp ? { ...a, replies: [...(a.replies||[]), text] } : a);
+          const newStatus = document.getElementById('empStatusSelect_' + emp).value;
+          const upd = empAppeals().map(a => a.empName === emp ? { ...a, status: newStatus } : a);
           store('tumix_emp_appeals', upd);
-          showToast('Ответ отправлен сотруднику');
-          document.getElementById('tabEmpAppeals').click();
-        }
-        if (e.target.classList.contains('close-btn')) {
-          e.stopPropagation();
-          const id = e.target.dataset.id;
-          const app = appeals().find(a => a.id === id);
-          if (!app) return;
-          store('tumix_resolved_appeals', [...resolvedAppeals(), { ...app, status: 'Закрыто' }]);
-          store('tumix_appeals', appeals().filter(a => a.id !== id));
-          showToast('Обращение закрыто');
-          document.getElementById('tabClientAppeals').click();
-        }
-        if (e.target.classList.contains('close-emp-btn')) {
-          e.stopPropagation();
-          const emp = e.target.dataset.emp;
-          const app = empAppeals().find(a => a.empName === emp);
-          if (!app) return;
-          store('tumix_resolved_emp_appeals', [...resolvedEmpAppeals(), { ...app, status: 'Закрыто' }]);
-          store('tumix_emp_appeals', empAppeals().filter(a => a.empName !== emp));
-          showToast('Обращение сотрудника закрыто');
-          document.getElementById('tabEmpAppeals').click();
-        }
-        if (e.target.classList.contains('delete-btn')) {
-          e.stopPropagation();
-          const id = e.target.dataset.id;
-          showModal('Удаление обращения', '<p>Удалить обращение #' + id + '?</p>', () => {
-            store('tumix_appeals', appeals().filter(a => a.id !== id));
-            showToast('Обращение удалено');
-            document.getElementById('tabClientAppeals').click();
-          });
-        }
-        if (e.target.classList.contains('delete-resolved-btn')) {
-          e.stopPropagation();
-          const id = e.target.dataset.id;
-          showModal('Удаление решенного', '<p>Удалить решенное обращение #' + id + ' навсегда?</p>', () => {
-            store('tumix_resolved_appeals', resolvedAppeals().filter(a => a.id !== id));
-            showToast('Решенное удалено');
-            document.getElementById('tabResolvedClient').click();
-          });
-        }
-        if (e.target.classList.contains('delete-resolved-emp-btn')) {
-          e.stopPropagation();
-          const emp = e.target.dataset.emp;
-          showModal('Удаление', '<p>Удалить решенное обращение сотрудника ' + emp + '?</p>', () => {
-            store('tumix_resolved_emp_appeals', resolvedEmpAppeals().filter(a => a.empName !== emp));
-            showToast('Удалено');
-            document.getElementById('tabResolvedEmp').click();
-          });
-        }
-        if (e.target.classList.contains('edit-order-btn')) {
-          e.stopPropagation();
-          const id = e.target.dataset.id;
-          showModal('Изменение статуса заказа #' + id, `
-          <select id="statusSelect" style="font-size:16px; padding:14px;">
-            <option style="background:#1a1a2e; color:white;">Оформлен</option>
-            <option style="background:#1a1a2e; color:white;">В пути</option>
-            <option style="background:#1a1a2e; color:white;">Доставлен</option>
-            <option style="background:#1a1a2e; color:white;">Отменён</option>
-          </select>`, (status) => {
-            store('tumix_orders', orders().map(o => o.id === id ? { ...o, status } : o));
-            showToast('Статус обновлён');
-            renderEmployeeView('allOrders');
-          });
-        }
-        if (e.target.classList.contains('cancel-order-btn')) {
-          e.stopPropagation();
-          const id = e.target.dataset.id;
-          showModal('Отмена заказа #' + id, '<p>Вы уверены, что хотите отменить заказ?</p>', () => {
-            store('tumix_orders', orders().map(o => o.id === id ? { ...o, status: 'Отменён' } : o));
-            showToast('Заказ отменён');
-            renderEmployeeView('allOrders');
-          });
-        }
-        if (e.target.id === 'submitClientAppeal') {
-          const app = {
-            id: String(appeals().length + 1).padStart(7, '0'),
-            empName: document.getElementById('eName').value,
-            empTab: document.getElementById('eTab').value,
-            clientName: document.getElementById('cName').value,
-            clientEmail: document.getElementById('cEmail').value,
-            clientPhone: document.getElementById('cPhone').value,
-            problem: document.getElementById('cProblem').value,
-            status: 'Открыто', replies: []
-          };
-          store('tumix_appeals', [...appeals(), app]);
-          showToast('Обращение создано');
-          document.getElementById('tabClientAppeals').click();
-        }
-        if (e.target.id === 'submitEmpAppeal') {
-          const text = document.getElementById('eText').value.trim();
-          if (!text) return showToast('Введите текст обращения');
-          store('tumix_emp_appeals', [...empAppeals(), { empName: document.getElementById('eName2').value, empTab: document.getElementById('eTab2').value, text, replies: [] }]);
-          showToast('Обращение сотрудника создано');
+          showToast('Статус изменён на ' + newStatus);
           document.getElementById('tabEmpAppeals').click();
         }
         if (e.target.id === 'sendColleague') {
           const inp = document.getElementById('colleagueInput'); if (!inp.value.trim()) return;
-          store('tumix_colleague_chats', [...colleagueChats(), { from: currentEmployee?.name || 'Сотрудник', text: inp.value, time: new Date().toLocaleTimeString('ru-RU'), timestamp: new Date().toISOString() }]);
+          store('tumix_colleague_chats', [...colleagueChats(), { from: currentEmployee?.name, text: inp.value, timestamp: new Date().toISOString() }]);
           renderEmployeeView('colleagueChat');
-        }
-        if (e.target.id === 'sendChat') {
-          const inp = document.getElementById('chatInput'); if (!inp.value.trim()) return;
-          const msg = { from: 'client', text: inp.value, timestamp: new Date().toISOString() };
-          store('tumix_support_chats', [...supportChats(), msg]);
-          const d = document.createElement('div'); d.className = 'chat-msg mine'; d.textContent = inp.value;
-          document.getElementById('chatMsgs').appendChild(d);
-          if (!supportSessionAnswered && supportChats().filter(m=>m.from==='support').length === 0) {
-            setTimeout(() => {
-              const autoMsg = { from: 'support', text: '👩‍💼 Оператор скоро ответит вам, пожалуйста подождите.', timestamp: new Date().toISOString() };
-              store('tumix_support_chats', [...supportChats(), autoMsg]);
-              const r = document.createElement('div'); r.className = 'chat-msg other'; r.textContent = autoMsg.text;
-              document.getElementById('chatMsgs').appendChild(r); supportSessionAnswered = true;
-            }, 900);
-          }
-          inp.value = ''; document.getElementById('chatMsgs').scrollTop = document.getElementById('chatMsgs').scrollHeight;
         }
       });
 
