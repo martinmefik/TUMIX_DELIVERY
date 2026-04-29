@@ -143,11 +143,22 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.07);
       background: rgba(8, 8, 22, 0.45);
       backdrop-filter: blur(20px);
+      flex-wrap: wrap;
+      gap: 16px;
     }
     .logo-left {
       display: flex;
       align-items: center;
       gap: 16px;
+    }
+    .logo-img {
+      height: 48px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 16px rgba(241, 90, 44, 0.5));
+      transition: transform 0.4s ease;
+    }
+    .logo-img:hover {
+      transform: scale(1.1) rotate(-4deg);
     }
     .logo-text {
       font-size: 34px;
@@ -158,6 +169,7 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: shimmer 5s linear infinite;
+      text-shadow: 0 0 40px rgba(241, 90, 44, 0.2);
     }
     .header-right {
       display: flex;
@@ -172,6 +184,12 @@
       background: rgba(241, 90, 44, 0.1);
       padding: 10px 20px;
       border-radius: 24px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .support-email:hover {
+      background: rgba(241, 90, 44, 0.25);
+      box-shadow: 0 0 20px rgba(241,90,44,0.3);
     }
     .logout-btn {
       background: rgba(255, 255, 255, 0.06);
@@ -183,6 +201,8 @@
       font-weight: 700;
       font-size: 15px;
       transition: all 0.4s ease;
+      backdrop-filter: blur(12px);
+      letter-spacing: 0.5px;
     }
     .logout-btn:hover {
       background: #c0392b;
@@ -208,6 +228,7 @@
       padding: 8px;
       border-radius: 34px;
       margin-bottom: 44px;
+      backdrop-filter: blur(16px);
     }
     .auth-tab {
       padding: 15px 42px;
@@ -219,12 +240,17 @@
       font-size: 16px;
       cursor: pointer;
       transition: all 0.4s ease;
+      letter-spacing: 0.4px;
     }
     .auth-tab.active {
       background: #F15A2C;
       color: #fff;
       box-shadow: 0 16px 38px rgba(241, 90, 44, 0.7);
       transform: scale(1.06);
+    }
+    .auth-tab:hover:not(.active) {
+      color: #d0c0b0;
+      background: rgba(255, 255, 255, 0.04);
     }
 
     .auth-card,
@@ -236,7 +262,7 @@
       width: 100%;
       max-width: 600px;
       border: 2px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 45px 80px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 45px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
       animation: cardFloat 7s ease-in-out infinite;
     }
     .auth-card h2,
@@ -246,6 +272,7 @@
       margin-bottom: 34px;
       text-align: center;
       color: #efe6da;
+      letter-spacing: -0.4px;
     }
 
     .input-column {
@@ -266,7 +293,8 @@
       color: #b8a8c8;
     }
     .field-group input,
-    .field-group textarea {
+    .field-group textarea,
+    .field-group select {
       width: 100%;
       padding: 17px 24px;
       background: rgba(255, 255, 255, 0.05);
@@ -302,6 +330,21 @@
       letter-spacing: 0.7px;
       width: 100%;
       margin-top: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.7s ease;
+    }
+    .btn:hover::before {
+      left: 100%;
     }
     .btn-primary {
       background: linear-gradient(135deg, #F15A2C, #e04820);
@@ -341,6 +384,11 @@
       color: #F15A2C;
       text-decoration: none;
       font-weight: 700;
+      transition: color 0.3s;
+    }
+    .link-text a:hover {
+      color: #ff9f7c;
+      text-decoration: underline;
     }
 
     .toast-notification {
@@ -355,7 +403,7 @@
       color: #f2e6d8;
       font-weight: 700;
       font-size: 16px;
-      box-shadow: 0 28px 60px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 28px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(241, 90, 44, 0.4);
       z-index: 9999;
       animation: fadeSlideDown 0.6s ease;
       display: flex;
@@ -399,6 +447,11 @@
       color: white;
       font-size: 17px;
       margin-bottom: 24px;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23F15A2C' stroke-width='3'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 18px center;
+      cursor: pointer;
     }
     .modal-buttons {
       display: flex;
@@ -636,7 +689,7 @@
         <span class="logo-text" id="dynamicLogo">TUMIX CLIENT</span>
       </div>
       <div class="header-right">
-        <a href="mailto:tumix.support@gmail.com" class="support-email">📧 tumix.support@gmail.com</a>
+        <span class="support-email" id="copyEmail">📧 tumix.support@gmail.com</span>
         <button class="logout-btn hidden" id="logoutBtn">🚪 Выйти из системы</button>
       </div>
     </div>
@@ -705,7 +758,9 @@
         t.className = 'toast-notification';
         t.textContent = '✨ ' + msg;
         document.body.appendChild(t);
-        setTimeout(() => { t.style.opacity = '0'; t.style.transition = '0.5s'; setTimeout(() => t.remove(), 500); }, 3000);
+        setTimeout(() => { t.style.opacity = '0';
+          t.style.transition = '0.5s';
+          setTimeout(() => t.remove(), 500); }, 3000);
       }
 
       function showModal(title, content, onConfirm) {
@@ -779,6 +834,10 @@
         });
       }
 
+      document.getElementById('copyEmail').addEventListener('click', () => {
+        navigator.clipboard.writeText('tumix.support@gmail.com').then(() => showToast('Почта скопирована!'));
+      });
+
       const authScreen = document.getElementById('authScreen');
       const clientDash = document.getElementById('clientDashboard');
       const empDash = document.getElementById('employeeDashboard');
@@ -810,17 +869,27 @@
         }
       }
 
-      logoutBtn.addEventListener('click', () => { currentClient = null; currentEmployee = null; updateUI(); renderAuth(); });
+      logoutBtn.addEventListener('click', () => { currentClient = null;
+        currentEmployee = null;
+        updateUI();
+        renderAuth(); });
 
       const session = JSON.parse(localStorage.getItem('tumix_session') || 'null');
       if (session) {
-        if (session.type === 'client') { const u = users().find(x => x.id === session.id); if (u) { currentClient = u; updateUI(); renderClientView('delivery'); } }
-        else if (session.type === 'employee') { if (session.tab === TEST_EMP.tab) currentEmployee = { ...TEST_EMP }; else if (session.tab === ADMIN_EMP.tab) currentEmployee = { ...ADMIN_EMP }; if (currentEmployee) { updateUI(); renderEmployeeView('empChat'); } }
+        if (session.type === 'client') { const u = users().find(x => x.id === session.id); if (u) { currentClient =
+            u;
+            updateUI();
+            renderClientView('delivery'); } } else if (session.type === 'employee') { if (session.tab === TEST_EMP
+            .tab) currentEmployee = { ...TEST_EMP }; else if (session.tab === ADMIN_EMP.tab) currentEmployee = { ...
+            ADMIN_EMP }; if (currentEmployee) { updateUI();
+            renderEmployeeView('empChat'); } }
       }
 
       let authMode = 'client';
-      document.getElementById('clientTab').addEventListener('click', () => { authMode = 'client'; renderAuth(); });
-      document.getElementById('employeeTab').addEventListener('click', () => { authMode = 'employee'; renderAuth(); });
+      document.getElementById('clientTab').addEventListener('click', () => { authMode = 'client';
+        renderAuth(); });
+      document.getElementById('employeeTab').addEventListener('click', () => { authMode = 'employee';
+        renderAuth(); });
 
       function renderAuth() {
         document.getElementById('clientTab').classList.toggle('active', authMode === 'client');
@@ -835,9 +904,12 @@
           <button class="btn btn-primary" id="loginClientBtn">Войти</button>
           <p class="link-text"><a href="#" id="showRegister">Регистрация</a></p>`;
           document.getElementById('loginClientBtn').addEventListener('click', () => {
-            const e = document.getElementById('loginEmail').value.trim(), p = document.getElementById('loginPass').value.trim();
+            const e = document.getElementById('loginEmail').value.trim(),
+              p = document.getElementById('loginPass').value.trim();
             const u = users().find(x => x.email === e && x.password === p);
-            if (u) { currentClient = u; updateUI(); renderClientView('delivery'); } else showToast('Неверные данные');
+            if (u) { currentClient = u;
+              updateUI();
+              renderClientView('delivery'); } else showToast('Неверные данные');
           });
           document.getElementById('showRegister').addEventListener('click', (e) => {
             e.preventDefault();
@@ -863,13 +935,20 @@
             <button class="btn btn-primary" id="registerBtn">Зарегистрироваться</button>
             <p class="link-text"><a href="#" id="backToLogin">Назад</a></p>`;
             document.getElementById('registerBtn').addEventListener('click', () => {
-              const n = document.getElementById('regName').value.trim(), em = document.getElementById('regEmail').value.trim(), ph = document.getElementById('regPhone').value.trim(), pw = document.getElementById('regPass').value.trim();
+              const n = document.getElementById('regName').value.trim(),
+                em = document.getElementById('regEmail').value.trim(),
+                ph = document.getElementById('regPhone').value.trim(),
+                pw = document.getElementById('regPass').value.trim();
               if (!n || !em || !ph || !pw) return showToast('Заполните все поля');
-              let u = users(); if (u.find(x => x.email === em)) return showToast('Почта занята');
+              let u = users();
+              if (u.find(x => x.email === em)) return showToast('Почта занята');
               u.push({ id: Date.now().toString(), name: n, email: em, phone: ph, password: pw });
-              store('tumix_users', u); showToast('Регистрация успешна!'); renderAuth();
+              store('tumix_users', u);
+              showToast('Регистрация успешна!');
+              renderAuth();
             });
-            document.getElementById('backToLogin').addEventListener('click', (ev) => { ev.preventDefault(); renderAuth(); });
+            document.getElementById('backToLogin').addEventListener('click', (ev) => { ev.preventDefault();
+              renderAuth(); });
           });
         } else {
           authForms.innerHTML = `
@@ -880,46 +959,55 @@
           </div>
           <button class="btn btn-primary" id="loginEmpBtn">Войти</button>`;
           document.getElementById('loginEmpBtn').addEventListener('click', () => {
-            const tab = document.getElementById('empTab').value.trim(), pass = document.getElementById('empPass').value.trim();
+            const tab = document.getElementById('empTab').value.trim(),
+              pass = document.getElementById('empPass').value.trim();
             if (tab === TEST_EMP.tab && pass === TEST_EMP.password) currentEmployee = { ...TEST_EMP };
             else if (tab === ADMIN_EMP.tab && pass === ADMIN_EMP.password) currentEmployee = { ...ADMIN_EMP };
             else return showToast('Неверные данные');
-            updateUI(); renderEmployeeView('empChat');
+            updateUI();
+            renderEmployeeView('empChat');
           });
         }
       }
 
       document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(b => b.addEventListener('click', () => {
-        document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(x => x.classList.remove('active'));
+        document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(x => x.classList.remove(
+          'active'));
         b.classList.add('active');
         if (b.dataset.view === 'rules') showRulesModal();
         else renderClientView(b.dataset.view);
       }));
 
       document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(b => b.addEventListener('click', () => {
-        document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(x => x.classList.remove('active'));
+        document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(x => x.classList.remove(
+          'active'));
         b.classList.add('active');
         if (b.dataset.view === 'empRules') showRulesModal();
         else renderEmployeeView(b.dataset.view);
       }));
 
-      let deliveryMap = null, routingControl = null;
+      let deliveryMap = null,
+        routingControl = null;
 
       function initDeliveryMap() {
         setTimeout(() => {
           const mapEl = document.getElementById('map');
           if (!mapEl || deliveryMap) return;
           deliveryMap = L.map('map').setView([55.7558, 37.6173], 10);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(deliveryMap);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' })
+            .addTo(deliveryMap);
           deliveryMap.invalidateSize();
         }, 600);
       }
 
       async function geocodeAddress(address) {
         try {
-          const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1&accept-language=ru`);
+          const resp = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1&accept-language=ru`
+            );
           const data = await resp.json();
-          if (data && data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0].display_name };
+          if (data && data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon),
+            display: data[0].display_name };
           return null;
         } catch (e) { return null; }
       }
@@ -928,18 +1016,19 @@
         return `<div class="card"><h3>📦 Оформление доставки</h3><div class="input-column">
         <div class="field-group"><label>👤 ФИО отправителя *</label><input id="sName" autocomplete="off"></div>
         <div class="field-group"><label>📱 Телефон отправителя *</label><input id="sPhone" value="+7" autocomplete="off"></div>
-        <div class="field-group"><label>📍 Адрес отправки *</label><input id="sAddr" placeholder="Москва, ул. Тверская, 1" autocomplete="off"></div>
+        <div class="field-group"><label>📍 Адрес отправки * <span style="font-weight:400;color:#ffa07c;">(улица, дом; без "д.", "к." — укажите в комментарии)</span></label><input id="sAddr" placeholder="Москва, ул. Тверская, 1" autocomplete="off"></div>
         <div class="field-group"><label>👤 ФИО получателя *</label><input id="rName" autocomplete="off"></div>
         <div class="field-group"><label>📱 Телефон получателя *</label><input id="rPhone" value="+7" autocomplete="off"></div>
-        <div class="field-group"><label>📍 Адрес получателя *</label><input id="rAddr" placeholder="Москва, ул. Арбат, 10" autocomplete="off"></div>
+        <div class="field-group"><label>📍 Адрес получателя * <span style="font-weight:400;color:#ffa07c;">(улица, дом; без "д.", "к." — укажите в комментарии)</span></label><input id="rAddr" placeholder="Москва, ул. Арбат, 10" autocomplete="off"></div>
         <div class="field-group"><label>📦 Содержимое *</label><input id="contentDesc" autocomplete="off"></div>
+        <div class="field-group"><label>💬 Комментарий к заказу</label><textarea id="orderComment" placeholder="Подъезд, домофон, этаж, особенности адреса..."></textarea></div>
         <div class="checkbox-group" id="packCheckboxes">
-          <label class="checkbox-pill"><input type="checkbox" value="Пакет" hidden> Пакет (60₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Конверт" hidden> Конверт (90₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка S" hidden> Коробка S (120₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка M" hidden> Коробка M (220₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка L" hidden> Коробка L (280₽)</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Коробка XL" hidden> Коробка XL (350₽)</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Пакет" hidden> 🛍️ Пакет</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Конверт" hidden> ✉️ Конверт</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка S" hidden> 📦 Коробка S</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка M" hidden> 📦 Коробка M</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка L" hidden> 📦 Коробка L</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Коробка XL" hidden> 📦 Коробка XL</label>
         </div>
         <div id="map"></div>
         <button class="btn btn-primary" id="calcDelivery">🧮 Рассчитать маршрут и стоимость</button>
@@ -950,219 +1039,71 @@
         if (e.target.id === 'calcDelivery') {
           const packs = [...document.querySelectorAll('#packCheckboxes input:checked')].map(c => c.value);
           if (!packs.length) return showToast('Выберите упаковку');
-          const sAddr = document.getElementById('sAddr').value.trim(), rAddr = document.getElementById('rAddr').value.trim();
+          const sAddr = document.getElementById('sAddr').value.trim(),
+            rAddr = document.getElementById('rAddr').value.trim();
           if (!sAddr || !rAddr) return showToast('Заполните адреса');
-          document.getElementById('priceDetails').innerHTML = '<p>🔄 Строим автомобильный маршрут...</p>';
+          document.getElementById('priceDetails').innerHTML =
+            '<p>🔄 Строим автомобильный маршрут...</p>';
           Promise.all([geocodeAddress(sAddr), geocodeAddress(rAddr)]).then(([from, to]) => {
-            if (!from || !to) { document.getElementById('priceDetails').innerHTML = '<p style="color:#ff7043;">❌ Адрес не найден</p>'; return; }
+            if (!from || !to) { document.getElementById('priceDetails').innerHTML =
+                '<p style="color:#ff7043;">❌ Адрес не найден</p>'; return; }
             if (deliveryMap) {
               if (routingControl) deliveryMap.removeControl(routingControl);
               routingControl = L.Routing.control({
                 waypoints: [L.latLng(from.lat, from.lng), L.latLng(to.lat, to.lng)],
-                routeWhileDragging: false, showAlternatives: false,
+                routeWhileDragging: false,
+                showAlternatives: false,
                 lineOptions: { styles: [{ color: '#F15A2C', weight: 6 }] }
               }).addTo(deliveryMap);
               routingControl.on('routesfound', function(ev) {
                 const dist = Math.round(ev.routes[0].summary.totalDistance / 1000);
-                const pr = { Пакет: 60, Конверт: 90, 'Коробка S': 120, 'Коробка M': 220, 'Коробка L': 280, 'Коробка XL': 350 };
-                let pc = packs.reduce((s, p) => s + pr[p], 0), km = dist * 22, serv = 29, total = pc + km + serv;
-                document.getElementById('priceDetails').innerHTML = `<div class="card"><div class="detail-row"><span>📦 Упаковка:</span><span>${pc} ₽</span></div><div class="detail-row"><span>🛣️ По дороге:</span><span>${dist} км × 22₽ = ${km} ₽</span></div><div class="detail-row"><span>🔧 Сервис:</span><span>29 ₽</span></div><h3>💰 Итого: ${total} ₽</h3><button class="btn btn-primary" id="confirmOrder">Оформить</button></div>`;
+                let km = dist * 22,
+                  serv = 29,
+                  total = km + serv;
+                document.getElementById('priceDetails').innerHTML =
+                  `<div class="card"><div class="detail-row"><span>🛣️ По дороге:</span><span>${dist} км × 22₽ = ${km} ₽</span></div><div class="detail-row"><span>🔧 Сервис:</span><span>29 ₽</span></div><h3>💰 Итого: ${total} ₽</h3><button class="btn btn-primary" id="confirmOrder">Оформить</button></div>`;
               });
             }
           });
         }
         if (e.target.id === 'confirmOrder') {
-          const ords = orders(); const newId = String(ords.length + 1).padStart(8, '0');
-          store('tumix_orders', [...ords, { id: newId, clientId: currentClient.id, sender: document.getElementById('sName').value, sPhone: document.getElementById('sPhone').value, sAddr: document.getElementById('sAddr').value, recName: document.getElementById('rName').value, rPhone: document.getElementById('rPhone').value, rAddr: document.getElementById('rAddr').value, content: document.getElementById('contentDesc').value, packs: [...document.querySelectorAll('#packCheckboxes input:checked')].map(c => c.value), status: 'Оформлен', date: new Date().toLocaleString('ru-RU') }]);
+          const ords = orders();
+          const newId = String(ords.length + 1).padStart(8, '0');
+          store('tumix_orders', [...ords, { id: newId, clientId: currentClient.id, sender: document.getElementById(
+              'sName').value, sPhone: document.getElementById('sPhone').value, sAddr: document.getElementById(
+              'sAddr').value, recName: document.getElementById('rName').value, rPhone: document.getElementById(
+              'rPhone').value, rAddr: document.getElementById('rAddr').value, content: document.getElementById(
+              'contentDesc').value, comment: document.getElementById('orderComment').value, packs: [...document
+              .querySelectorAll('#packCheckboxes input:checked')
+            ].map(c => c.value), status: 'Оформлен', date: new Date().toLocaleString('ru-RU') }]);
           showToast('Заказ #' + newId + ' оформлен!');
           document.querySelector('#clientDashboard .sidebar-btn[data-view="orders"]').click();
         }
-        if (e.target.closest('.checkbox-pill')) { const pill = e.target.closest('.checkbox-pill'), cb = pill.querySelector('input'); cb.checked = !cb.checked; pill.classList.toggle('checked', cb.checked); }
-        if (e.target.classList.contains('reply-btn')) {
-          e.stopPropagation();
-          const id = e.target.dataset.id;
-          const text = document.getElementById('replyText_' + id).value.trim();
-          if (!text) return showToast('Введите текст ответа');
-          const upd = appeals().map(a => a.id === id ? { ...a, replies: [...(a.replies||[]), text] } : a);
-          store('tumix_appeals', upd);
-          showToast('Ответ руководителя добавлен');
-          document.getElementById('tabClientAppeals')?.click();
-        }
-        if (e.target.classList.contains('emp-reply-btn')) {
-          e.stopPropagation();
-          const emp = e.target.dataset.emp;
-          const text = document.getElementById('empReplyText_' + emp).value.trim();
-          if (!text) return showToast('Введите текст ответа');
-          const upd = empAppeals().map(a => a.empName === emp ? { ...a, replies: [...(a.replies||[]), text] } : a);
-          store('tumix_emp_appeals', upd);
-          showToast('Ответ отправлен сотруднику');
-          document.getElementById('tabEmpAppeals')?.click();
-        }
-        if (e.target.classList.contains('close-btn')) {
-          e.stopPropagation();
-          const id = e.target.dataset.id;
-          const app = appeals().find(a => a.id === id);
-          if (!app) return;
-          store('tumix_resolved_appeals', [...resolvedAppeals(), { ...app, status: 'Решено' }]);
-          store('tumix_appeals', appeals().filter(a => a.id !== id));
-          showToast('Обращение закрыто и перемещено в решенные');
-          document.getElementById('tabClientAppeals')?.click();
-        }
-        if (e.target.classList.contains('close-emp-btn')) {
-          e.stopPropagation();
-          const emp = e.target.dataset.emp;
-          const app = empAppeals().find(a => a.empName === emp);
-          if (!app) return;
-          store('tumix_resolved_emp_appeals', [...resolvedEmpAppeals(), { ...app, status: 'Решено' }]);
-          store('tumix_emp_appeals', empAppeals().filter(a => a.empName !== emp));
-          showToast('Обращение сотрудника закрыто и перемещено в решенные');
-          document.getElementById('tabEmpAppeals')?.click();
-        }
-        if (e.target.classList.contains('delete-btn')) {
-          e.stopPropagation();
-          const id = e.target.dataset.id;
-          showModal('Удаление обращения', '<p>Удалить обращение #' + id + '?</p>', () => {
-            store('tumix_appeals', appeals().filter(a => a.id !== id));
-            showToast('Обращение удалено');
-            document.getElementById('tabClientAppeals')?.click();
-          });
-        }
-        if (e.target.classList.contains('delete-resolved-btn')) {
-          e.stopPropagation();
-          const id = e.target.dataset.id;
-          showModal('Удаление решенного', '<p>Удалить решенное обращение #' + id + ' навсегда?</p>', () => {
-            store('tumix_resolved_appeals', resolvedAppeals().filter(a => a.id !== id));
-            showToast('Решенное удалено');
-            document.getElementById('tabResolvedClient')?.click();
-          });
-        }
-        if (e.target.classList.contains('delete-resolved-emp-btn')) {
-          e.stopPropagation();
-          const emp = e.target.dataset.emp;
-          showModal('Удаление', '<p>Удалить решенное обращение сотрудника ' + emp + '?</p>', () => {
-            store('tumix_resolved_emp_appeals', resolvedEmpAppeals().filter(a => a.empName !== emp));
-            showToast('Удалено');
-            document.getElementById('tabResolvedEmp')?.click();
-          });
-        }
-        if (e.target.classList.contains('edit-order-btn')) {
-          e.stopPropagation();
-          const id = e.target.dataset.id;
-          showModal('Изменение статуса заказа #' + id, `<select id="statusSelect"><option>Оформлен</option><option>В пути</option><option>Доставлен</option><option>Отменён</option></select>`, (status) => {
-            store('tumix_orders', orders().map(o => o.id === id ? { ...o, status } : o));
-            showToast('Статус обновлён');
-            renderEmployeeView('allOrders');
-          });
-        }
-        if (e.target.classList.contains('cancel-order-btn')) {
-          e.stopPropagation();
-          const id = e.target.dataset.id;
-          showModal('Отмена заказа #' + id, '<p>Вы уверены, что хотите отменить заказ?</p>', () => {
-            store('tumix_orders', orders().map(o => o.id === id ? { ...o, status: 'Отменён' } : o));
-            showToast('Заказ отменён');
-            renderEmployeeView('allOrders');
-          });
-        }
-        if (e.target.classList.contains('change-status-btn')) {
-          e.stopPropagation();
-          const id = e.target.dataset.id;
-          const newStatus = document.getElementById('statusSelect_' + id).value;
-          const upd = appeals().map(a => a.id === id ? { ...a, status: newStatus } : a);
-          store('tumix_appeals', upd);
-          showToast('Статус изменён на ' + newStatus);
-          document.getElementById('tabClientAppeals')?.click();
-        }
-        if (e.target.classList.contains('emp-change-status-btn')) {
-          e.stopPropagation();
-          const emp = e.target.dataset.emp;
-          const newStatus = document.getElementById('empStatusSelect_' + emp).value;
-          const upd = empAppeals().map(a => a.empName === emp ? { ...a, status: newStatus } : a);
-          store('tumix_emp_appeals', upd);
-          showToast('Статус изменён на ' + newStatus);
-          document.getElementById('tabEmpAppeals')?.click();
-        }
-        if (e.target.id === 'submitClientAppeal') {
-          const app = { id: String(appeals().length + 1).padStart(7, '0'), empName: document.getElementById('eName').value, empTab: document.getElementById('eTab').value, clientName: document.getElementById('cName').value, clientEmail: document.getElementById('cEmail').value, clientPhone: document.getElementById('cPhone').value, problem: document.getElementById('cProblem').value, status: 'Открыто', replies: [] };
-          store('tumix_appeals', [...appeals(), app]);
-          showToast('Обращение создано');
-          document.getElementById('tabClientAppeals')?.click();
-        }
-        if (e.target.id === 'submitEmpAppeal') {
-          const text = document.getElementById('eText').value.trim();
-          if (!text) return showToast('Введите текст обращения');
-          store('tumix_emp_appeals', [...empAppeals(), { empName: document.getElementById('eName2').value, empTab: document.getElementById('eTab2').value, text, replies: [] }]);
-          showToast('Обращение сотрудника создано');
-          document.getElementById('tabEmpAppeals')?.click();
-        }
-        if (e.target.id === 'sendColleague') {
-          const inp = document.getElementById('colleagueInput'); if (!inp.value.trim()) return;
-          store('tumix_colleague_chats', [...colleagueChats(), { from: currentEmployee?.name, text: inp.value, timestamp: new Date().toISOString() }]);
-          renderEmployeeView('colleagueChat');
-        }
-        if (e.target.id === 'sendChat') {
-          const inp = document.getElementById('chatInput'); if (!inp.value.trim()) return;
-          const msg = { from: 'client', text: inp.value, timestamp: new Date().toISOString() };
-          store('tumix_support_chats', [...supportChats(), msg]);
-          const d = document.createElement('div'); d.className = 'chat-msg mine'; d.textContent = inp.value;
-          document.getElementById('chatMsgs').appendChild(d);
-          if (supportChats().filter(m=>m.from==='support').length === 0) {
-            setTimeout(() => {
-              const autoMsg = { from: 'support', text: '👩‍💼 Оператор скоро ответит вам, пожалуйста подождите.', timestamp: new Date().toISOString() };
-              store('tumix_support_chats', [...supportChats(), autoMsg]);
-              const r = document.createElement('div'); r.className = 'chat-msg other'; r.textContent = autoMsg.text;
-              document.getElementById('chatMsgs').appendChild(r);
-            }, 900);
-          }
-          inp.value = ''; document.getElementById('chatMsgs').scrollTop = document.getElementById('chatMsgs').scrollHeight;
-        }
-      });
-
-      document.addEventListener('click', e => {
-        if (e.target.classList.contains('tab-inner')) {
-          document.querySelectorAll('.tab-inner').forEach(t => t.classList.remove('active'));
-          e.target.classList.add('active');
-          const sub = document.getElementById('appealsSubContent');
-          if (e.target.id === 'tabClientAppeals') sub.innerHTML = appeals().map(a => `
-          <div class="appeal-item"><b>🎫 #${a.id}</b> — ${a.status||'Открыто'}<div class="details" style="margin-top:16px;">
-            <div class="detail-row"><span>👤 Сотрудник:</span><span>${a.empName} (${a.empTab})</span></div>
-            <div class="detail-row"><span>👤 Клиент:</span><span>${a.clientName}</span></div>
-            <div class="detail-row"><span>📝 Проблема:</span><span>${a.problem}</span></div>
-            ${a.replies ? a.replies.map(r => `<div class="reply-block">🔴 <b>Ответ руководителя поддержки TUMIX:</b><br>${r}</div>`).join('') : ''}
-            ${currentEmployee?.role==='admin' ? `<textarea id="replyText_${a.id}" placeholder="Ответ руководителя..." style="width:100%;margin-top:12px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.18);border-radius:16px;padding:14px;color:white;min-height:80px;"></textarea>
-            <button class="btn btn-primary reply-btn" data-id="${a.id}" style="margin-top:8px;">📩 Ответить</button>
-            <button class="btn btn-outline close-btn" data-id="${a.id}" style="margin-top:6px;">✅ Закрыть</button>
-            <button class="btn btn-danger delete-btn" data-id="${a.id}" style="margin-top:6px;">🗑️ Удалить</button>
-            <select id="statusSelect_${a.id}" style="width:100%;margin-top:6px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.18);border-radius:14px;padding:8px;color:white;">
-              <option>Открыт</option><option>В работе</option><option>На проверке информации</option>
-            </select>
-            <button class="btn btn-outline change-status-btn" data-id="${a.id}" style="margin-top:4px;">🔄 Сменить статус</button>` : ''}
-          </div></div>`).join('')||'<p style="text-align:center;padding:40px;">Обращений клиентов нет</p>';
-          if (e.target.id === 'tabEmpAppeals') sub.innerHTML = empAppeals().filter(a=>a.empTab===currentEmployee?.tab||currentEmployee?.role==='admin').map(a=>`
-          <div class="appeal-item"><b>👔 ${a.empName}</b> → Руководителю поддержки TUMIX<div class="details" style="margin-top:16px;">
-            <div class="detail-row"><span>🪪 Табельный:</span><span>${a.empTab}</span></div>
-            <div class="detail-row"><span>📝 Текст:</span><span style="white-space:pre-wrap;">${a.text}</span></div>
-            ${a.replies ? a.replies.map(r => `<div class="reply-block">🔴 <b>Ответ руководителя поддержки TUMIX:</b><br>${r}</div>`).join('') : ''}
-            ${currentEmployee?.role==='admin' ? `<textarea id="empReplyText_${a.empName}" placeholder="Ответ..." style="width:100%;margin-top:12px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.18);border-radius:16px;padding:14px;color:white;min-height:80px;"></textarea>
-            <button class="btn btn-primary emp-reply-btn" data-emp="${a.empName}" style="margin-top:8px;">📩 Ответить</button>
-            <button class="btn btn-outline close-emp-btn" data-emp="${a.empName}" style="margin-top:6px;">✅ Закрыть</button>
-            <select id="empStatusSelect_${a.empName}" style="width:100%;margin-top:6px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.18);border-radius:14px;padding:8px;color:white;">
-              <option>Открыт</option><option>В работе</option><option>На проверке информации</option>
-            </select>
-            <button class="btn btn-outline emp-change-status-btn" data-emp="${a.empName}" style="margin-top:4px;">🔄 Сменить статус</button>` : ''}
-          </div></div>`).join('')||'<p style="text-align:center;padding:40px;">Обращений сотрудников нет</p>';
-          if (e.target.id === 'tabResolvedClient') sub.innerHTML = resolvedAppeals().map(a=>`<div class="appeal-item"><b>✅ #${a.id}</b><div class="details" style="margin-top:16px;">${a.replies? a.replies.map(r=>`<div class="reply-block">🔴 ${r}</div>`).join('') : ''}${currentEmployee?.role==='admin'? `<button class="btn btn-danger delete-resolved-btn" data-id="${a.id}" style="margin-top:8px;">🗑️ Удалить</button>` : ''}</div></div>`).join('')||'<p>Нет решенных</p>';
-          if (e.target.id === 'tabResolvedEmp') sub.innerHTML = resolvedEmpAppeals().map(a=>`<div class="appeal-item"><b>✅ ${a.empName}</b><div class="details" style="margin-top:16px;">${a.replies? a.replies.map(r=>`<div class="reply-block">🔴 ${r}</div>`).join('') : ''}${currentEmployee?.role==='admin'? `<button class="btn btn-danger delete-resolved-emp-btn" data-emp="${a.empName}" style="margin-top:8px;">🗑️ Удалить</button>` : ''}</div></div>`).join('')||'<p>Нет решенных</p>';
-          if (e.target.id === 'tabCreateClient') sub.innerHTML = `<div class="form-card"><h3>➕ Новое обращение клиента</h3><div class="input-column"><div class="field-group"><label>👤 ФИО сотрудника *</label><input id="eName"></div><div class="field-group"><label>🪪 Табельный номер *</label><input id="eTab" placeholder="TUM-0001"></div><div class="field-group"><label>👤 ФИО клиента *</label><input id="cName"></div><div class="field-group"><label>📧 Почта *</label><input id="cEmail"></div><div class="field-group"><label>📱 Телефон *</label><input id="cPhone" value="+7"></div><div class="field-group"><label>📝 Проблема *</label><textarea id="cProblem"></textarea></div><button class="btn btn-primary" id="submitClientAppeal">Оформить</button></div></div>`;
-          if (e.target.id === 'tabCreateEmp') sub.innerHTML = `<div class="form-card"><h3>📝 Обращение сотрудника</h3><div class="input-column"><div class="field-group"><label>👤 ФИО сотрудника *</label><input id="eName2"></div><div class="field-group"><label>🪪 Табельный номер *</label><input id="eTab2" placeholder="TUM-0001"></div><div class="field-group"><label>📌 Кому</label><input disabled value="Руководителю поддержки TUMIX"></div><div class="field-group"><label>📝 Текст обращения</label><textarea id="eText" placeholder="Введите текст обращения..."></textarea></div><button class="btn btn-primary" id="submitEmpAppeal">✅ Оформить обращение</button></div></div>`;
-        }
+        if (e.target.closest('.checkbox-pill')) { const pill = e.target.closest('.checkbox-pill'),
+            cb = pill.querySelector('input');
+          cb.checked = !cb.checked;
+          pill.classList.toggle('checked', cb.checked); }
       });
 
       function clientOrders() {
-        return `<h3>📑 Мои заказы</h3>` + orders().filter(o => o.clientId === currentClient?.id).map(o => `<div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')"><b>#${o.id}</b> — ${o.status}<div class="details hidden">${['sender','sPhone','sAddr','recName','rPhone','rAddr','content'].map(k=>`<div class="detail-row"><span>${k}:</span><span>${o[k]}</span></div>`).join('')}</div></div>`).join('') || '<p>Нет заказов</p>';
+        return `<h3>📑 Мои заказы</h3>` + orders().filter(o => o.clientId === currentClient?.id).map(o =>
+          `<div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')"><b>#${o.id}</b> — ${o.status}<div class="details hidden">
+          <div class="detail-row"><span>Отправитель:</span><span>${o.sender}</span></div>
+          <div class="detail-row"><span>Телефон отпр.:</span><span>${o.sPhone}</span></div>
+          <div class="detail-row"><span>Адрес отпр.:</span><span>${o.sAddr}</span></div>
+          <div class="detail-row"><span>Получатель:</span><span>${o.recName}</span></div>
+          <div class="detail-row"><span>Телефон получ.:</span><span>${o.rPhone}</span></div>
+          <div class="detail-row"><span>Адрес получ.:</span><span>${o.rAddr}</span></div>
+          <div class="detail-row"><span>Содержимое:</span><span>${o.content}</span></div>
+          <div class="detail-row"><span>Комментарий:</span><span>${o.comment||'—'}</span></div>
+          <div class="detail-row"><span>Упаковка:</span><span>${o.packs?.join(', ')}</span></div>
+          </div></div>`).join('') || '<p>Нет заказов</p>';
       }
 
       function clientAppeals() {
-        return `<h3>📋 Мои обращения</h3>` + appeals().filter(a => a.clientEmail === currentClient?.email).map(a => `<div class="appeal-item" onclick="event.stopPropagation(); this.querySelector('.details').classList.toggle('hidden')"><b>#${a.id}</b> — ${a.status||'Открыто'}<div class="details hidden"><div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>${a.replies ? a.replies.map(r => `<div class="admin-reply">🔴 Ответ руководителя поддержки TUMIX:<br>${r}</div>`).join('') : ''}</div></div>`).join('') || '<p>Нет обращений</p>';
+        return `<h3>📋 Мои обращения</h3>` + appeals().filter(a => a.clientEmail === currentClient?.email).map(a =>
+          `<div class="appeal-item" onclick="event.stopPropagation(); this.querySelector('.details').classList.toggle('hidden')"><b>#${a.id}</b> — ${a.status||'Открыто'}<div class="details hidden"><div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>${a.replies ? a.replies.map(r => `<div class="admin-reply">🔴 Ответ руководителя поддержки TUMIX:<br>${r}</div>`).join('') : ''}</div></div>`
+          ).join('') || '<p>Нет обращений</p>';
       }
 
       function supportChat() {
@@ -1172,22 +1113,32 @@
 
       function renderClientView(view) {
         const a = document.getElementById('clientContent');
-        if (view === 'delivery') { a.innerHTML = deliveryForm(); initDeliveryMap(); }
-        else if (view === 'appeals') a.innerHTML = clientAppeals();
+        if (view === 'delivery') { a.innerHTML = deliveryForm();
+          initDeliveryMap(); } else if (view === 'appeals') a.innerHTML = clientAppeals();
         else if (view === 'orders') a.innerHTML = clientOrders();
         else if (view === 'support') a.innerHTML = supportChat();
       }
 
       function renderEmployeeView(view) {
         const a = document.getElementById('employeeContent');
-        if (view === 'empChat') a.innerHTML = '<div class="card"><h3>💬 Чаты с клиентами</h3><p style="text-align:center;padding:40px;">Список активных чатов появится после подключения базы данных.</p></div>';
+        if (view === 'empChat') a.innerHTML =
+          '<div class="card"><h3>💬 Чаты с клиентами</h3><p>Список чатов появится после подключения базы данных.</p></div>';
         else if (view === 'empAppeals') a.innerHTML = empAppealsPanel();
         else if (view === 'allOrders') a.innerHTML = allOrdersView();
         else if (view === 'colleagueChat') a.innerHTML = colleagueChatPanel();
       }
 
       function allOrdersView() {
-        return `<h3>📦 Все заказы</h3>` + orders().map(o => `<div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')"><b>#${o.id}</b> — ${o.status}<div class="details hidden">${['sender','recName','status'].map(k=>`<div class="detail-row"><span>${k}:</span><span>${o[k]}</span></div>`).join('')}<button class="btn btn-outline edit-order-btn" data-id="${o.id}">✏️ Статус</button><button class="btn btn-danger cancel-order-btn" data-id="${o.id}">🚫 Отменить</button></div></div>`).join('');
+        return `<h3>📦 Все заказы</h3>` + orders().map(o => `<div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')"><b>#${o.id}</b> — ${o.status}<div class="details hidden">
+        <div class="detail-row"><span>Отправитель:</span><span>${o.sender} (${o.sPhone})</span></div>
+        <div class="detail-row"><span>Адрес отпр.:</span><span>${o.sAddr}</span></div>
+        <div class="detail-row"><span>Получатель:</span><span>${o.recName} (${o.rPhone})</span></div>
+        <div class="detail-row"><span>Адрес получ.:</span><span>${o.rAddr}</span></div>
+        <div class="detail-row"><span>Содержимое:</span><span>${o.content}</span></div>
+        <div class="detail-row"><span>Комментарий:</span><span>${o.comment||'—'}</span></div>
+        <button class="btn btn-outline edit-order-btn" data-id="${o.id}">✏️ Статус</button>
+        <button class="btn btn-danger cancel-order-btn" data-id="${o.id}">🚫 Отменить</button>
+        </div></div>`).join('');
       }
 
       function empAppealsPanel() {
@@ -1206,6 +1157,124 @@
         const msgs = colleagueChats();
         return `<div class="card"><h3>👥 Чат коллег</h3><div class="chat-messages" id="colleagueMessages">${msgs.map(m => `<div class="chat-msg ${m.from === currentEmployee?.name ? 'mine' : 'other'}"><b>${m.from}:</b> ${m.text}</div>`).join('')}</div><div style="display:flex;gap:14px;"><input id="colleagueInput" style="flex:1;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.14);border-radius:18px;padding:16px;color:white;"><button class="btn btn-primary" id="sendColleague" style="width:auto;">📤</button></div></div>`;
       }
+
+      document.addEventListener('click', e => {
+        if (e.target.classList.contains('tab-inner')) {
+          document.querySelectorAll('.tab-inner').forEach(t => t.classList.remove('active'));
+          e.target.classList.add('active');
+          const sub = document.getElementById('appealsSubContent');
+          if (e.target.id === 'tabClientAppeals') sub.innerHTML = appeals().map(a => `
+          <div class="appeal-item"><b>🎫 #${a.id}</b> — ${a.status||'Открыто'}<div class="details" style="margin-top:16px;">
+            <div class="detail-row"><span>Сотрудник:</span><span>${a.empName} (${a.empTab})</span></div>
+            <div class="detail-row"><span>Клиент:</span><span>${a.clientName}</span></div>
+            <div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>
+            ${a.replies ? a.replies.map(r => `<div class="reply-block">🔴 Ответ руководителя поддержки TUMIX:<br>${r}</div>`).join('') : ''}
+            ${currentEmployee?.role==='admin' ? `<textarea id="replyText_${a.id}" placeholder="Ответ..." style="width:100%;margin-top:12px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.18);border-radius:16px;padding:14px;color:white;min-height:80px;"></textarea>
+            <button class="btn btn-primary reply-btn" data-id="${a.id}" style="margin-top:8px;">📩 Ответить</button>
+            <button class="btn btn-outline close-btn" data-id="${a.id}" style="margin-top:6px;">✅ Закрыть</button>
+            <button class="btn btn-danger delete-btn" data-id="${a.id}" style="margin-top:6px;">🗑️ Удалить</button>
+            <select id="statusSelect_${a.id}" style="width:100%;margin-top:6px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.18);border-radius:14px;padding:8px;color:white;">
+              <option style="background:#1a1a2e;color:white;">Открыт</option>
+              <option style="background:#1a1a2e;color:white;">В работе</option>
+              <option style="background:#1a1a2e;color:white;">На проверке</option>
+            </select>
+            <button class="btn btn-outline change-status-btn" data-id="${a.id}" style="margin-top:4px;">🔄 Сменить статус</button>` : ''}
+          </div></div>`).join('')||'<p>Нет обращений</p>';
+          if (e.target.id === 'tabEmpAppeals') sub.innerHTML = empAppeals().filter(a=>a.empTab===currentEmployee?.tab||currentEmployee?.role==='admin').map(a=>`
+          <div class="appeal-item"><b>👔 ${a.empName}</b> → Руководителю поддержки TUMIX<div class="details" style="margin-top:16px;">
+            <div class="detail-row"><span>Табельный:</span><span>${a.empTab}</span></div>
+            <div class="detail-row"><span>Текст:</span><span style="white-space:pre-wrap;">${a.text}</span></div>
+            <div class="detail-row"><span>Статус:</span><span>${a.status||'Открыт'}</span></div>
+            ${a.replies ? a.replies.map(r => `<div class="reply-block">🔴 Ответ руководителя поддержки TUMIX:<br>${r}</div>`).join('') : ''}
+            ${currentEmployee?.role==='admin' ? `<textarea id="empReplyText_${a.empName}" placeholder="Ответ..." style="width:100%;margin-top:12px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.18);border-radius:16px;padding:14px;color:white;min-height:80px;"></textarea>
+            <button class="btn btn-primary emp-reply-btn" data-emp="${a.empName}" style="margin-top:8px;">📩 Ответить</button>
+            <button class="btn btn-outline close-emp-btn" data-emp="${a.empName}" style="margin-top:6px;">✅ Закрыть</button>
+            <select id="empStatusSelect_${a.empName}" style="width:100%;margin-top:6px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.18);border-radius:14px;padding:8px;color:white;">
+              <option style="background:#1a1a2e;color:white;">Открыт</option>
+              <option style="background:#1a1a2e;color:white;">В работе</option>
+              <option style="background:#1a1a2e;color:white;">На проверке</option>
+            </select>
+            <button class="btn btn-outline emp-change-status-btn" data-emp="${a.empName}" style="margin-top:4px;">🔄 Сменить статус</button>` : ''}
+          </div></div>`).join('')||'<p>Нет обращений</p>';
+          if (e.target.id === 'tabResolvedClient') sub.innerHTML = resolvedAppeals().map(a=>`<div class="appeal-item" onclick="this.querySelector('.details').classList.toggle('hidden')"><b>✅ #${a.id}</b><div class="details hidden" style="margin-top:12px;"><div class="detail-row"><span>Сотрудник:</span><span>${a.empName}</span></div><div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>${a.replies? a.replies.map(r=>`<div class="reply-block">🔴 ${r}</div>`).join('') : ''}${currentEmployee?.role==='admin'? `<button class="btn btn-danger delete-resolved-btn" data-id="${a.id}">🗑️ Удалить</button>` : ''}</div></div>`).join('')||'<p>Нет решенных</p>';
+          if (e.target.id === 'tabResolvedEmp') sub.innerHTML = resolvedEmpAppeals().map(a=>`<div class="appeal-item" onclick="this.querySelector('.details').classList.toggle('hidden')"><b>✅ ${a.empName}</b><div class="details hidden" style="margin-top:12px;"><div class="detail-row"><span>Текст:</span><span>${a.text}</span></div>${a.replies? a.replies.map(r=>`<div class="reply-block">🔴 ${r}</div>`).join('') : ''}${currentEmployee?.role==='admin'? `<button class="btn btn-danger delete-resolved-emp-btn" data-emp="${a.empName}">🗑️ Удалить</button>` : ''}</div></div>`).join('')||'<p>Нет решенных</p>';
+        }
+        if (e.target.classList.contains('reply-btn')) {
+          e.stopPropagation();
+          const id = e.target.dataset.id;
+          const text = document.getElementById('replyText_' + id).value.trim();
+          if (!text) return showToast('Введите текст ответа');
+          const upd = appeals().map(a => a.id === id ? { ...a, replies: [...(a.replies||[]), text] } : a);
+          store('tumix_appeals', upd);
+          showToast('Ответ добавлен');
+          document.getElementById('tabClientAppeals').click();
+        }
+        if (e.target.classList.contains('emp-reply-btn')) {
+          e.stopPropagation();
+          const emp = e.target.dataset.emp;
+          const text = document.getElementById('empReplyText_' + emp).value.trim();
+          if (!text) return showToast('Введите ответ');
+          const upd = empAppeals().map(a => a.empName === emp ? { ...a, replies: [...(a.replies||[]), text] } : a);
+          store('tumix_emp_appeals', upd);
+          showToast('Ответ отправлен');
+          document.getElementById('tabEmpAppeals').click();
+        }
+        if (e.target.classList.contains('close-btn')) {
+          e.stopPropagation();
+          const id = e.target.dataset.id;
+          const app = appeals().find(a => a.id === id);
+          if (!app) return;
+          store('tumix_resolved_appeals', [...resolvedAppeals(), { ...app, status: 'Решено' }]);
+          store('tumix_appeals', appeals().filter(a => a.id !== id));
+          showToast('Обращение закрыто');
+          document.getElementById('tabClientAppeals').click();
+        }
+        if (e.target.classList.contains('close-emp-btn')) {
+          e.stopPropagation();
+          const emp = e.target.dataset.emp;
+          const app = empAppeals().find(a => a.empName === emp);
+          if (!app) return;
+          store('tumix_resolved_emp_appeals', [...resolvedEmpAppeals(), { ...app, status: 'Решено' }]);
+          store('tumix_emp_appeals', empAppeals().filter(a => a.empName !== emp));
+          showToast('Обращение сотрудника закрыто');
+          document.getElementById('tabEmpAppeals').click();
+        }
+        if (e.target.classList.contains('change-status-btn')) {
+          const id = e.target.dataset.id;
+          const newStatus = document.getElementById('statusSelect_' + id).value;
+          const upd = appeals().map(a => a.id === id ? { ...a, status: newStatus } : a);
+          store('tumix_appeals', upd);
+          showToast('Статус изменён');
+          document.getElementById('tabClientAppeals').click();
+        }
+        if (e.target.classList.contains('emp-change-status-btn')) {
+          const emp = e.target.dataset.emp;
+          const newStatus = document.getElementById('empStatusSelect_' + emp).value;
+          const upd = empAppeals().map(a => a.empName === emp ? { ...a, status: newStatus } : a);
+          store('tumix_emp_appeals', upd);
+          showToast('Статус изменён');
+          document.getElementById('tabEmpAppeals').click();
+        }
+        if (e.target.id === 'sendChat') {
+          const inp = document.getElementById('chatInput'); if (!inp.value.trim()) return;
+          store('tumix_support_chats', [...supportChats(), { from: 'client', text: inp.value, timestamp: new Date().toISOString() }]);
+          const d = document.createElement('div'); d.className = 'chat-msg mine'; d.textContent = inp.value;
+          document.getElementById('chatMsgs').appendChild(d);
+          if (supportChats().filter(m=>m.from==='support').length === 0) {
+            setTimeout(() => {
+              store('tumix_support_chats', [...supportChats(), { from: 'support', text: 'Оператор скоро ответит вам, пожалуйста подождите.', timestamp: new Date().toISOString() }]);
+              const r = document.createElement('div'); r.className = 'chat-msg other'; r.textContent = 'Оператор скоро ответит вам, пожалуйста подождите.';
+              document.getElementById('chatMsgs').appendChild(r);
+            }, 900);
+          }
+          inp.value = '';
+        }
+        if (e.target.id === 'sendColleague') {
+          const inp = document.getElementById('colleagueInput'); if (!inp.value.trim()) return;
+          store('tumix_colleague_chats', [...colleagueChats(), { from: currentEmployee?.name, text: inp.value, timestamp: new Date().toISOString() }]);
+          renderEmployeeView('colleagueChat');
+        }
+      });
 
       document.addEventListener('keydown', e => {
         if (e.key === 'Enter' && document.activeElement?.id === 'chatInput') { e.preventDefault(); document.getElementById('sendChat')?.click(); }
