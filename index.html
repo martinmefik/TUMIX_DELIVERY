@@ -6,11 +6,13 @@
   <title>TUMIX — Доставка с душой</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23F15A2C'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold' font-size='18'>T</text></svg>">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-  </script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
-  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js">
-  </script>
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+  
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
   <style>
     * {
       margin: 0;
@@ -79,6 +81,22 @@
       0% { background-position: -400% center; }
       100% { background-position: 400% center; }
     }
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(241, 90, 44, 0.7); }
+      50% { box-shadow: 0 0 0 25px rgba(241, 90, 44, 0); }
+    }
+    @keyframes borderGlow {
+      0%, 100% { border-color: rgba(241, 90, 44, 0.25); box-shadow: 0 0 20px rgba(241, 90, 44, 0.08); }
+      50% { border-color: rgba(241, 90, 44, 0.8); box-shadow: 0 0 40px rgba(241, 90, 44, 0.25); }
+    }
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     .app-wrapper {
       width: 100%;
@@ -93,7 +111,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1), borderGlow 7s infinite;
     }
 
     .logo-header {
@@ -121,6 +139,7 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: shimmer 5s linear infinite;
+      text-shadow: 0 0 40px rgba(241, 90, 44, 0.2);
     }
     .header-right {
       display: flex;
@@ -162,6 +181,8 @@
       font-weight: 700;
       font-size: 15px;
       transition: all 0.4s ease;
+      backdrop-filter: blur(12px);
+      letter-spacing: 0.5px;
     }
     .logout-btn:hover {
       background: #c0392b;
@@ -221,10 +242,6 @@
       border: 2px solid var(--border);
       box-shadow: 0 45px 80px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
       animation: cardFloat 7s ease-in-out infinite;
-    }
-    @keyframes cardFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
     }
     .auth-card h2,
     .form-card h3 {
@@ -367,10 +384,9 @@
       box-shadow: 0 28px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(241, 90, 44, 0.4);
       z-index: 9999;
       animation: fadeSlideDown 0.6s ease;
-    }
-    @keyframes fadeSlideDown {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
 
     .modal-overlay {
@@ -689,52 +705,54 @@
   </div>
 
   <script>
-    (() => {
-      const store = (k, v) => v !== undefined ? localStorage.setItem(k, JSON.stringify(v)) : JSON.parse(localStorage.getItem(k) || 'null');
-      const users = () => store('tumix_users') || [];
-      const orders = () => store('tumix_orders') || [];
-      const archivedOrders = () => store('tumix_archived_orders') || [];
-      const appeals = () => store('tumix_appeals') || [];
-      const empAppeals = () => store('tumix_emp_appeals') || [];
-      const resolvedAppeals = () => store('tumix_resolved_appeals') || [];
-      const resolvedEmpAppeals = () => store('tumix_resolved_emp_appeals') || [];
-      const colleagueChats = () => store('tumix_colleague_chats') || [];
-      const supportChats = () => store('tumix_support_chats') || [];
-      const agreementAccepted = () => localStorage.getItem('tumix_agreement_accepted') === 'true';
-
-      let currentClient = null, currentEmployee = null;
-      const TEST_EMP = { tab: 'TUM-0001', password: 'Password0001', name: 'Алексей Смирнов', role: 'support' };
-      const ADMIN_EMP = { tab: 'OWNER_MARTIN_MEFIKOV0001', password: 'MARTIN_MEFIKOV0001', name: 'Мартин Мефиков', role: 'admin' };
-
-      const dynamicLogo = document.getElementById('dynamicLogo');
-      const themeToggle = document.getElementById('themeToggle');
-
-      if (localStorage.getItem('theme') === 'light') {
-        document.body.classList.add('light-theme');
-        document.body.classList.remove('dark-theme');
-      } else {
-        document.body.classList.add('dark-theme');
-      }
-      themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('light-theme');
-        document.body.classList.toggle('dark-theme');
-        localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
-      });
-
-      function showToast(msg) {
-        const old = document.querySelector('.toast-notification');
-        if (old) old.remove();
-        const t = document.createElement('div');
-        t.className = 'toast-notification';
-        t.innerHTML = '✨ ' + msg;
-        document.body.appendChild(t);
-        setTimeout(() => { t.style.opacity = '0'; t.style.transition = '0.5s'; setTimeout(() => t.remove(), 500); }, 3000);
-      }
-
-      function showModal(title, content, onConfirm) {
-        const overlay = document.createElement('div');
-        overlay.className = 'modal-overlay';
-        overlay.innerHTML = `
+    // ============================================
+    // КОНФИГУРАЦИЯ SUPABASE
+    // ============================================
+    const SUPABASE_URL = 'https://fsqfmyfamdwiuhllmfkl.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_-xdtiAUrvfkMbUFuZnzfgQ_UNYwZAL3';
+    const supa = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // ============================================
+    // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+    // ============================================
+    let currentClient = null;
+    let currentEmployee = null;
+    let realtimeSubscriptions = [];
+    
+    const dynamicLogo = document.getElementById('dynamicLogo');
+    const themeToggle = document.getElementById('themeToggle');
+    
+    // Инициализация темы
+    if (localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light-theme');
+      document.body.classList.remove('dark-theme');
+    } else {
+      document.body.classList.add('dark-theme');
+    }
+    
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light-theme');
+      document.body.classList.toggle('dark-theme');
+      localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
+    });
+    
+    // ============================================
+    // ФУНКЦИИ УВЕДОМЛЕНИЙ
+    // ============================================
+    function showToast(msg) {
+      const old = document.querySelector('.toast-notification');
+      if (old) old.remove();
+      const t = document.createElement('div');
+      t.className = 'toast-notification';
+      t.innerHTML = '✨ ' + msg;
+      document.body.appendChild(t);
+      setTimeout(() => { t.style.opacity = '0'; t.style.transition = '0.5s'; setTimeout(() => t.remove(), 500); }, 3000);
+    }
+    
+    function showModal(title, content, onConfirm) {
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay';
+      overlay.innerHTML = `
         <div class="modal-window">
           <h3>${title}</h3>
           ${content}
@@ -743,18 +761,18 @@
             <button class="btn btn-primary confirm-modal" style="width:auto;">Подтвердить</button>
           </div>
         </div>`;
-        document.body.appendChild(overlay);
-        overlay.querySelector('.cancel-modal').addEventListener('click', () => overlay.remove());
-        overlay.querySelector('.confirm-modal').addEventListener('click', () => {
-          const select = overlay.querySelector('select');
-          const value = select ? select.value : true;
-          overlay.remove();
-          if (onConfirm) onConfirm(value);
-        });
-      }
-
-      function showRulesModal() {
-        const rules = `
+      document.body.appendChild(overlay);
+      overlay.querySelector('.cancel-modal').addEventListener('click', () => overlay.remove());
+      overlay.querySelector('.confirm-modal').addEventListener('click', () => {
+        const select = overlay.querySelector('select');
+        const value = select ? select.value : true;
+        overlay.remove();
+        if (onConfirm) onConfirm(value);
+      });
+    }
+    
+    function showRulesModal() {
+      const rules = `
         <div style="max-height:60vh;overflow-y:auto;padding-right:10px;">
           <p><b>1. При использовании услуг компании TUMIX пользователь соглашается на обработку и хранение персональных данных. Данные хранятся в соответствии с Федеральным законом от 27 июля 2006 года №152-ФЗ «О персональных данных».</b></p>
           <p><b style="color:#e74c3c;">2. Клиент подтверждает, что в грузе нет ничего запрещённого. Список запрещённого к перевозке:</b> <span style="color:#e74c3c;font-weight:700;">Оружие (любое), Животные, Легковоспламеняющиеся вещества, Взрывчатые вещества, Лекарственные препараты, Наркотические и психотропные препараты, Денежные средства любой валюты, Вещества кислотного происхождения, Перекись водорода, Скоропортящиеся продукты (СПП), Дорогое ювелирное украшение, Хрупкие предметы без специальной упаковки.</span></p>
@@ -768,17 +786,17 @@
           <p>10. Компания TUMIX оставляет за собой право изменять условия пользования и тарифы с уведомлением на сайте.</p>
           <p>11. Клиент имеет право на возврат средств в соответствии с условиями договора-оферты.</p>
         </div>`;
-        const overlay = document.createElement('div');
-        overlay.className = 'modal-overlay';
-        overlay.innerHTML = `<div class="modal-window"><h3>📜 Правила пользования</h3>${rules}<div class="modal-buttons"><button class="btn btn-primary close-rules" style="width:auto;">Закрыть</button></div></div>`;
-        document.body.appendChild(overlay);
-        overlay.querySelector('.close-rules').addEventListener('click', () => overlay.remove());
-      }
-
-      function showAgreementModal(callback) {
-        const overlay = document.createElement('div');
-        overlay.className = 'modal-overlay';
-        overlay.innerHTML = `
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay';
+      overlay.innerHTML = `<div class="modal-window"><h3>📜 Правила пользования</h3>${rules}<div class="modal-buttons"><button class="btn btn-primary close-rules" style="width:auto;">Закрыть</button></div></div>`;
+      document.body.appendChild(overlay);
+      overlay.querySelector('.close-rules').addEventListener('click', () => overlay.remove());
+    }
+    
+    function showAgreementModal(callback) {
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay';
+      overlay.innerHTML = `
         <div class="modal-window">
           <h3>📜 Пользовательское соглашение</h3>
           <div style="max-height:50vh;overflow-y:auto;padding-right:10px;margin-bottom:20px;">
@@ -790,74 +808,100 @@
             <button class="btn btn-primary accept-agreement" style="width:auto;">Принять</button>
           </div>
         </div>`;
-        document.body.appendChild(overlay);
-        overlay.querySelector('#rulesLinkInAgreement').addEventListener('click', (e) => {
-          e.preventDefault();
-          showRulesModal();
-        });
-        overlay.querySelector('.accept-agreement').addEventListener('click', () => {
-          localStorage.setItem('tumix_agreement_accepted', 'true');
-          overlay.remove();
-          if (callback) callback(true);
-        });
-        overlay.querySelector('.decline-agreement').addEventListener('click', () => {
-          overlay.remove();
-          if (callback) callback(false);
-        });
-      }
-
-      document.getElementById('copyEmail').addEventListener('click', () => {
-        navigator.clipboard.writeText('tumix.support@gmail.com').then(() => showToast('Почта скопирована!'));
+      document.body.appendChild(overlay);
+      overlay.querySelector('#rulesLinkInAgreement').addEventListener('click', (e) => {
+        e.preventDefault();
+        showRulesModal();
       });
-
-      const authScreen = document.getElementById('authScreen');
-      const clientDash = document.getElementById('clientDashboard');
-      const empDash = document.getElementById('employeeDashboard');
-      const authForms = document.getElementById('authFormsContainer');
-      const logoutBtn = document.getElementById('logoutBtn');
-
-      function updateUI() {
-        if (currentClient) {
-          authScreen.classList.add('hidden');
-          clientDash.classList.remove('hidden');
-          empDash.classList.add('hidden');
-          logoutBtn.classList.remove('hidden');
-          dynamicLogo.textContent = 'TUMIX CLIENT';
-          localStorage.setItem('tumix_session', JSON.stringify({ type: 'client', id: currentClient.id }));
-        } else if (currentEmployee) {
-          authScreen.classList.add('hidden');
-          empDash.classList.remove('hidden');
-          clientDash.classList.add('hidden');
-          logoutBtn.classList.remove('hidden');
-          dynamicLogo.textContent = 'TUMIX SUPPORT';
-          localStorage.setItem('tumix_session', JSON.stringify({ type: 'employee', tab: currentEmployee.tab }));
-        } else {
-          authScreen.classList.remove('hidden');
-          clientDash.classList.add('hidden');
-          empDash.classList.add('hidden');
-          logoutBtn.classList.add('hidden');
-          dynamicLogo.textContent = 'TUMIX';
-          localStorage.removeItem('tumix_session');
-        }
+      overlay.querySelector('.accept-agreement').addEventListener('click', () => {
+        localStorage.setItem('tumix_agreement_accepted', 'true');
+        overlay.remove();
+        if (callback) callback(true);
+      });
+      overlay.querySelector('.decline-agreement').addEventListener('click', () => {
+        overlay.remove();
+        if (callback) callback(false);
+      });
+    }
+    
+    document.getElementById('copyEmail').addEventListener('click', () => {
+      navigator.clipboard.writeText('tumix.support@gmail.com').then(() => showToast('Почта скопирована!'));
+    });
+    
+    // ============================================
+    // УПРАВЛЕНИЕ ИНТЕРФЕЙСОМ
+    // ============================================
+    const authScreen = document.getElementById('authScreen');
+    const clientDash = document.getElementById('clientDashboard');
+    const empDash = document.getElementById('employeeDashboard');
+    const authForms = document.getElementById('authFormsContainer');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    function updateUI() {
+      if (currentClient) {
+        authScreen.classList.add('hidden');
+        clientDash.classList.remove('hidden');
+        empDash.classList.add('hidden');
+        logoutBtn.classList.remove('hidden');
+        dynamicLogo.textContent = 'TUMIX CLIENT';
+        localStorage.setItem('tumix_session', JSON.stringify({ type: 'client', id: currentClient.id }));
+      } else if (currentEmployee) {
+        authScreen.classList.add('hidden');
+        empDash.classList.remove('hidden');
+        clientDash.classList.add('hidden');
+        logoutBtn.classList.remove('hidden');
+        dynamicLogo.textContent = 'TUMIX SUPPORT';
+        localStorage.setItem('tumix_session', JSON.stringify({ type: 'employee', tab: currentEmployee.tab_number }));
+      } else {
+        authScreen.classList.remove('hidden');
+        clientDash.classList.add('hidden');
+        empDash.classList.add('hidden');
+        logoutBtn.classList.add('hidden');
+        dynamicLogo.textContent = 'TUMIX';
+        localStorage.removeItem('tumix_session');
       }
-
-      logoutBtn.addEventListener('click', () => { currentClient = null; currentEmployee = null; updateUI(); renderAuth(); });
-
-      const session = JSON.parse(localStorage.getItem('tumix_session') || 'null');
-      if (session) {
-        if (session.type === 'client') { const u = users().find(x => x.id === session.id); if (u) { currentClient = u; updateUI(); renderClientView('delivery'); } }
-        else if (session.type === 'employee') { if (session.tab === TEST_EMP.tab) currentEmployee = { ...TEST_EMP }; else if (session.tab === ADMIN_EMP.tab) currentEmployee = { ...ADMIN_EMP }; if (currentEmployee) { updateUI(); renderEmployeeView('empChat'); } }
+    }
+    
+    function unsubscribeAll() {
+      realtimeSubscriptions.forEach(sub => supa.removeChannel(sub));
+      realtimeSubscriptions = [];
+    }
+    
+    logoutBtn.addEventListener('click', async () => {
+      if (currentClient) {
+        await supa.auth.signOut();
       }
-
-      let authMode = 'client';
-      document.getElementById('clientTab').addEventListener('click', () => { authMode = 'client'; dynamicLogo.textContent = 'TUMIX CLIENT'; renderAuth(); });
-      document.getElementById('employeeTab').addEventListener('click', () => { authMode = 'employee'; dynamicLogo.textContent = 'TUMIX SUPPORT'; renderAuth(); });
-
-      function renderAuth() {
-        document.getElementById('clientTab').classList.toggle('active', authMode === 'client');
-        document.getElementById('employeeTab').classList.toggle('active', authMode === 'employee');
-        if (authMode === 'client') {
-          authForms.innerHTML = `
+      currentClient = null;
+      currentEmployee = null;
+      unsubscribeAll();
+      updateUI();
+      renderAuth();
+      showToast('Вы вышли из системы');
+    });
+    
+    // ============================================
+    // АВТОРИЗАЦИЯ
+    // ============================================
+    let authMode = 'client';
+    
+    document.getElementById('clientTab').addEventListener('click', () => {
+      authMode = 'client';
+      dynamicLogo.textContent = 'TUMIX CLIENT';
+      renderAuth();
+    });
+    
+    document.getElementById('employeeTab').addEventListener('click', () => {
+      authMode = 'employee';
+      dynamicLogo.textContent = 'TUMIX SUPPORT';
+      renderAuth();
+    });
+    
+    function renderAuth() {
+      document.getElementById('clientTab').classList.toggle('active', authMode === 'client');
+      document.getElementById('employeeTab').classList.toggle('active', authMode === 'employee');
+      
+      if (authMode === 'client') {
+        authForms.innerHTML = `
           <h2>Вход для клиентов</h2>
           <div class="input-column">
             <div class="field-group"><label>📧 Почта</label><input type="email" id="loginEmail" autocomplete="off"></div>
@@ -865,25 +909,40 @@
           </div>
           <button class="btn btn-primary" id="loginClientBtn">Войти</button>
           <p class="link-text"><a href="#" id="showRegister">Регистрация</a></p>`;
-          document.getElementById('loginClientBtn').addEventListener('click', () => {
-            const e = document.getElementById('loginEmail').value.trim(), p = document.getElementById('loginPass').value.trim();
-            const u = users().find(x => x.email === e && x.password === p);
-            if (u) { currentClient = u; updateUI(); renderClientView('delivery'); } else showToast('Неверные данные');
-          });
-          document.getElementById('showRegister').addEventListener('click', (e) => {
-            e.preventDefault();
-            if (!agreementAccepted()) {
-              showAgreementModal((accepted) => {
-                if (accepted) {
-                  showToast('Соглашение принято! Теперь вы можете зарегистрироваться.');
-                  document.getElementById('showRegister').click();
-                } else {
-                  showToast('Регистрация невозможна без принятия соглашения.');
-                }
-              });
-              return;
-            }
-            authForms.innerHTML = `
+        
+        document.getElementById('loginClientBtn').addEventListener('click', async () => {
+          const email = document.getElementById('loginEmail').value.trim();
+          const password = document.getElementById('loginPass').value.trim();
+          
+          try {
+            const { data, error } = await supa.auth.signInWithPassword({ email, password });
+            if (error) throw error;
+            
+            currentClient = data.user;
+            updateUI();
+            renderClientView('delivery');
+            showToast('Добро пожаловать!');
+          } catch (err) {
+            showToast('Неверные данные: ' + err.message);
+          }
+        });
+        
+        document.getElementById('showRegister').addEventListener('click', (e) => {
+          e.preventDefault();
+          
+          if (!localStorage.getItem('tumix_agreement_accepted')) {
+            showAgreementModal((accepted) => {
+              if (accepted) {
+                showToast('Соглашение принято! Теперь вы можете зарегистрироваться.');
+                document.getElementById('showRegister').click();
+              } else {
+                showToast('Регистрация невозможна без принятия соглашения.');
+              }
+            });
+            return;
+          }
+          
+          authForms.innerHTML = `
             <h2>Регистрация</h2>
             <div class="input-column">
               <div class="field-group"><label>Имя *</label><input id="regName"></div>
@@ -893,83 +952,134 @@
             </div>
             <button class="btn btn-primary" id="registerBtn">Зарегистрироваться</button>
             <p class="link-text"><a href="#" id="backToLogin">Назад</a></p>`;
-            document.getElementById('registerBtn').addEventListener('click', () => {
-              const n = document.getElementById('regName').value.trim(), em = document.getElementById('regEmail').value.trim(), ph = document.getElementById('regPhone').value.trim(), pw = document.getElementById('regPass').value.trim();
-              if (!n || !em || !ph || !pw) return showToast('Заполните все поля');
-              let u = users(); if (u.find(x => x.email === em)) return showToast('Почта занята');
-              u.push({ id: Date.now().toString(), name: n, email: em, phone: ph, password: pw });
-              store('tumix_users', u); showToast('Регистрация успешна!'); renderAuth();
-            });
-            document.getElementById('backToLogin').addEventListener('click', (ev) => { ev.preventDefault(); renderAuth(); });
+          
+          document.getElementById('registerBtn').addEventListener('click', async () => {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const password = document.getElementById('regPass').value.trim();
+            
+            if (!name || !email || !phone || !password) {
+              return showToast('Заполните все поля');
+            }
+            
+            try {
+              const { data, error } = await supa.auth.signUp({
+                email,
+                password,
+                options: {
+                  data: { full_name: name, phone }
+                }
+              });
+              
+              if (error) throw error;
+              
+              showToast('Регистрация успешна! Теперь войдите.');
+              renderAuth();
+            } catch (err) {
+              showToast('Ошибка: ' + err.message);
+            }
           });
-        } else {
-          authForms.innerHTML = `
+          
+          document.getElementById('backToLogin').addEventListener('click', (ev) => {
+            ev.preventDefault();
+            renderAuth();
+          });
+        });
+      } else {
+        authForms.innerHTML = `
           <h2>Вход для сотрудников</h2>
           <div class="input-column">
             <div class="field-group"><label>Табельный номер</label><input id="empTab" placeholder="TUM-0001"></div>
             <div class="field-group"><label>Пароль</label><input type="password" id="empPass"></div>
           </div>
           <button class="btn btn-primary" id="loginEmpBtn">Войти</button>`;
-          document.getElementById('loginEmpBtn').addEventListener('click', () => {
-            const tab = document.getElementById('empTab').value.trim(), pass = document.getElementById('empPass').value.trim();
-            if (tab === TEST_EMP.tab && pass === TEST_EMP.password) currentEmployee = { ...TEST_EMP };
-            else if (tab === ADMIN_EMP.tab && pass === ADMIN_EMP.password) currentEmployee = { ...ADMIN_EMP };
-            else return showToast('Неверные данные');
-            updateUI(); renderEmployeeView('empChat');
-          });
-        }
+        
+        document.getElementById('loginEmpBtn').addEventListener('click', async () => {
+          const tab = document.getElementById('empTab').value.trim();
+          const password = document.getElementById('empPass').value.trim();
+          
+          try {
+            const { data, error } = await supa
+              .from('employees')
+              .select('*')
+              .eq('tab_number', tab)
+              .eq('password', password)
+              .single();
+            
+            if (error || !data) {
+              return showToast('Неверный табельный номер или пароль');
+            }
+            
+            currentEmployee = data;
+            updateUI();
+            renderEmployeeView('empChat');
+            showToast('Добро пожаловать, ' + data.full_name + '!');
+          } catch (err) {
+            showToast('Ошибка входа');
+          }
+        });
       }
-
-      document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(b => b.addEventListener('click', () => {
-        document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(x => x.classList.remove('active'));
-        b.classList.add('active');
-        if (b.dataset.view === 'rules') showRulesModal();
-        else renderClientView(b.dataset.view);
-      }));
-
-      document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(b => b.addEventListener('click', () => {
-        document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(x => x.classList.remove('active'));
-        b.classList.add('active');
-        if (b.dataset.view === 'empRules') showRulesModal();
-        else renderEmployeeView(b.dataset.view);
-      }));
-
-      let deliveryMap = null, routingControl = null;
-
-      function initDeliveryMap() {
-        const mapEl = document.getElementById('map');
-        if (!mapEl) return;
-        if (deliveryMap) {
-          deliveryMap.invalidateSize();
-          return;
-        }
-        deliveryMap = L.map('map').setView([55.7558, 37.6173], 10);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(deliveryMap);
-        setTimeout(() => deliveryMap.invalidateSize(), 200);
+    }
+    
+    // ============================================
+    // НАВИГАЦИЯ КЛИЕНТА
+    // ============================================
+    document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(b => b.addEventListener('click', () => {
+      document.querySelectorAll('#clientDashboard .sidebar-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      if (b.dataset.view === 'rules') showRulesModal();
+      else renderClientView(b.dataset.view);
+    }));
+    
+    // ============================================
+    // НАВИГАЦИЯ СОТРУДНИКА
+    // ============================================
+    document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(b => b.addEventListener('click', () => {
+      document.querySelectorAll('#employeeDashboard .sidebar-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      if (b.dataset.view === 'empRules') showRulesModal();
+      else renderEmployeeView(b.dataset.view);
+    }));
+    
+    // ============================================
+    // КАРТА И ДОСТАВКА
+    // ============================================
+    let deliveryMap = null, routingControl = null;
+    
+    function initDeliveryMap() {
+      const mapEl = document.getElementById('map');
+      if (!mapEl) return;
+      if (deliveryMap) {
+        deliveryMap.invalidateSize();
+        return;
       }
-
-      async function geocodeAddress(address) {
-        try {
-          const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1&accept-language=ru`);
-          const data = await resp.json();
-          if (data && data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0].display_name };
-          return null;
-        } catch (e) { return null; }
-      }
-
-      function deliveryForm() {
-        setTimeout(initDeliveryMap, 100);
-        return `<div class="card"><h3>📦 Оформление доставки</h3><div class="input-column">
+      deliveryMap = L.map('map').setView([55.7558, 37.6173], 10);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(deliveryMap);
+      setTimeout(() => deliveryMap.invalidateSize(), 200);
+    }
+    
+    async function geocodeAddress(address) {
+      try {
+        const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1&accept-language=ru`);
+        const data = await resp.json();
+        if (data && data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0].display_name };
+        return null;
+      } catch (e) { return null; }
+    }
+    
+    function deliveryForm() {
+      setTimeout(initDeliveryMap, 100);
+      return `<div class="card"><h3>📦 Оформление доставки</h3><div class="input-column">
         <div class="field-group"><label>👤 ФИО отправителя *</label><input id="sName" autocomplete="off"></div>
         <div class="field-group"><label>📱 Телефон отправителя *</label><input id="sPhone" value="+7" autocomplete="off"></div>
-        <div class="field-group"><label>📍 Адрес отправки * <span style="font-weight:400;color:#ffa07c;">(улица, дом; без д., к. — укажите в комментарии)</span></label><input id="sAddr" placeholder="Москва, ул. Тверская, 1" autocomplete="off"></div>
+        <div class="field-group"><label>📍 Адрес отправки * <span style="font-weight:400;color:#ffa07c;">(пример: Балашиха свердлова 40)</span></label><input id="sAddr" placeholder="Балашиха свердлова 40" autocomplete="off"></div>
         <div class="field-group"><label>👤 ФИО получателя *</label><input id="rName" autocomplete="off"></div>
         <div class="field-group"><label>📱 Телефон получателя *</label><input id="rPhone" value="+7" autocomplete="off"></div>
-        <div class="field-group"><label>📍 Адрес получателя * <span style="font-weight:400;color:#ffa07c;">(улица, дом; без д., к. — укажите в комментарии)</span></label><input id="rAddr" placeholder="Москва, ул. Арбат, 10" autocomplete="off"></div>
+        <div class="field-group"><label>📍 Адрес получателя * <span style="font-weight:400;color:#ffa07c;">(пример: Москва Тверская 1)</span></label><input id="rAddr" placeholder="Москва Тверская 1" autocomplete="off"></div>
         <div class="field-group"><label>📦 Содержимое *</label><input id="contentDesc" autocomplete="off"></div>
-        <div class="field-group"><label>💬 Комментарий к заказу</label><textarea id="orderComment" placeholder="Подъезд, домофон, этаж, особенности адреса..."></textarea></div>
         <div class="checkbox-group" id="packCheckboxes">
           <label class="checkbox-pill"><input type="checkbox" value="Пакет" hidden> 🛍️ Пакет</label>
           <label class="checkbox-pill"><input type="checkbox" value="Конверт" hidden> ✉️ Конверт</label>
@@ -981,310 +1091,440 @@
         <div id="map"></div>
         <button class="btn btn-primary" id="calcDelivery">🧮 Рассчитать маршрут и стоимость</button>
         <div id="priceDetails"></div></div></div>`;
+    }
+    
+    // ============================================
+    // ОБРАБОТЧИКИ СОБЫТИЙ
+    // ============================================
+    document.addEventListener('click', async e => {
+      // Расчет доставки
+      if (e.target.id === 'calcDelivery') {
+        const packs = [...document.querySelectorAll('#packCheckboxes input:checked')].map(c => c.value);
+        if (!packs.length) return showToast('Выберите упаковку');
+        const sAddr = document.getElementById('sAddr').value.trim();
+        const rAddr = document.getElementById('rAddr').value.trim();
+        if (!sAddr || !rAddr) return showToast('Заполните адреса');
+        
+        document.getElementById('priceDetails').innerHTML = '<p>🔄 Строим автомобильный маршрут...</p>';
+        initDeliveryMap();
+        
+        Promise.all([geocodeAddress(sAddr), geocodeAddress(rAddr)]).then(([from, to]) => {
+          if (!from || !to) {
+            document.getElementById('priceDetails').innerHTML = '<p style="color:#ff7043;">❌ Адрес не найден</p>';
+            return;
+          }
+          
+          if (deliveryMap) {
+            if (routingControl) deliveryMap.removeControl(routingControl);
+            routingControl = L.Routing.control({
+              waypoints: [L.latLng(from.lat, from.lng), L.latLng(to.lat, to.lng)],
+              routeWhileDragging: false,
+              showAlternatives: false,
+              lineOptions: { styles: [{ color: '#F15A2C', weight: 6 }] }
+            }).addTo(deliveryMap);
+            
+            routingControl.on('routesfound', function(ev) {
+              const dist = Math.round(ev.routes[0].summary.totalDistance / 1000);
+              let km = dist * 22, serv = 29, total = km + serv;
+              document.getElementById('priceDetails').innerHTML = `
+                <div class="card">
+                  <div class="detail-row"><span>🛣️ По дороге:</span><span>${dist} км × 22₽ = ${km} ₽</span></div>
+                  <div class="detail-row"><span>🔧 Сервис:</span><span>29 ₽</span></div>
+                  <h3>💰 Итого: ${total} ₽</h3>
+                  <button class="btn btn-primary" id="confirmOrder">Оформить</button>
+                </div>`;
+            });
+          }
+        });
       }
-
-      document.addEventListener('click', e => {
-        if (e.target.id === 'calcDelivery') {
-          const packs = [...document.querySelectorAll('#packCheckboxes input:checked')].map(c => c.value);
-          if (!packs.length) return showToast('Выберите упаковку');
-          const sAddr = document.getElementById('sAddr').value.trim(), rAddr = document.getElementById('rAddr').value.trim();
-          if (!sAddr || !rAddr) return showToast('Заполните адреса');
-          document.getElementById('priceDetails').innerHTML = '<p>🔄 Строим автомобильный маршрут...</p>';
-          initDeliveryMap();
-          Promise.all([geocodeAddress(sAddr), geocodeAddress(rAddr)]).then(([from, to]) => {
-            if (!from || !to) { document.getElementById('priceDetails').innerHTML = '<p style="color:#ff7043;">❌ Адрес не найден</p>'; return; }
-            if (deliveryMap) {
-              if (routingControl) deliveryMap.removeControl(routingControl);
-              routingControl = L.Routing.control({
-                waypoints: [L.latLng(from.lat, from.lng), L.latLng(to.lat, to.lng)],
-                routeWhileDragging: false, showAlternatives: false,
-                lineOptions: { styles: [{ color: '#F15A2C', weight: 6 }] }
-              }).addTo(deliveryMap);
-              routingControl.on('routesfound', function(ev) {
-                const dist = Math.round(ev.routes[0].summary.totalDistance / 1000);
-                let km = dist * 22, serv = 29, total = km + serv;
-                document.getElementById('priceDetails').innerHTML = `<div class="card"><div class="detail-row"><span>🛣️ По дороге:</span><span>${dist} км × 22₽ = ${km} ₽</span></div><div class="detail-row"><span>🔧 Сервис:</span><span>29 ₽</span></div><h3>💰 Итого: ${total} ₽</h3><button class="btn btn-primary" id="confirmOrder">Оформить</button></div>`;
-              });
-            }
-          });
-        }
-        if (e.target.id === 'confirmOrder') {
-          const ords = orders(); const newId = String(ords.length + 1).padStart(8, '0');
-          const order = {
-            id: newId, clientId: currentClient.id,
-            sender: document.getElementById('sName').value,
-            sPhone: document.getElementById('sPhone').value,
-            sAddr: document.getElementById('sAddr').value,
-            recName: document.getElementById('rName').value,
-            rPhone: document.getElementById('rPhone').value,
-            rAddr: document.getElementById('rAddr').value,
-            content: document.getElementById('contentDesc').value,
-            comment: document.getElementById('orderComment').value,
-            packs: [...document.querySelectorAll('#packCheckboxes input:checked')].map(c => c.value),
-            status: 'Оформлен', date: new Date().toLocaleString('ru-RU')
-          };
-          store('tumix_orders', [...ords, order]);
-          showToast('Заказ #' + newId + ' оформлен!');
+      
+      // Подтверждение заказа
+      if (e.target.id === 'confirmOrder') {
+        const orderId = String(Date.now()).slice(-8);
+        const order = {
+          id: orderId,
+          client_id: currentClient.id,
+          sender_name: document.getElementById('sName').value,
+          sender_phone: document.getElementById('sPhone').value,
+          sender_address: document.getElementById('sAddr').value,
+          recipient_name: document.getElementById('rName').value,
+          recipient_phone: document.getElementById('rPhone').value,
+          recipient_address: document.getElementById('rAddr').value,
+          content: document.getElementById('contentDesc').value,
+          packs: [...document.querySelectorAll('#packCheckboxes input:checked')].map(c => c.value),
+          status: 'Оформлен'
+        };
+        
+        const { error } = await supa.from('orders').insert([order]);
+        if (error) {
+          showToast('Ошибка: ' + error.message);
+        } else {
+          showToast('Заказ #' + orderId + ' оформлен!');
           document.querySelector('#clientDashboard .sidebar-btn[data-view="orders"]').click();
         }
-        if (e.target.closest('.checkbox-pill')) { const pill = e.target.closest('.checkbox-pill'), cb = pill.querySelector('input'); cb.checked = !cb.checked; pill.classList.toggle('checked', cb.checked); }
-        if (e.target.classList.contains('cancel-order-btn')) {
-          e.stopPropagation();
-          const id = e.target.dataset.id;
-          const order = orders().find(o => o.id === id);
-          if (!order) return;
-          if (confirm('Отменить заказ #' + id + ' и переместить в архив?')) {
-            store('tumix_archived_orders', [...archivedOrders(), { ...order, status: 'Отменён' }]);
-            store('tumix_orders', orders().filter(o => o.id !== id));
-            showToast('Заказ отменён и помещён в архив');
+      }
+      
+      // Чекбоксы упаковки
+      if (e.target.closest('.checkbox-pill')) {
+        const pill = e.target.closest('.checkbox-pill');
+        const cb = pill.querySelector('input');
+        cb.checked = !cb.checked;
+        pill.classList.toggle('checked', cb.checked);
+      }
+      
+      // Кнопка "Сменить статус" в обращениях
+      if (e.target.classList.contains('change-status-btn')) {
+        const id = e.target.dataset.id;
+        const newStatus = document.getElementById('statusSelect_' + id).value;
+        const { error } = await supa.from('appeals').update({ status: newStatus }).eq('id', id);
+        if (!error) {
+          showToast('Статус изменён на ' + newStatus);
+          document.getElementById('tabClientAppeals')?.click();
+        }
+      }
+      
+      // Кнопка "Сменить статус" в обращениях сотрудников
+      if (e.target.classList.contains('emp-change-status-btn')) {
+        const emp = e.target.dataset.emp;
+        const newStatus = document.getElementById('empStatusSelect_' + emp).value;
+        const { error } = await supa.from('emp_appeals').update({ status: newStatus }).eq('employee_name', emp);
+        if (!error) {
+          showToast('Статус изменён на ' + newStatus);
+          document.getElementById('tabEmpAppeals')?.click();
+        }
+      }
+      
+      // Ответ на обращение
+      if (e.target.classList.contains('reply-btn')) {
+        const id = e.target.dataset.id;
+        const text = document.getElementById('replyText_' + id).value.trim();
+        if (!text) return showToast('Введите ответ');
+        
+        const { data } = await supa.from('appeals').select('replies').eq('id', id).single();
+        const replies = [...(data?.replies || []), text];
+        await supa.from('appeals').update({ replies }).eq('id', id);
+        showToast('Ответ добавлен');
+        document.getElementById('tabClientAppeals')?.click();
+      }
+      
+      // Ответ на обращение сотрудника
+      if (e.target.classList.contains('emp-reply-btn')) {
+        const emp = e.target.dataset.emp;
+        const text = document.getElementById('empReplyText_' + emp).value.trim();
+        if (!text) return showToast('Введите ответ');
+        
+        const { data } = await supa.from('emp_appeals').select('replies').eq('employee_name', emp).single();
+        const replies = [...(data?.replies || []), text];
+        await supa.from('emp_appeals').update({ replies }).eq('employee_name', emp);
+        showToast('Ответ отправлен');
+        document.getElementById('tabEmpAppeals')?.click();
+      }
+      
+      // Закрыть обращение
+      if (e.target.classList.contains('close-btn')) {
+        const id = e.target.dataset.id;
+        await supa.from('appeals').update({ status: 'Решено' }).eq('id', id);
+        showToast('Обращение закрыто');
+        document.getElementById('tabClientAppeals')?.click();
+      }
+      
+      // Закрыть обращение сотрудника
+      if (e.target.classList.contains('close-emp-btn')) {
+        const emp = e.target.dataset.emp;
+        await supa.from('emp_appeals').update({ status: 'Решено' }).eq('employee_name', emp);
+        showToast('Обращение сотрудника закрыто');
+        document.getElementById('tabEmpAppeals')?.click();
+      }
+      
+      // Изменить статус заказа
+      if (e.target.classList.contains('edit-order-btn')) {
+        const id = e.target.dataset.id;
+        showModal('Изменение статуса заказа #' + id, `
+          <select id="statusSelect">
+            <option>Оформлен</option>
+            <option>В пути</option>
+            <option>Доставлен</option>
+            <option>Отменён</option>
+          </select>`, async (status) => {
+            await supa.from('orders').update({ status }).eq('id', id);
+            showToast('Статус обновлён');
             renderEmployeeView('allOrders');
-          }
-        }
-        if (e.target.classList.contains('change-status-btn')) {
-          e.stopPropagation();
-          const id = e.target.dataset.id;
-          const newStatus = document.getElementById('statusSelect_' + id).value;
-          const upd = appeals().map(a => a.id === id ? { ...a, status: newStatus } : a);
-          store('tumix_appeals', upd);
-          showToast('Статус изменён на ' + newStatus);
-          document.getElementById('tabClientAppeals').click();
-        }
-        if (e.target.classList.contains('emp-change-status-btn')) {
-          e.stopPropagation();
-          const emp = e.target.dataset.emp;
-          const newStatus = document.getElementById('empStatusSelect_' + emp).value;
-          const upd = empAppeals().map(a => a.empName === emp ? { ...a, status: newStatus } : a);
-          store('tumix_emp_appeals', upd);
-          showToast('Статус изменён на ' + newStatus);
-          document.getElementById('tabEmpAppeals').click();
-        }
-      });
-
-      function clientOrders() {
-        const ords = orders().filter(o => o.clientId === currentClient?.id);
-        return `<h3>📑 Мои заказы (${ords.length})</h3>` + ords.map(o => `
-        <div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
-          <b>🚚 Заказ #${o.id}</b> — ${o.status}
-          <div class="details hidden" style="margin-top:16px;">
-            <div class="detail-row"><span>Отправитель:</span><span>${o.sender} (${o.sPhone})</span></div>
-            <div class="detail-row"><span>Адрес отпр.:</span><span>${o.sAddr}</span></div>
-            <div class="detail-row"><span>Получатель:</span><span>${o.recName} (${o.rPhone})</span></div>
-            <div class="detail-row"><span>Адрес получ.:</span><span>${o.rAddr}</span></div>
-            <div class="detail-row"><span>Содержимое:</span><span>${o.content}</span></div>
-            <div class="detail-row"><span>Комментарий:</span><span>${o.comment || '—'}</span></div>
-            <div class="detail-row"><span>Упаковка:</span><span>${o.packs?.join(', ')}</span></div>
-            <div class="detail-row"><span>Дата:</span><span>${o.date}</span></div>
-          </div>
-        </div>`).join('') || '<p style="text-align:center;padding:40px;">У вас пока нет заказов</p>';
+          });
       }
-
-      function clientAppeals() {
-        const apps = appeals().filter(a => a.clientEmail === currentClient?.email);
-        return `<h3>📋 Мои обращения (${apps.length})</h3>` + apps.map(a => `
+      
+      // Отменить заказ
+      if (e.target.classList.contains('cancel-order-btn')) {
+        const id = e.target.dataset.id;
+        showModal('Отмена заказа #' + id, '<p>Вы уверены, что хотите отменить заказ?</p>', async () => {
+          await supa.from('orders').update({ status: 'Отменён' }).eq('id', id);
+          showToast('Заказ отменён');
+          renderEmployeeView('allOrders');
+        });
+      }
+      
+      // Создать обращение клиента
+      if (e.target.id === 'submitClientAppeal') {
+        const app = {
+          id: String(Date.now()).slice(-8),
+          client_id: currentClient?.id,
+          employee_name: document.getElementById('eName')?.value,
+          employee_tab: document.getElementById('eTab')?.value,
+          client_name: document.getElementById('cName')?.value,
+          client_email: document.getElementById('cEmail')?.value,
+          client_phone: document.getElementById('cPhone')?.value,
+          problem: document.getElementById('cProblem')?.value,
+          status: 'Открыто',
+          replies: []
+        };
+        
+        const { error } = await supa.from('appeals').insert([app]);
+        if (!error) {
+          showToast('Обращение создано');
+          document.getElementById('tabClientAppeals')?.click();
+        }
+      }
+      
+      // Создать обращение сотрудника
+      if (e.target.id === 'submitEmpAppeal') {
+        const text = document.getElementById('eText')?.value.trim();
+        if (!text) return showToast('Введите текст обращения');
+        
+        const { error } = await supa.from('emp_appeals').insert([{
+          employee_name: document.getElementById('eName2')?.value,
+          employee_tab: document.getElementById('eTab2')?.value,
+          text,
+          replies: []
+        }]);
+        
+        if (!error) {
+          showToast('Обращение сотрудника создано');
+          document.getElementById('tabEmpAppeals')?.click();
+        }
+      }
+      
+      // Отправить в чат поддержки
+      if (e.target.id === 'sendChat') {
+        const inp = document.getElementById('chatInput');
+        if (!inp.value.trim()) return;
+        
+        await supa.from('support_chats').insert([{
+          client_id: currentClient?.id,
+          sender_type: 'client',
+          message: inp.value
+        }]);
+        
+        inp.value = '';
+      }
+      
+      // Отправить в чат коллег
+      if (e.target.id === 'sendColleague') {
+        const inp = document.getElementById('colleagueInput');
+        if (!inp.value.trim()) return;
+        
+        await supa.from('colleague_chats').insert([{
+          employee_name: currentEmployee?.full_name,
+          message: inp.value
+        }]);
+        
+        inp.value = '';
+      }
+      
+      // Вкладки обращений
+      if (e.target.classList.contains('tab-inner')) {
+        document.querySelectorAll('.tab-inner').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        const sub = document.getElementById('appealsSubContent');
+        
+        if (e.target.id === 'tabClientAppeals') {
+          const { data } = await supa.from('appeals').select('*').order('created_at', { ascending: false });
+          sub.innerHTML = (data || []).map(a => `
+            <div class="appeal-item">
+              <b>🎫 #${a.id}</b> — ${a.status || 'Открыто'}
+              <div class="details" style="margin-top:16px;">
+                <div class="detail-row"><span>Сотрудник:</span><span>${a.employee_name} (${a.employee_tab})</span></div>
+                <div class="detail-row"><span>Клиент:</span><span>${a.client_name}</span></div>
+                <div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>
+                ${(a.replies || []).map(r => `<div class="reply-block">🔴 Ответ руководителя поддержки TUMIX:<br>${r}</div>`).join('')}
+                ${currentEmployee?.role === 'admin' ? `
+                  <textarea id="replyText_${a.id}" placeholder="Ответ руководителя..." style="width:100%;margin-top:12px;background:var(--input);border:2px solid var(--border);border-radius:16px;padding:14px;color:var(--text);min-height:80px;"></textarea>
+                  <button class="btn btn-primary reply-btn" data-id="${a.id}" style="margin-top:8px;">📩 Ответить</button>
+                  <button class="btn btn-outline close-btn" data-id="${a.id}" style="margin-top:6px;">✅ Закрыть</button>
+                  <select id="statusSelect_${a.id}" style="width:100%;margin-top:6px;background:var(--input);border:2px solid var(--border);border-radius:14px;padding:8px;color:var(--text);">
+                    <option>Открыт</option><option>В работе</option><option>На проверке</option>
+                  </select>
+                  <button class="btn btn-outline change-status-btn" data-id="${a.id}" style="margin-top:4px;">🔄 Сменить статус</button>
+                ` : ''}
+              </div>
+            </div>
+          `).join('') || '<p>Нет обращений</p>';
+        }
+        
+        if (e.target.id === 'tabEmpAppeals') {
+          const { data } = await supa.from('emp_appeals').select('*').order('created_at', { ascending: false });
+          sub.innerHTML = (data || []).filter(a => a.employee_tab === currentEmployee?.tab_number || currentEmployee?.role === 'admin').map(a => `
+            <div class="appeal-item">
+              <b>👔 ${a.employee_name}</b> → Руководителю поддержки TUMIX
+              <div class="details" style="margin-top:16px;">
+                <div class="detail-row"><span>Табельный:</span><span>${a.employee_tab}</span></div>
+                <div class="detail-row"><span>Текст:</span><span style="white-space:pre-wrap;">${a.text}</span></div>
+                <div class="detail-row"><span>Статус:</span><span>${a.status || 'Открыт'}</span></div>
+                ${(a.replies || []).map(r => `<div class="reply-block">🔴 Ответ руководителя поддержки TUMIX:<br>${r}</div>`).join('')}
+                ${currentEmployee?.role === 'admin' ? `
+                  <textarea id="empReplyText_${a.employee_name}" placeholder="Ответ..." style="width:100%;margin-top:12px;background:var(--input);border:2px solid var(--border);border-radius:16px;padding:14px;color:var(--text);min-height:80px;"></textarea>
+                  <button class="btn btn-primary emp-reply-btn" data-emp="${a.employee_name}" style="margin-top:8px;">📩 Ответить</button>
+                  <button class="btn btn-outline close-emp-btn" data-emp="${a.employee_name}" style="margin-top:6px;">✅ Закрыть</button>
+                  <select id="empStatusSelect_${a.employee_name}" style="width:100%;margin-top:6px;background:var(--input);border:2px solid var(--border);border-radius:14px;padding:8px;color:var(--text);">
+                    <option>Открыт</option><option>В работе</option><option>На проверке</option>
+                  </select>
+                  <button class="btn btn-outline emp-change-status-btn" data-emp="${a.employee_name}" style="margin-top:4px;">🔄 Сменить статус</button>
+                ` : ''}
+              </div>
+            </div>
+          `).join('') || '<p>Нет обращений</p>';
+        }
+      }
+    });
+    
+    // ============================================
+    // ОТОБРАЖЕНИЕ КЛИЕНТСКИХ ДАННЫХ
+    // ============================================
+    async function clientOrders() {
+      const { data } = await supa.from('orders').select('*').eq('client_id', currentClient?.id).order('created_at', { ascending: false });
+      return `<h3>📑 Мои заказы (${(data || []).length})</h3>` + (data || []).map(o => `
+        <div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
+          <b>#${o.id}</b> — ${o.status}
+          <div class="details hidden" style="margin-top:16px;">
+            <div class="detail-row"><span>Отправитель:</span><span>${o.sender_name} (${o.sender_phone})</span></div>
+            <div class="detail-row"><span>Адрес отпр.:</span><span>${o.sender_address}</span></div>
+            <div class="detail-row"><span>Получатель:</span><span>${o.recipient_name} (${o.recipient_phone})</span></div>
+            <div class="detail-row"><span>Адрес получ.:</span><span>${o.recipient_address}</span></div>
+            <div class="detail-row"><span>Содержимое:</span><span>${o.content}</span></div>
+            <div class="detail-row"><span>Упаковка:</span><span>${(o.packs || []).join(', ')}</span></div>
+          </div>
+        </div>
+      `).join('') || '<p>Нет заказов</p>';
+    }
+    
+    async function clientAppeals() {
+      const { data } = await supa.from('appeals').select('*').eq('client_id', currentClient?.id).order('created_at', { ascending: false });
+      return `<h3>📋 Мои обращения (${(data || []).length})</h3>` + (data || []).map(a => `
         <div class="appeal-item" onclick="event.stopPropagation(); this.querySelector('.details').classList.toggle('hidden')">
-          <b>🎫 Обращение #${a.id}</b> — ${a.status || 'Открыто'}
+          <b>#${a.id}</b> — ${a.status || 'Открыто'}
           <div class="details hidden" style="margin-top:16px;">
-            <div class="detail-row"><span>👤 Сотрудник:</span><span>${a.empName}</span></div>
-            <div class="detail-row"><span>📝 Проблема:</span><span>${a.problem}</span></div>
-            ${a.replies ? a.replies.map(r => `<div class="admin-reply">🔴 <b>Ответ руководителя поддержки TUMIX:</b><br>${r}</div>`).join('') : ''}
+            <div class="detail-row"><span>Сотрудник:</span><span>${a.employee_name}</span></div>
+            <div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>
+            ${(a.replies || []).map(r => `<div class="admin-reply">🔴 Ответ руководителя поддержки TUMIX:<br>${r}</div>`).join('')}
           </div>
-        </div>`).join('') || '<p style="text-align:center;padding:40px;">Обращений нет</p>';
-      }
-
-      function supportChat() {
-        const msgs = supportChats();
-        return `<div class="card"><h3>💬 Чат с поддержкой TUMIX</h3>
-        <div class="chat-messages" id="chatMsgs">${msgs.length ? msgs.map(m => `<div class="chat-msg ${m.from === 'client' ? 'mine' : 'other'}">${m.text}</div>`).join('') : '<div class="chat-msg other">👋 Здравствуйте! Это поддержка TUMIX. Какой у вас вопрос?</div>'}</div>
+        </div>
+      `).join('') || '<p>Нет обращений</p>';
+    }
+    
+    function supportChat() {
+      return `<div class="card"><h3>💬 Поддержка</h3>
+        <div class="chat-messages" id="chatMsgs"></div>
         <div style="display:flex;gap:14px;">
-          <input id="chatInput" style="flex:1;background:var(--input);border:2px solid var(--border);border-radius:18px;padding:16px;color:var(--text);" placeholder="Введите сообщение...">
-          <button class="btn btn-primary" id="sendChat" style="width:auto;margin-top:0;">📤 Отправить</button>
+          <input id="chatInput" style="flex:1;background:var(--input);border:2px solid var(--border);border-radius:18px;padding:16px;color:var(--text);">
+          <button class="btn btn-primary" id="sendChat" style="width:auto;">📤</button>
         </div></div>`;
-      }
-
-      function renderClientView(view) {
-        const a = document.getElementById('clientContent');
-        if (view === 'delivery') { a.innerHTML = deliveryForm(); }
-        else if (view === 'appeals') a.innerHTML = clientAppeals();
-        else if (view === 'orders') a.innerHTML = clientOrders();
-        else if (view === 'support') a.innerHTML = supportChat();
-      }
-
-      function renderEmployeeView(view) {
-        const a = document.getElementById('employeeContent');
-        if (view === 'empChat') a.innerHTML = '<div class="card"><h3>💬 Чаты с клиентами</h3><p style="text-align:center;padding:40px;">Список активных чатов появится после подключения базы данных.</p></div>';
-        else if (view === 'empAppeals') a.innerHTML = empAppealsPanel();
-        else if (view === 'allOrders') a.innerHTML = allOrdersView();
-        else if (view === 'colleagueChat') a.innerHTML = colleagueChatPanel();
-      }
-
-      function allOrdersView() {
-        const allOrds = orders();
-        const arch = archivedOrders();
-        return `<h3>📦 Все заказы (${allOrds.length})</h3>` + allOrds.map(o => `
+    }
+    
+    function renderClientView(view) {
+      const a = document.getElementById('clientContent');
+      if (view === 'delivery') { a.innerHTML = deliveryForm(); }
+      else if (view === 'appeals') clientAppeals().then(html => a.innerHTML = html);
+      else if (view === 'orders') clientOrders().then(html => a.innerHTML = html);
+      else if (view === 'support') a.innerHTML = supportChat();
+    }
+    
+    // ============================================
+    // ОТОБРАЖЕНИЕ ДАННЫХ СОТРУДНИКА
+    // ============================================
+    async function allOrdersView() {
+      const { data } = await supa.from('orders').select('*').order('created_at', { ascending: false });
+      return `<h3>📦 Все заказы (${(data || []).length})</h3>` + (data || []).map(o => `
         <div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
-          <b>🚚 Заказ #${o.id}</b> — ${o.status}
+          <b>#${o.id}</b> — ${o.status}
           <div class="details hidden" style="margin-top:16px;">
-            <div class="detail-row"><span>Отправитель:</span><span>${o.sender} (${o.sPhone})</span></div>
-            <div class="detail-row"><span>Адрес отпр.:</span><span>${o.sAddr}</span></div>
-            <div class="detail-row"><span>Получатель:</span><span>${o.recName} (${o.rPhone})</span></div>
-            <div class="detail-row"><span>Адрес получ.:</span><span>${o.rAddr}</span></div>
+            <div class="detail-row"><span>Отправитель:</span><span>${o.sender_name} (${o.sender_phone})</span></div>
+            <div class="detail-row"><span>Адрес отпр.:</span><span>${o.sender_address}</span></div>
+            <div class="detail-row"><span>Получатель:</span><span>${o.recipient_name} (${o.recipient_phone})</span></div>
+            <div class="detail-row"><span>Адрес получ.:</span><span>${o.recipient_address}</span></div>
             <div class="detail-row"><span>Содержимое:</span><span>${o.content}</span></div>
-            <div class="detail-row"><span>Комментарий:</span><span>${o.comment || '—'}</span></div>
-            <div class="detail-row"><span>Упаковка:</span><span>${o.packs?.join(', ')}</span></div>
-            <div class="detail-row"><span>Дата:</span><span>${o.date}</span></div>
-            <button class="btn btn-outline edit-order-btn" data-id="${o.id}" style="margin-top:12px;">✏️ Изменить статус</button>
-            <button class="btn btn-danger cancel-order-btn" data-id="${o.id}" style="margin-top:8px;">🚫 Отменить (в архив)</button>
+            <button class="btn btn-outline edit-order-btn" data-id="${o.id}" style="margin-top:8px;">✏️ Статус</button>
+            <button class="btn btn-danger cancel-order-btn" data-id="${o.id}" style="margin-top:8px;">🚫 Отменить</button>
           </div>
-        </div>`).join('') + (arch.length ? `<h4>📂 Архив отменённых (${arch.length})</h4>` + arch.map(o => `
-        <div class="order-item" onclick="this.querySelector('.details').classList.toggle('hidden')">
-          <b>🚚 Заказ #${o.id}</b> — ${o.status}
-          <div class="details hidden" style="margin-top:16px;">
-            <div class="detail-row"><span>Отправитель:</span><span>${o.sender} (${o.sPhone})</span></div>
-            <div class="detail-row"><span>Адрес отпр.:</span><span>${o.sAddr}</span></div>
-            <div class="detail-row"><span>Получатель:</span><span>${o.recName} (${o.rPhone})</span></div>
-            <div class="detail-row"><span>Адрес получ.:</span><span>${o.rAddr}</span></div>
-            <div class="detail-row"><span>Содержимое:</span><span>${o.content}</span></div>
-            <div class="detail-row"><span>Комментарий:</span><span>${o.comment || '—'}</span></div>
-          </div>
-        </div>`).join('') : '') || '<p style="text-align:center;padding:40px;">Заказов пока нет</p>';
-      }
-
-      function empAppealsPanel() {
-        setTimeout(() => { const tab = document.getElementById('tabClientAppeals'); if (tab) tab.click(); }, 100);
-        return `<div class="tabs-inner">
+        </div>
+      `).join('') || '<p>Нет заказов</p>';
+    }
+    
+    function empAppealsPanel() {
+      setTimeout(() => { const tab = document.getElementById('tabClientAppeals'); if (tab) tab.click(); }, 100);
+      return `<div class="tabs-inner">
         <button class="tab-inner active" id="tabClientAppeals">👥 Обращения клиентов</button>
         <button class="tab-inner" id="tabEmpAppeals">👔 Обращения сотрудников</button>
-        <button class="tab-inner" id="tabResolvedClient">✅ Решенные клиентские</button>
-        <button class="tab-inner" id="tabResolvedEmp">✅ Решенные сотрудников</button>
         <button class="tab-inner" id="tabCreateClient">➕ Создать клиенту</button>
         <button class="tab-inner" id="tabCreateEmp">📝 Создать сотруднику</button>
       </div><div id="appealsSubContent"></div>`;
-      }
-
-      function colleagueChatPanel() {
-        const msgs = colleagueChats();
-        return `<div class="card"><h3>👥 Чат коллег TUMIX</h3>
-        <div class="chat-messages" id="colleagueMessages">${msgs.map(m => `<div class="chat-msg ${m.from === currentEmployee?.name ? 'mine' : 'other'}"><strong>${m.from}:</strong> ${m.text}<div style="font-size:10px;opacity:0.6;">${m.time || ''}</div></div>`).join('')}</div>
+    }
+    
+    function colleagueChatPanel() {
+      return `<div class="card"><h3>👥 Чат коллег</h3>
+        <div class="chat-messages" id="colleagueMessages"></div>
         <div style="display:flex;gap:14px;">
-          <input id="colleagueInput" style="flex:1;background:var(--input);border:2px solid var(--border);border-radius:18px;padding:16px;color:var(--text);" placeholder="Сообщение...">
-          <button class="btn btn-primary" id="sendColleague" style="width:auto;margin-top:0;">📤</button>
+          <input id="colleagueInput" style="flex:1;background:var(--input);border:2px solid var(--border);border-radius:18px;padding:16px;color:var(--text);">
+          <button class="btn btn-primary" id="sendColleague" style="width:auto;">📤</button>
         </div></div>`;
+    }
+    
+    function renderEmployeeView(view) {
+      const a = document.getElementById('employeeContent');
+      if (view === 'empChat') a.innerHTML = '<div class="card"><h3>💬 Чат с клиентами</h3><p>Список чатов появится после подключения базы данных.</p></div>';
+      else if (view === 'empAppeals') a.innerHTML = empAppealsPanel();
+      else if (view === 'allOrders') allOrdersView().then(html => a.innerHTML = html);
+      else if (view === 'colleagueChat') {
+        a.innerHTML = colleagueChatPanel();
+        loadColleagueMessages();
       }
-
-      document.addEventListener('click', e => {
-        if (e.target.classList.contains('tab-inner')) {
-          document.querySelectorAll('.tab-inner').forEach(t => t.classList.remove('active'));
-          e.target.classList.add('active');
-          const sub = document.getElementById('appealsSubContent');
-          if (e.target.id === 'tabClientAppeals') sub.innerHTML = appeals().map(a => `
-          <div class="appeal-item"><b>🎫 #${a.id}</b> — ${a.status||'Открыто'}<div class="details" style="margin-top:16px;">
-            <div class="detail-row"><span>Сотрудник:</span><span>${a.empName} (${a.empTab})</span></div>
-            <div class="detail-row"><span>Клиент:</span><span>${a.clientName}</span></div>
-            <div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>
-            ${a.replies ? a.replies.map(r => `<div class="reply-block">🔴 Ответ руководителя поддержки TUMIX:<br>${r}</div>`).join('') : ''}
-            ${currentEmployee?.role==='admin' ? `<textarea id="replyText_${a.id}" placeholder="Ответ руководителя..." style="width:100%;margin-top:12px;background:var(--input);border:2px solid var(--border);border-radius:16px;padding:14px;color:var(--text);min-height:80px;"></textarea>
-            <button class="btn btn-primary reply-btn" data-id="${a.id}" style="margin-top:8px;">📩 Ответить</button>
-            <button class="btn btn-outline close-btn" data-id="${a.id}" style="margin-top:6px;">✅ Закрыть</button>
-            <button class="btn btn-danger delete-btn" data-id="${a.id}" style="margin-top:6px;">🗑️ Удалить</button>
-            <select id="statusSelect_${a.id}" style="width:100%;margin-top:6px;background:var(--input);border:2px solid var(--border);border-radius:14px;padding:8px;color:var(--text);">
-              <option>Открыт</option><option>В работе</option><option>На проверке информации</option>
-            </select>
-            <button class="btn btn-outline change-status-btn" data-id="${a.id}" style="margin-top:4px;">🔄 Сменить статус</button>` : ''}
-          </div></div>`).join('')||'<p>Нет обращений</p>';
-          if (e.target.id === 'tabEmpAppeals') sub.innerHTML = empAppeals().filter(a=>a.empTab===currentEmployee?.tab||currentEmployee?.role==='admin').map(a=>`
-          <div class="appeal-item"><b>👔 ${a.empName}</b> → Руководителю поддержки TUMIX<div class="details" style="margin-top:16px;">
-            <div class="detail-row"><span>Табельный:</span><span>${a.empTab}</span></div>
-            <div class="detail-row"><span>Текст:</span><span style="white-space:pre-wrap;">${a.text}</span></div>
-            <div class="detail-row"><span>Статус:</span><span>${a.status||'Открыт'}</span></div>
-            ${a.replies ? a.replies.map(r => `<div class="reply-block">🔴 Ответ руководителя поддержки TUMIX:<br>${r}</div>`).join('') : ''}
-            ${currentEmployee?.role==='admin' ? `<textarea id="empReplyText_${a.empName}" placeholder="Ответ..." style="width:100%;margin-top:12px;background:var(--input);border:2px solid var(--border);border-radius:16px;padding:14px;color:var(--text);min-height:80px;"></textarea>
-            <button class="btn btn-primary emp-reply-btn" data-emp="${a.empName}" style="margin-top:8px;">📩 Ответить</button>
-            <button class="btn btn-outline close-emp-btn" data-emp="${a.empName}" style="margin-top:6px;">✅ Закрыть</button>
-            <select id="empStatusSelect_${a.empName}" style="width:100%;margin-top:6px;background:var(--input);border:2px solid var(--border);border-radius:14px;padding:8px;color:var(--text);">
-              <option>Открыт</option><option>В работе</option><option>На проверке информации</option>
-            </select>
-            <button class="btn btn-outline emp-change-status-btn" data-emp="${a.empName}" style="margin-top:4px;">🔄 Сменить статус</button>` : ''}
-          </div></div>`).join('')||'<p>Нет обращений</p>';
-          if (e.target.id === 'tabResolvedClient') sub.innerHTML = resolvedAppeals().map(a=>`<div class="appeal-item" onclick="this.querySelector('.details').classList.toggle('hidden')"><b>✅ #${a.id}</b><div class="details hidden" style="margin-top:12px;"><div class="detail-row"><span>Сотрудник:</span><span>${a.empName}</span></div><div class="detail-row"><span>Проблема:</span><span>${a.problem}</span></div>${a.replies? a.replies.map(r=>`<div class="reply-block">🔴 ${r}</div>`).join('') : ''}${currentEmployee?.role==='admin'? `<button class="btn btn-danger delete-resolved-btn" data-id="${a.id}">🗑️ Удалить</button>` : ''}</div></div>`).join('')||'<p>Нет решенных</p>';
-          if (e.target.id === 'tabResolvedEmp') sub.innerHTML = resolvedEmpAppeals().map(a=>`<div class="appeal-item" onclick="this.querySelector('.details').classList.toggle('hidden')"><b>✅ ${a.empName}</b><div class="details hidden" style="margin-top:12px;"><div class="detail-row"><span>Текст:</span><span>${a.text}</span></div>${a.replies? a.replies.map(r=>`<div class="reply-block">🔴 ${r}</div>`).join('') : ''}${currentEmployee?.role==='admin'? `<button class="btn btn-danger delete-resolved-emp-btn" data-emp="${a.empName}">🗑️ Удалить</button>` : ''}</div></div>`).join('')||'<p>Нет решенных</p>';
-          if (e.target.id === 'tabCreateClient') sub.innerHTML = `<div class="form-card"><h3>➕ Новое обращение клиента</h3><div class="input-column"><div class="field-group"><label>👤 ФИО сотрудника *</label><input id="eName"></div><div class="field-group"><label>🪪 Табельный номер *</label><input id="eTab" placeholder="TUM-0001"></div><div class="field-group"><label>👤 ФИО клиента *</label><input id="cName"></div><div class="field-group"><label>📧 Почта *</label><input id="cEmail"></div><div class="field-group"><label>📱 Телефон *</label><input id="cPhone" value="+7"></div><div class="field-group"><label>📝 Проблема *</label><textarea id="cProblem"></textarea></div><button class="btn btn-primary" id="submitClientAppeal">Оформить</button></div></div>`;
-          if (e.target.id === 'tabCreateEmp') sub.innerHTML = `<div class="form-card"><h3>📝 Обращение сотрудника</h3><div class="input-column"><div class="field-group"><label>👤 ФИО сотрудника *</label><input id="eName2"></div><div class="field-group"><label>🪪 Табельный номер *</label><input id="eTab2" placeholder="TUM-0001"></div><div class="field-group"><label>📌 Кому</label><input disabled value="Руководителю поддержки TUMIX"></div><div class="field-group"><label>📝 Текст обращения</label><textarea id="eText" placeholder="Введите текст обращения..."></textarea></div><button class="btn btn-primary" id="submitEmpAppeal">✅ Оформить обращение</button></div></div>`;
-        }
-        if (e.target.classList.contains('reply-btn')) {
-          const id = e.target.dataset.id;
-          const text = document.getElementById('replyText_' + id).value.trim();
-          if (!text) return showToast('Введите ответ');
-          store('tumix_appeals', appeals().map(a => a.id === id ? { ...a, replies: [...(a.replies||[]), text] } : a));
-          showToast('Ответ добавлен');
-          document.getElementById('tabClientAppeals').click();
-        }
-        if (e.target.classList.contains('emp-reply-btn')) {
-          const emp = e.target.dataset.emp;
-          const text = document.getElementById('empReplyText_' + emp).value.trim();
-          if (!text) return showToast('Введите ответ');
-          store('tumix_emp_appeals', empAppeals().map(a => a.empName === emp ? { ...a, replies: [...(a.replies||[]), text] } : a));
-          showToast('Ответ отправлен');
-          document.getElementById('tabEmpAppeals').click();
-        }
-        if (e.target.classList.contains('close-btn')) {
-          const id = e.target.dataset.id;
-          const app = appeals().find(a => a.id === id);
-          if (!app) return;
-          store('tumix_resolved_appeals', [...resolvedAppeals(), { ...app, status: 'Решено' }]);
-          store('tumix_appeals', appeals().filter(a => a.id !== id));
-          showToast('Обращение закрыто');
-          document.getElementById('tabClientAppeals').click();
-        }
-        if (e.target.classList.contains('close-emp-btn')) {
-          const emp = e.target.dataset.emp;
-          const app = empAppeals().find(a => a.empName === emp);
-          if (!app) return;
-          store('tumix_resolved_emp_appeals', [...resolvedEmpAppeals(), { ...app, status: 'Решено' }]);
-          store('tumix_emp_appeals', empAppeals().filter(a => a.empName !== emp));
-          showToast('Обращение закрыто');
-          document.getElementById('tabEmpAppeals').click();
-        }
-        if (e.target.id === 'submitClientAppeal') {
-          const app = { id: String(appeals().length+1).padStart(7,'0'), empName: document.getElementById('eName').value, empTab: document.getElementById('eTab').value, clientName: document.getElementById('cName').value, clientEmail: document.getElementById('cEmail').value, clientPhone: document.getElementById('cPhone').value, problem: document.getElementById('cProblem').value, status: 'Открыто', replies: [] };
-          store('tumix_appeals', [...appeals(), app]);
-          showToast('Обращение создано');
-          document.getElementById('tabClientAppeals').click();
-        }
-        if (e.target.id === 'submitEmpAppeal') {
-          const text = document.getElementById('eText').value.trim();
-          if (!text) return showToast('Введите текст обращения');
-          store('tumix_emp_appeals', [...empAppeals(), { empName: document.getElementById('eName2').value, empTab: document.getElementById('eTab2').value, text, replies: [] }]);
-          showToast('Обращение создано');
-          document.getElementById('tabEmpAppeals').click();
-        }
-        if (e.target.id === 'sendColleague') {
-          const inp = document.getElementById('colleagueInput'); if (!inp.value.trim()) return;
-          store('tumix_colleague_chats', [...colleagueChats(), { from: currentEmployee?.name, text: inp.value, timestamp: new Date().toISOString() }]);
-          renderEmployeeView('colleagueChat');
-        }
-        if (e.target.id === 'sendChat') {
-          const inp = document.getElementById('chatInput'); if (!inp.value.trim()) return;
-          store('tumix_support_chats', [...supportChats(), { from: 'client', text: inp.value }]);
-          const d = document.createElement('div'); d.className = 'chat-msg mine'; d.textContent = inp.value;
-          document.getElementById('chatMsgs').appendChild(d);
-          if (supportChats().filter(m=>m.from==='support').length === 0) {
-            setTimeout(() => {
-              store('tumix_support_chats', [...supportChats(), { from: 'support', text: 'Оператор скоро ответит.' }]);
-              const r = document.createElement('div'); r.className = 'chat-msg other'; r.textContent = 'Оператор скоро ответит.';
-              document.getElementById('chatMsgs').appendChild(r);
-            }, 900);
-          }
-          inp.value = '';
-        }
-      });
-
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Enter' && document.activeElement?.id === 'chatInput') { e.preventDefault(); document.getElementById('sendChat')?.click(); }
-        if (e.key === 'Enter' && document.activeElement?.id === 'colleagueInput') { e.preventDefault(); document.getElementById('sendColleague')?.click(); }
-      });
-
-      if (!currentClient && !currentEmployee) renderAuth();
-    })();
+    }
+    
+    async function loadColleagueMessages() {
+      const { data } = await supa.from('colleague_chats').select('*').order('created_at', { ascending: true });
+      const chatDiv = document.getElementById('colleagueMessages');
+      if (chatDiv && data) {
+        chatDiv.innerHTML = data.map(m => `
+          <div class="chat-msg ${m.employee_name === currentEmployee?.full_name ? 'mine' : 'other'}">
+            <b>${m.employee_name}:</b> ${m.message}
+          </div>
+        `).join('');
+      }
+    }
+    
+    // ============================================
+    // REAL-TIME ПОДПИСКИ
+    // ============================================
+    function subscribeToColleagueChat() {
+      const sub = supa
+        .channel('colleague-chat')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'colleague_chats' }, () => {
+          loadColleagueMessages();
+        })
+        .subscribe();
+      realtimeSubscriptions.push(sub);
+    }
+    
+    // ============================================
+    // ЗАПУСК
+    // ============================================
+    // Восстановление сессии
+    supa.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        currentClient = session.user;
+        updateUI();
+        renderClientView('delivery');
+      }
+    });
+    
+    renderAuth();
   </script>
 </body>
 </html>
